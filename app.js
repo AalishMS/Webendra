@@ -74,6 +74,21 @@ const characters = [
     image: "assets/spoonendra.png",
     alt: "A dramatically lit silver spoon",
   },
+  {
+    name: "Dogendra",
+    image: "assets/dogendra.png",
+    alt: "A dog raising one paw at a doorbell camera",
+  },
+  {
+    name: "Magendra",
+    image: "assets/magendra.png",
+    alt: "A studio portrait of Magnus Carlsen",
+  },
+  {
+    name: "Fishendra",
+    image: "assets/fishendra.png",
+    alt: "A gorilla-faced fish swimming underwater",
+  },
 ];
 
 const figure = document.querySelector(".character");
