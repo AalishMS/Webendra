@@ -3,8 +3,8 @@ const SITE_URL = "https://webendra.vercel.app";
 const characters = [
   {
     name: "Ballendra",
-    image: "/assets/ballendra.jpg",
-    alt: "Ballendra, a man holding a basketball",
+    image: "/assets/ballendra.png",
+    alt: "Ballendra, Balen Shah holding a basketball",
   },
   {
     name: "Birendra",
@@ -162,11 +162,11 @@ function updateSeo(index) {
   const imageUrl = `${SITE_URL}${character.image}`;
   const isHome = index === 0;
   const title = isHome
-    ? "Webendra — A Funny Website of Distinguished Things"
-    : `${character.name} — Webendra Funny Character Gallery`;
+    ? "Webendra"
+    : `${character.name} — Webendra`;
   const description = isHome
-    ? "Webendra is a funny website and character gallery where ordinary people, animals, food, and objects receive unnecessarily dignified -endra names."
-    : `Meet ${character.name} in Webendra, the funny website and character gallery of ordinary things with distinguished -endra names.`;
+    ? "A small collection of things with -endra at the end."
+    : `${character.name} — A small collection of things with -endra at the end.`;
 
   document.title = title;
   document.querySelector('link[rel="canonical"]').href = url;
