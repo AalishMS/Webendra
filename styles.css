@@ -42,6 +42,7 @@ button {
 }
 
 .image-frame {
+  position: relative;
   aspect-ratio: 1;
   width: 100%;
   overflow: hidden;
@@ -49,26 +50,41 @@ button {
 }
 
 .image-frame img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 140ms ease, transform 140ms ease;
+  backface-visibility: hidden;
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.image-frame .character-image--incoming {
+  opacity: 0;
 }
 
 .character figcaption {
+  position: relative;
   margin-top: clamp(1rem, 2.5vh, 1.75rem);
   font-size: clamp(2rem, 5vw, 3.75rem);
   font-weight: 600;
   letter-spacing: -0.055em;
   line-height: 1;
-  transition: opacity 140ms ease, transform 140ms ease;
 }
 
-.character.is-changing img,
-.character.is-changing figcaption {
+.character-name {
+  display: block;
+  backface-visibility: hidden;
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.character-name--incoming {
+  position: absolute;
+  inset: 0;
   opacity: 0;
-  transform: translateY(0.35rem);
 }
 
 .arrow {
@@ -117,8 +133,7 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .arrow,
-  .image-frame img,
-  .character figcaption {
+  .image-frame img {
     transition: none;
   }
 }
