@@ -62,19 +62,9 @@ const characters = [
     alt: "Sockendra, a single black-and-white striped sock",
   },
   {
-    name: "Sharkendra",
-    image: "/assets/sharkendra.jpg",
-    alt: "Sharkendra, a shark facing the camera",
-  },
-  {
     name: "Catendra",
     image: "/assets/catendra.jpg",
     alt: "Catendra, an unimpressed gray tabby cat",
-  },
-  {
-    name: "Spoonendra",
-    image: "/assets/spoonendra.jpg",
-    alt: "Spoonendra, a dramatically lit silver spoon",
   },
   {
     name: "Dogendra",
@@ -102,11 +92,6 @@ const characters = [
     alt: "Dipendra, a bowl of red dipping sauce",
   },
   {
-    name: "Fanendra",
-    image: "/assets/fanendra.jpg",
-    alt: "Fanendra, an electric desk fan",
-  },
-  {
     name: "Rabindra",
     image: "/assets/rabindra.jpg",
     alt: "Rabindra, a pink rubber eraser",
@@ -115,11 +100,6 @@ const characters = [
     name: "Goatendra",
     image: "/assets/goatendra.jpg",
     alt: "Goatendra, LeBron James staring directly at the camera",
-  },
-  {
-    name: "Brownendra",
-    image: "/assets/brownendra.png",
-    alt: "Brownendra, a distinguished Indian man in a suit",
   },
   {
     name: "Gyanendra",

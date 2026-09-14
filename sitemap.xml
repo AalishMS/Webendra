@@ -112,30 +112,12 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/sharkendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/sharkendra.jpg</image:loc>
-      <image:title>Sharkendra</image:title>
-      <image:caption>Sharkendra, a shark facing the camera</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://webendra.vercel.app/character/catendra</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/catendra.jpg</image:loc>
       <image:title>Catendra</image:title>
       <image:caption>Catendra, an unimpressed gray tabby cat</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/spoonendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/spoonendra.jpg</image:loc>
-      <image:title>Spoonendra</image:title>
-      <image:caption>Spoonendra, a dramatically lit silver spoon</image:caption>
     </image:image>
   </url>
   <url>
@@ -184,15 +166,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/fanendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/fanendra.jpg</image:loc>
-      <image:title>Fanendra</image:title>
-      <image:caption>Fanendra, an electric desk fan</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://webendra.vercel.app/character/rabindra</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
@@ -208,15 +181,6 @@
       <image:loc>https://webendra.vercel.app/assets/goatendra.jpg</image:loc>
       <image:title>Goatendra</image:title>
       <image:caption>Goatendra, LeBron James staring directly at the camera</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/brownendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/brownendra.png</image:loc>
-      <image:title>Brownendra</image:title>
-      <image:caption>Brownendra, a distinguished Indian man in a suit</image:caption>
     </image:image>
   </url>
   <url>

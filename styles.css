@@ -100,9 +100,18 @@ button {
   color: #000;
   background: transparent;
   cursor: pointer;
-  font-size: 3rem;
-  line-height: 1;
   transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.arrow svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .arrow:hover {
@@ -129,7 +138,11 @@ button {
   .arrow {
     width: 3rem;
     height: 3rem;
-    font-size: 2.25rem;
+  }
+
+  .arrow svg {
+    width: 1.625rem;
+    height: 1.625rem;
   }
 }
 
