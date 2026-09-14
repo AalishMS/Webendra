@@ -165,4 +165,49 @@
       <image:caption>Fishendra, a gorilla-faced fish swimming underwater</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/bootendra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/bootendra.jpg</image:loc>
+      <image:title>Bootendra</image:title>
+      <image:caption>Bootendra, a rugged brown leather boot</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/dipendra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/dipendra.jpg</image:loc>
+      <image:title>Dipendra</image:title>
+      <image:caption>Dipendra, a bowl of red dipping sauce</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/fanendra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/fanendra.jpg</image:loc>
+      <image:title>Fanendra</image:title>
+      <image:caption>Fanendra, an electric desk fan</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/rabindra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/rabindra.jpg</image:loc>
+      <image:title>Rabindra</image:title>
+      <image:caption>Rabindra, a pink rubber eraser</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/goatendra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/goatendra.jpg</image:loc>
+      <image:title>Goatendra</image:title>
+      <image:caption>Goatendra, LeBron James staring directly at the camera</image:caption>
+    </image:image>
+  </url>
 </urlset>

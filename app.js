@@ -91,6 +91,31 @@ const characters = [
     image: "/assets/fishendra.jpg",
     alt: "Fishendra, a gorilla-faced fish swimming underwater",
   },
+  {
+    name: "Bootendra",
+    image: "/assets/bootendra.jpg",
+    alt: "Bootendra, a rugged brown leather boot",
+  },
+  {
+    name: "Dipendra",
+    image: "/assets/dipendra.jpg",
+    alt: "Dipendra, a bowl of red dipping sauce",
+  },
+  {
+    name: "Fanendra",
+    image: "/assets/fanendra.jpg",
+    alt: "Fanendra, an electric desk fan",
+  },
+  {
+    name: "Rabindra",
+    image: "/assets/rabindra.jpg",
+    alt: "Rabindra, a pink rubber eraser",
+  },
+  {
+    name: "Goatendra",
+    image: "/assets/goatendra.jpg",
+    alt: "Goatendra, LeBron James staring directly at the camera",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
