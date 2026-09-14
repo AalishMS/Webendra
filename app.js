@@ -12,7 +12,7 @@ const characters = [
   {
     name: "Ganendra",
     image: "assets/ganendra.png",
-    alt: "A metal engine piston",
+    alt: "A brushed steel Desert Eagle pistol",
   },
   {
     name: "Bonendra",
