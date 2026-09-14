@@ -32,31 +32,6 @@ const characters = [
     alt: "Mugendra, a steaming black coffee mug",
   },
   {
-    name: "Eggendra",
-    image: "/assets/eggendra.jpg",
-    alt: "Eggendra, a sunny-side-up fried egg",
-  },
-  {
-    name: "Frogendra",
-    image: "/assets/frogendra.jpg",
-    alt: "Frogendra, a serious-looking green frog",
-  },
-  {
-    name: "Breadendra",
-    image: "/assets/breadendra.jpg",
-    alt: "Breadendra, a rustic loaf of bread",
-  },
-  {
-    name: "Rockendra",
-    image: "/assets/rockendra.jpg",
-    alt: "Rockendra, an ordinary gray rock",
-  },
-  {
-    name: "Duckendra",
-    image: "/assets/duckendra.jpg",
-    alt: "Duckendra, a yellow rubber duck",
-  },
-  {
     name: "Sockendra",
     image: "/assets/sockendra.jpg",
     alt: "Sockendra, a single black-and-white striped sock",

@@ -24,8 +24,8 @@ deserve.
 - When suggesting additions, lead with the funniest strong ideas rather than a
   giant list of weak ones.
 
-Good examples include Mugendra, Frogendra, Breadendra, Rockendra, and
-Spoonendra. A weak idea is one whose subject cannot be recognized instantly or
+Good examples include Mugendra, Sockendra, Belendra, Gymendra, and
+Shailendra. A weak idea is one whose subject cannot be recognized instantly or
 whose name becomes a paragraph wearing a fake moustache.
 
 ## Visual rules
