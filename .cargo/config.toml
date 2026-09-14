@@ -1,0 +1,4 @@
+# web-sys gates the Web Animations API (Element::animate, get_animations,
+# KeyframeAnimationOptions) behind this cfg since the spec is still evolving.
+[target.wasm32-unknown-unknown]
+rustflags = ["--cfg=web_sys_unstable_apis"]

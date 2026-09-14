@@ -47,9 +47,11 @@ whose name becomes a paragraph wearing a fake moustache.
 1. Choose a clear subject and a name that lands without explanation.
 2. Generate or source a square image consistent with the existing studio style.
 3. Inspect the final image before adding it to the project.
-4. Save it in `assets/` using the lowercase character name, such as
-   `assets/mugendra.png`.
-5. Add the name, image path, and useful alt text to `characters` in `app.js`.
+4. Save it in `static/assets/` using the lowercase character name, such as
+   `static/assets/mugendra.png`.
+5. Add the name, image path, and useful alt text to `CHARACTERS` in
+   `crates/shared/src/lib.rs` — the server and the wasm client both read from
+   this single list, so there's nothing else to update.
 6. Test button navigation, keyboard navigation, image loading, and wraparound at
    desktop and mobile sizes.
 7. Commit meaningful batches periodically and push the completed work.
