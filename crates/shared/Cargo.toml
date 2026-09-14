@@ -1,0 +1,8 @@
+[package]
+name = "webendra-shared"
+version = "0.1.0"
+edition.workspace = true
+
+[lib]
+name = "webendra_shared"
+path = "src/lib.rs"
