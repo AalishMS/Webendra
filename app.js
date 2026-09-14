@@ -261,20 +261,27 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   nextImage.id = 'character-image';
   nextImage.style.clipPath = 'inset(0 100% 0 0)';
   imageFrame.append(nextImage);
-  let renamed = false;
+  const nextHeading = heading.cloneNode(true);
+  nextHeading.textContent = character.name;
+  nextHeading.classList.add('character-name--incoming');
+  nextHeading.style.clipPath = 'inset(0 100% 0 0)';
+  heading.setAttribute('aria-hidden', 'true');
+  name.append(nextHeading);
   const reveal = rear => {
     const rect = imageFrame.getBoundingClientRect();
     const fraction = Math.max(0, Math.min(1, (rear - rect.left) / rect.width));
     nextImage.style.clipPath = `inset(0 ${(1 - fraction) * 100}% 0 0)`;
-    if (!renamed && fraction >= .5) {
-      heading.textContent = character.name;
-      renamed = true;
-    }
+    const caption = name.getBoundingClientRect();
+    const captionFraction = Math.max(0, Math.min(1, (rear - caption.left) / caption.width));
+    nextHeading.style.clipPath = `inset(0 ${(1 - captionFraction) * 100}% 0 0)`;
+    heading.style.clipPath = `inset(0 0 0 ${captionFraction * 100}%)`;
   };
   if (!reduceMotion.matches && !document.hidden) await tempo.run(reveal, reduceMotion);
   previousImage.remove();
   nextImage.style.removeProperty('clip-path');
-  heading.textContent = character.name;
+  heading.remove();
+  nextHeading.classList.remove('character-name--incoming');
+  nextHeading.style.removeProperty('clip-path');
   document.querySelector('.character').removeAttribute('aria-busy');
   preloadCharacter(nextIndex - 1);
   preloadCharacter(nextIndex + 1);

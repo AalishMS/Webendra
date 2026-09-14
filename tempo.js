@@ -11,10 +11,17 @@ class TempoTransition {
           <linearGradient id="tempo-green" x2="0" y2="1"><stop stop-color="#258753"/><stop offset="1" stop-color="#0b5138"/></linearGradient>
           <linearGradient id="tempo-yellow" x2="0" y2="1"><stop stop-color="#ffd957"/><stop offset="1" stop-color="#e7a919"/></linearGradient>
         </defs>
-        <g class="tempo-exhaust" fill="#bcbcbc">
-          <ellipse cx="105" cy="555" rx="24" ry="16"/>
-          <ellipse cx="66" cy="541" rx="30" ry="23"/>
-          <ellipse cx="22" cy="522" rx="34" ry="29"/>
+        <g class="tempo-flame">
+          <path d="M115 488C30 448-44 486-116 448L-79 486-310 506-140 526-201 561-48 541C18 571 75 550 115 536Z" fill="#ff5a18"/>
+          <path d="M113 495C29 480-39 512-208 508L-81 525-105 543C-9 520 46 548 113 532Z" fill="#ffcf32"/>
+          <path d="M116 500L-79 513-8 527 116 530Z" fill="#fff4ae"/>
+          <path d="M116 503L21 514 116 527Z" fill="#80dcff"/>
+        </g>
+        <g stroke="#26312f" stroke-width="6" stroke-linejoin="round">
+          <path d="M169 469L102 477 79 494V536L103 550 169 551Z" fill="#737e80"/>
+          <path d="M101 483V546M121 480V548M144 476V549" stroke="#bac6c6"/>
+          <ellipse cx="80" cy="515" rx="13" ry="26" fill="#263e51"/>
+          <ellipse cx="77" cy="515" rx="6" ry="17" fill="#94e8ff" stroke="none"/>
         </g>
         <ellipse cx="496" cy="615" rx="413" ry="17" fill="#000" opacity=".10"/>
         <g class="tempo-body" stroke="#182b25" stroke-width="7" stroke-linejoin="round">
@@ -96,43 +103,52 @@ class TempoTransition {
     const seconds = duration / 1000;
     const master = ctx.createGain();
     master.gain.setValueAtTime(0, t);
-    master.gain.linearRampToValueAtTime(.22, t + .4);
-    master.gain.setValueAtTime(.22, t + seconds - .7);
+    master.gain.linearRampToValueAtTime(.27, t + .08);
+    master.gain.setValueAtTime(.27, t + seconds - .35);
     master.gain.linearRampToValueAtTime(0, t + seconds);
-    master.connect(ctx.destination);
+    const compressor = ctx.createDynamicsCompressor();
+    master.connect(compressor).connect(ctx.destination);
     const nodes = [];
-    const engine = ctx.createOscillator();
-    engine.type = 'sawtooth';
-    engine.frequency.setValueAtTime(47, t);
-    engine.frequency.linearRampToValueAtTime(63, t + seconds * .7);
-    engine.frequency.linearRampToValueAtTime(43, t + seconds);
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 420;
-    const pulse = ctx.createGain();
-    pulse.gain.value = .48;
-    const chug = ctx.createOscillator();
-    chug.frequency.value = 11;
-    const depth = ctx.createGain();
-    depth.gain.value = .36;
-    chug.connect(depth).connect(pulse.gain);
-    engine.connect(filter).connect(pulse).connect(master);
-    nodes.push(engine, chug);
-    // Two short, nasal honks from a vehicle with considerable self-belief.
-    for (const offset of [1.05, 1.29]) {
-      for (const frequency of [370, 493]) {
-        const horn = ctx.createOscillator();
-        horn.type = 'square';
-        horn.frequency.value = frequency;
-        const envelope = ctx.createGain();
-        envelope.gain.setValueAtTime(0, t);
-        envelope.gain.setValueAtTime(0, t + offset);
-        envelope.gain.linearRampToValueAtTime(.09, t + offset + .015);
-        envelope.gain.exponentialRampToValueAtTime(.001, t + offset + .18);
-        horn.connect(envelope).connect(master);
-        nodes.push(horn);
+    // Layered racing-engine harmonics, two gear changes, then a Doppler drop.
+    for (const [ratio, volume, type] of [[1, .48, 'sawtooth'], [2.01, .18, 'sawtooth'], [.5, .28, 'triangle']]) {
+      const engine = ctx.createOscillator();
+      engine.type = type;
+      for (const [time, rpm] of [[0, 95], [.22, 230], [.27, 150], [.52, 320], [.57, 210], [.79, 390], [1, 100]]) {
+        engine.frequency.linearRampToValueAtTime(rpm * ratio, t + time * seconds);
       }
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(650, t);
+      filter.frequency.linearRampToValueAtTime(2400, t + seconds * .75);
+      filter.frequency.linearRampToValueAtTime(350, t + seconds);
+      const gain = ctx.createGain();
+      gain.gain.value = volume;
+      engine.connect(filter).connect(gain).connect(master);
+      nodes.push(engine);
     }
+    // Air rushing through a turbo that is several sizes too large.
+    const buffer = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * seconds), ctx.sampleRate);
+    const samples = buffer.getChannelData(0);
+    for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
+    const air = ctx.createBufferSource();
+    air.buffer = buffer;
+    const airFilter = ctx.createBiquadFilter();
+    airFilter.type = 'bandpass';
+    airFilter.frequency.setValueAtTime(900, t);
+    airFilter.frequency.linearRampToValueAtTime(4200, t + seconds * .75);
+    airFilter.Q.value = .7;
+    const airGain = ctx.createGain();
+    airGain.gain.value = .32;
+    air.connect(airFilter).connect(airGain).connect(master);
+    nodes.push(air);
+    const whistle = ctx.createOscillator();
+    whistle.frequency.setValueAtTime(600, t);
+    whistle.frequency.exponentialRampToValueAtTime(2300, t + seconds * .7);
+    whistle.frequency.exponentialRampToValueAtTime(450, t + seconds);
+    const whistleGain = ctx.createGain();
+    whistleGain.gain.value = .065;
+    whistle.connect(whistleGain).connect(master);
+    nodes.push(whistle);
     nodes.forEach(node => { node.start(t); node.stop(t + seconds); });
     const stop = () => {
       master.gain.cancelScheduledValues(ctx.currentTime);
@@ -142,11 +158,20 @@ class TempoTransition {
       this.stopSound = null;
     };
     this.stopSound = stop;
-    engine.onended = () => master.disconnect();
+    nodes[0].onended = () => { master.disconnect(); compressor.disconnect(); };
   }
 
   run(reveal, reducedMotion) {
-    const duration = 4300;
+    const duration = 1800;
+    const fitVehicle = () => {
+      const bounds = document.querySelector('.character').getBoundingClientRect();
+      // The solid rear panel spans y=150..540: cover photo AND caption.
+      const width = Math.max(760, (bounds.height + 24) * 960 / 390, innerHeight * 1.25);
+      this.vehicle.style.width = `${width}px`;
+      this.vehicle.style.top = `${bounds.bottom + 12 - width * 540 / 960}px`;
+    };
+    fitVehicle();
+    this.vehicle.style.transform = 'translate3d(-200vw, 0, 0)';
     this.layer.hidden = false;
     this.startSound(duration);
     return new Promise(resolve => {
@@ -164,8 +189,9 @@ class TempoTransition {
         start ??= now;
         const progress = Math.min((now - start) / duration, 1);
         if (progress === 1 || reducedMotion.matches || document.hidden) return finish();
+        fitVehicle();
         const width = this.vehicle.getBoundingClientRect().width;
-        const x = -width + progress * (window.innerWidth + width);
+        const x = -width + progress * (window.innerWidth + width * 1.34);
         this.vehicle.style.transform = `translate3d(${x}px, 0, 0)`;
         // The canvas rear is at x=142 in the 960-unit drawing.
         reveal(x + width * 142 / 960);

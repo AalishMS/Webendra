@@ -77,6 +77,8 @@ button {
   transform-origin: center;
 }
 
+.character-name--incoming { position: absolute; inset: 0; }
+
 .arrow {
   display: grid;
   place-items: center;
@@ -141,7 +143,7 @@ button {
 .tempo-vehicle {
   position: absolute;
   left: 0;
-  bottom: max(1.5vh, calc((100vh - 820px) / 2));
+  top: 0;
   width: max(760px, 140vh);
   width: max(760px, 140svh);
   will-change: transform;
@@ -149,17 +151,17 @@ button {
 
 .tempo-vehicle svg { display: block; width: 100%; overflow: visible; }
 .tempo-body { animation: tempo-rattle 110ms steps(2, jump-none) infinite; transform-origin: 480px 550px; }
-.tempo-wheel { animation: tempo-roll 750ms linear infinite; }
-.tempo-exhaust { animation: tempo-puff 550ms ease-out infinite; transform-origin: 110px 550px; }
+.tempo-wheel { animation: tempo-roll 180ms linear infinite; }
+.tempo-flame { animation: tempo-boost 90ms alternate infinite; transform-origin: 115px 515px; }
 
 @keyframes tempo-rattle {
   from { transform: translateY(-2px) rotate(-.25deg); }
   to { transform: translateY(2px) rotate(.25deg); }
 }
 @keyframes tempo-roll { to { transform: rotate(360deg); } }
-@keyframes tempo-puff {
-  from { opacity: .45; transform: translateX(8px) scale(.65); }
-  to { opacity: 0; transform: translateX(-40px) scale(1.3); }
+@keyframes tempo-boost {
+  from { transform: scaleX(.78) scaleY(.87); }
+  to { transform: scaleX(1.08) scaleY(1.08); }
 }
 
 .tempo-sound {
@@ -184,5 +186,5 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .tempo-stage { display: none; }
-  .tempo-body, .tempo-wheel, .tempo-exhaust { animation: none; }
+  .tempo-body, .tempo-wheel, .tempo-flame { animation: none; }
 }
