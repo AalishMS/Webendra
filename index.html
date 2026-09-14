@@ -3,12 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="A small collection of things with -endra at the end." />
-    <title>Webendra</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Webendra — A Funny Website of Distinguished Things</title>
+    <meta
+      name="description"
+      content="Webendra is a funny website and character gallery where ordinary people, animals, food, and objects receive unnecessarily dignified -endra names."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="application-name" content="Webendra" />
+    <link rel="canonical" href="https://webendra.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Webendra" />
+    <meta property="og:title" content="Webendra — A Funny Website of Distinguished Things" />
+    <meta
+      property="og:description"
+      content="A funny character gallery where ordinary things receive unnecessarily dignified -endra names."
+    />
+    <meta property="og:url" content="https://webendra.vercel.app/" />
+    <meta property="og:image" content="https://webendra.vercel.app/assets/ballendra.jpg" />
+    <meta property="og:image:alt" content="Ballendra, a man holding a basketball" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Webendra — A Funny Website of Distinguished Things" />
+    <meta
+      name="twitter:description"
+      content="A funny character gallery where ordinary things receive unnecessarily dignified -endra names."
+    />
+    <meta name="twitter:image" content="https://webendra.vercel.app/assets/ballendra.jpg" />
+    <meta name="twitter:image:alt" content="Ballendra, a man holding a basketball" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" as="image" href="/assets/ballendra.jpg" fetchpriority="high" />
+    <link rel="stylesheet" href="/styles.css" />
+
+    <script id="structured-data" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Webendra",
+        "url": "https://webendra.vercel.app/",
+        "description": "A funny website and character gallery of ordinary things with dignified -endra names.",
+        "mainEntity": {
+          "@type": "ItemList",
+          "numberOfItems": 18,
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Ballendra", "url": "https://webendra.vercel.app/" },
+            { "@type": "ListItem", "position": 2, "name": "Birendra", "url": "https://webendra.vercel.app/character/birendra" },
+            { "@type": "ListItem", "position": 3, "name": "Ganendra", "url": "https://webendra.vercel.app/character/ganendra" },
+            { "@type": "ListItem", "position": 4, "name": "Bonendra", "url": "https://webendra.vercel.app/character/bonendra" },
+            { "@type": "ListItem", "position": 5, "name": "Botendra", "url": "https://webendra.vercel.app/character/botendra" },
+            { "@type": "ListItem", "position": 6, "name": "Mugendra", "url": "https://webendra.vercel.app/character/mugendra" },
+            { "@type": "ListItem", "position": 7, "name": "Eggendra", "url": "https://webendra.vercel.app/character/eggendra" },
+            { "@type": "ListItem", "position": 8, "name": "Frogendra", "url": "https://webendra.vercel.app/character/frogendra" },
+            { "@type": "ListItem", "position": 9, "name": "Breadendra", "url": "https://webendra.vercel.app/character/breadendra" },
+            { "@type": "ListItem", "position": 10, "name": "Rockendra", "url": "https://webendra.vercel.app/character/rockendra" },
+            { "@type": "ListItem", "position": 11, "name": "Duckendra", "url": "https://webendra.vercel.app/character/duckendra" },
+            { "@type": "ListItem", "position": 12, "name": "Sockendra", "url": "https://webendra.vercel.app/character/sockendra" },
+            { "@type": "ListItem", "position": 13, "name": "Sharkendra", "url": "https://webendra.vercel.app/character/sharkendra" },
+            { "@type": "ListItem", "position": 14, "name": "Catendra", "url": "https://webendra.vercel.app/character/catendra" },
+            { "@type": "ListItem", "position": 15, "name": "Spoonendra", "url": "https://webendra.vercel.app/character/spoonendra" },
+            { "@type": "ListItem", "position": 16, "name": "Dogendra", "url": "https://webendra.vercel.app/character/dogendra" },
+            { "@type": "ListItem", "position": 17, "name": "Magendra", "url": "https://webendra.vercel.app/character/magendra" },
+            { "@type": "ListItem", "position": 18, "name": "Fishendra", "url": "https://webendra.vercel.app/character/fishendra" }
+          ]
+        }
+      }
+    </script>
   </head>
   <body>
-    <main class="showcase" aria-label="Webendra gallery">
+    <main class="showcase" aria-label="Webendra funny character gallery">
       <button class="arrow arrow--previous" type="button" aria-label="Previous character">
         <span aria-hidden="true">←</span>
       </button>
@@ -17,12 +83,15 @@
         <div class="image-frame">
           <img
             id="character-image"
-            src="assets/ballendra.png"
-            alt="A man holding a basketball"
+            src="/assets/ballendra.jpg"
+            alt="Ballendra, a man holding a basketball"
+            width="1254"
+            height="1254"
+            fetchpriority="high"
           />
         </div>
         <figcaption id="character-name">
-          <span class="character-name">Ballendra</span>
+          <h1 class="character-name">Ballendra</h1>
         </figcaption>
       </figure>
 
@@ -31,6 +100,7 @@
       </button>
     </main>
 
-    <script src="app.js"></script>
+    <script src="/tempo.js"></script>
+    <script src="/app.js"></script>
   </body>
 </html>

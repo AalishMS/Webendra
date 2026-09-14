@@ -1,0 +1,39 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/character/ballendra", "destination": "/index.html" },
+    { "source": "/character/birendra", "destination": "/index.html" },
+    { "source": "/character/ganendra", "destination": "/index.html" },
+    { "source": "/character/bonendra", "destination": "/index.html" },
+    { "source": "/character/botendra", "destination": "/index.html" },
+    { "source": "/character/mugendra", "destination": "/index.html" },
+    { "source": "/character/eggendra", "destination": "/index.html" },
+    { "source": "/character/frogendra", "destination": "/index.html" },
+    { "source": "/character/breadendra", "destination": "/index.html" },
+    { "source": "/character/rockendra", "destination": "/index.html" },
+    { "source": "/character/duckendra", "destination": "/index.html" },
+    { "source": "/character/sockendra", "destination": "/index.html" },
+    { "source": "/character/sharkendra", "destination": "/index.html" },
+    { "source": "/character/catendra", "destination": "/index.html" },
+    { "source": "/character/spoonendra", "destination": "/index.html" },
+    { "source": "/character/dogendra", "destination": "/index.html" },
+    { "source": "/character/magendra", "destination": "/index.html" },
+    { "source": "/character/fishendra", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
