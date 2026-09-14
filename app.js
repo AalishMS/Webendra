@@ -126,11 +126,36 @@ const characters = [
     image: "/assets/gymendra.png",
     alt: "Gymendra, a serious man in a gym vest holding a tiny pink dumbbell",
   },
-  {
+    {
     name: "Shailendra",
     image: "/assets/shailendra.png",
     alt: "Shailendra, a small sailboat with one white sail",
   },
+  {
+    name: "Calendra",
+    image: "/assets/calendra.jpg",
+    alt: "Calendra, a simple wall calendar",
+  },
+  {
+    name: "Bartendra",
+    image: "/assets/bartendra.jpg",
+    alt: "Bartendra, a professional bartender shaking a metallic cocktail shaker",
+  },
+  {
+    name: "Deffendra",
+    image: "/assets/deffendra.jpg",
+    alt: "Deffendra, a medieval knight's large metal shield",
+  },
+  {
+    name: "Pretendra",
+    image: "/assets/pretendra.jpg",
+    alt: "Pretendra, a classic Groucho Marx disguise",
+  },
+  {
+    name: "Yogendra",
+    image: "/assets/yogendra.jpg",
+    alt: "Yogendra, a person stretching in an advanced yoga pose",
+  }
 ];
 
 const imageFrame = document.querySelector(".image-frame");
