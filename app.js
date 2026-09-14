@@ -93,9 +93,11 @@ const characters = [
   },
 ];
 
+const imageFrame = document.querySelector(".image-frame");
 const name = document.querySelector("#character-name");
 const previousButton = document.querySelector(".arrow--previous");
 const nextButton = document.querySelector(".arrow--next");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const structuredData = document.querySelector("#structured-data");
 const collectionStructuredData = structuredData.textContent;
 
@@ -213,43 +215,143 @@ window.addEventListener(
   { once: true },
 );
 
-let navigationId = 0;
+let transitionId = 0;
+
+function clearPreviousTransition(container, selector, incomingClass) {
+  const layers = [...container.querySelectorAll(selector)];
+  const visibleLayer = layers.at(-1);
+  const visibleStyle = window.getComputedStyle(visibleLayer);
+  const opacity = visibleStyle.opacity;
+  const transform = visibleStyle.transform;
+
+  layers.forEach((layer) => {
+    layer.getAnimations().forEach((animation) => animation.cancel());
+
+    if (layer !== visibleLayer) {
+      layer.remove();
+    }
+  });
+
+  visibleLayer.classList.remove(incomingClass);
+  visibleLayer.removeAttribute("aria-hidden");
+  visibleLayer.style.opacity = opacity;
+  visibleLayer.style.transform = transform;
+
+  return visibleLayer;
+}
 
 async function showCharacter(index, { updateHistory = true } = {}) {
   const nextIndex = (index + characters.length) % characters.length;
   if (nextIndex === currentIndex) return;
 
-  const thisNavigation = ++navigationId;
   const character = characters[nextIndex];
+  const direction = nextIndex === (currentIndex - 1 + characters.length) % characters.length ? -1 : 1;
+  const thisTransition = ++transitionId;
+  currentIndex = nextIndex;
+
+  const path = getCharacterPath(nextIndex);
+  if (updateHistory && window.location.pathname !== path) {
+    window.history.pushState({ character: getSlug(character) }, "", path);
+  }
+  updateSeo(nextIndex);
+
+  const previousImage = clearPreviousTransition(
+    imageFrame,
+    "img",
+    "character-image--incoming",
+  );
   const nextImage = new Image(1254, 1254);
   nextImage.src = character.image;
   nextImage.alt = character.alt;
-  nextImage.className = "character-image";
+  nextImage.className = "character-image character-image--incoming";
 
   try {
     await nextImage.decode();
   } catch {
-    // Keep the current photograph if the next asset cannot load.
+    // The load event will still paint the image if decode is unavailable.
+  }
+
+  if (thisTransition !== transitionId) return;
+
+  previousImage.removeAttribute("id");
+  previousImage.setAttribute("aria-hidden", "true");
+  nextImage.id = "character-image";
+  imageFrame.append(nextImage);
+
+  const previousName = clearPreviousTransition(
+    name,
+    ".character-name",
+    "character-name--incoming",
+  );
+  const nextName = previousName.cloneNode(false);
+  nextName.className = "character-name character-name--incoming";
+  nextName.textContent = character.name;
+  previousName.setAttribute("aria-hidden", "true");
+  name.append(nextName);
+
+  if (reduceMotion.matches) {
+    previousImage.remove();
+    nextImage.classList.remove("character-image--incoming");
+    nextImage.removeAttribute("style");
+    previousName.remove();
+    nextName.classList.remove("character-name--incoming");
+    nextName.removeAttribute("style");
+    preloadCharacter(nextIndex - 1);
+    preloadCharacter(nextIndex + 1);
     return;
   }
 
-  if (thisNavigation !== navigationId) return;
+  const duration = 600;
+  const easing = "cubic-bezier(0.16, 1, 0.3, 1)";
 
-  const previousImage = document.querySelector("#character-image");
-  const heading = name.querySelector(".character-name");
-  currentIndex = nextIndex;
-  const path = getCharacterPath(nextIndex);
+  const outgoingAnimation = previousImage.animate(
+    [
+      { opacity: previousImage.style.opacity || 1, transform: previousImage.style.transform || "none" },
+      { opacity: 0, transform: `translateX(${direction * -5}px) scale(0.992)` },
+    ],
+    { duration, easing, fill: "forwards" },
+  );
 
-  if (updateHistory && window.location.pathname !== path) {
-    window.history.pushState({ character: getSlug(character) }, "", path);
+  const incomingAnimation = nextImage.animate(
+    [
+      { opacity: 0, transform: `translateX(${direction * 8}px) scale(1.012)` },
+      { opacity: 1, transform: "translateX(0) scale(1)" },
+    ],
+    { duration, easing, fill: "forwards" },
+  );
+
+  const outgoingNameAnimation = previousName.animate(
+    [
+      { opacity: previousName.style.opacity || 1, transform: previousName.style.transform || "none" },
+      { opacity: 0, transform: `translateX(${direction * -5}px) scale(0.992)` },
+    ],
+    { duration, easing, fill: "forwards" },
+  );
+
+  const incomingNameAnimation = nextName.animate(
+    [
+      { opacity: 0, transform: `translateX(${direction * 8}px) scale(1.012)` },
+      { opacity: 1, transform: "translateX(0) scale(1)" },
+    ],
+    { duration, easing, fill: "forwards" },
+  );
+
+  await incomingAnimation.finished.catch(() => {});
+
+  if (thisTransition === transitionId) {
+    outgoingAnimation.cancel();
+    outgoingNameAnimation.cancel();
+    previousImage.remove();
+    previousName.remove();
+    nextImage.getAnimations().forEach((animation) => animation.cancel());
+    nextName.getAnimations().forEach((animation) => animation.cancel());
+    nextImage.classList.remove("character-image--incoming");
+    nextName.classList.remove("character-name--incoming");
+    nextImage.removeAttribute("style");
+    nextName.removeAttribute("style");
+    preloadCharacter(nextIndex - 1);
+    preloadCharacter(nextIndex + 1);
   }
-
-  updateSeo(nextIndex);
-  nextImage.id = "character-image";
-  previousImage.replaceWith(nextImage);
-  heading.textContent = character.name;
-  preloadCharacter(nextIndex - 1);
-  preloadCharacter(nextIndex + 1);
 }
 
 previousButton.addEventListener("click", () => showCharacter(currentIndex - 1));

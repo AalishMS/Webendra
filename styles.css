@@ -58,6 +58,11 @@ button {
   object-fit: cover;
   backface-visibility: hidden;
   transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.image-frame .character-image--incoming {
+  opacity: 0;
 }
 
 .character figcaption {
@@ -75,6 +80,13 @@ button {
   font: inherit;
   backface-visibility: hidden;
   transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.character-name--incoming {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
 }
 
 .arrow {
