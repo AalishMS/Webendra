@@ -93,11 +93,9 @@ const characters = [
   },
 ];
 
-const imageFrame = document.querySelector(".image-frame");
 const name = document.querySelector("#character-name");
 const previousButton = document.querySelector(".arrow--previous");
 const nextButton = document.querySelector(".arrow--next");
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const structuredData = document.querySelector("#structured-data");
 const collectionStructuredData = structuredData.textContent;
 
@@ -215,91 +213,44 @@ window.addEventListener(
   { once: true },
 );
 
-const tempo = new TempoTransition();
-let busy = false;
-let pendingNavigation = null;
+let navigationId = 0;
 
 async function showCharacter(index, { updateHistory = true } = {}) {
-  tempo.unlockAudio();
   const nextIndex = (index + characters.length) % characters.length;
-  if (busy) {
-    // Keep the latest request; never put two Tempos on the same road.
-    pendingNavigation = { index: nextIndex, updateHistory };
-    return;
-  }
   if (nextIndex === currentIndex) return;
-  busy = true;
+
+  const thisNavigation = ++navigationId;
   const character = characters[nextIndex];
   const nextImage = new Image(1254, 1254);
   nextImage.src = character.image;
   nextImage.alt = character.alt;
-  nextImage.className = 'character-image';
+  nextImage.className = "character-image";
+
   try {
     await nextImage.decode();
   } catch {
     // Keep the current photograph if the next asset cannot load.
-    busy = false;
-    if (pendingNavigation) {
-      const pending = pendingNavigation;
-      pendingNavigation = null;
-      showCharacter(pending.index, pending);
-    }
     return;
   }
 
-  const previousImage = document.querySelector('#character-image');
-  const heading = name.querySelector('.character-name');
+  if (thisNavigation !== navigationId) return;
+
+  const previousImage = document.querySelector("#character-image");
+  const heading = name.querySelector(".character-name");
   currentIndex = nextIndex;
   const path = getCharacterPath(nextIndex);
+
   if (updateHistory && window.location.pathname !== path) {
-    window.history.pushState({ character: getSlug(character) }, '', path);
+    window.history.pushState({ character: getSlug(character) }, "", path);
   }
+
   updateSeo(nextIndex);
-  document.querySelector('.character').setAttribute('aria-busy', 'true');
-  previousImage.removeAttribute('id');
-  previousImage.setAttribute('aria-hidden', 'true');
-  nextImage.id = 'character-image';
-  nextImage.style.clipPath = 'inset(0 100% 0 0)';
-  imageFrame.append(nextImage);
-  const nextHeading = heading.cloneNode(true);
-  nextHeading.textContent = character.name;
-  nextHeading.classList.add('character-name--incoming');
-  nextHeading.style.clipPath = 'inset(0 100% 0 0)';
-  heading.setAttribute('aria-hidden', 'true');
-  name.append(nextHeading);
-  const reveal = rear => {
-    const rect = imageFrame.getBoundingClientRect();
-    const fraction = Math.max(0, Math.min(1, (rear - rect.left) / rect.width));
-    nextImage.style.clipPath = `inset(0 ${(1 - fraction) * 100}% 0 0)`;
-    const caption = name.getBoundingClientRect();
-    const captionFraction = Math.max(0, Math.min(1, (rear - caption.left) / caption.width));
-    nextHeading.style.clipPath = `inset(0 ${(1 - captionFraction) * 100}% 0 0)`;
-    heading.style.clipPath = `inset(0 0 0 ${captionFraction * 100}%)`;
-  };
-  if (!reduceMotion.matches && !document.hidden) await tempo.run(reveal, reduceMotion);
-  previousImage.remove();
-  nextImage.style.removeProperty('clip-path');
-  heading.remove();
-  nextHeading.classList.remove('character-name--incoming');
-  nextHeading.style.removeProperty('clip-path');
-  document.querySelector('.character').removeAttribute('aria-busy');
+  nextImage.id = "character-image";
+  previousImage.replaceWith(nextImage);
+  heading.textContent = character.name;
   preloadCharacter(nextIndex - 1);
   preloadCharacter(nextIndex + 1);
-  busy = false;
-  if (pendingNavigation) {
-    const pending = pendingNavigation;
-    pendingNavigation = null;
-    showCharacter(pending.index, pending);
-  }
 }
-
-// Finish immediately when the tab is hidden or reduced motion is enabled.
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) tempo.finish?.();
-});
-reduceMotion.addEventListener('change', () => {
-  if (reduceMotion.matches) tempo.finish?.();
-});
 
 previousButton.addEventListener("click", () => showCharacter(currentIndex - 1));
 nextButton.addEventListener("click", () => showCharacter(currentIndex + 1));
@@ -307,7 +258,7 @@ nextButton.addEventListener("click", () => showCharacter(currentIndex + 1));
 window.addEventListener("popstate", () => {
   const index = getIndexFromPath();
 
-  if (busy || index !== currentIndex) {
+  if (index !== currentIndex) {
     showCharacter(index, { updateHistory: false });
   }
 });

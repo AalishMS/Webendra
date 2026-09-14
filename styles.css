@@ -77,8 +77,6 @@ button {
   transform-origin: center;
 }
 
-.character-name--incoming { position: absolute; inset: 0; }
-
 .arrow {
   display: grid;
   place-items: center;
@@ -128,63 +126,4 @@ button {
   .image-frame img {
     transition: none;
   }
-}
-
-.tempo-stage {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.tempo-stage[hidden] { display: none; }
-
-.tempo-vehicle {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: max(760px, 140vh);
-  width: max(760px, 140svh);
-  will-change: transform;
-}
-
-.tempo-vehicle svg { display: block; width: 100%; overflow: visible; }
-.tempo-body { animation: tempo-rattle 110ms steps(2, jump-none) infinite; transform-origin: 480px 550px; }
-.tempo-wheel { animation: tempo-roll 180ms linear infinite; }
-.tempo-flame { animation: tempo-boost 90ms alternate infinite; transform-origin: 115px 515px; }
-
-@keyframes tempo-rattle {
-  from { transform: translateY(-2px) rotate(-.25deg); }
-  to { transform: translateY(2px) rotate(.25deg); }
-}
-@keyframes tempo-roll { to { transform: rotate(360deg); } }
-@keyframes tempo-boost {
-  from { transform: scaleX(.78) scaleY(.87); }
-  to { transform: scaleX(1.08) scaleY(1.08); }
-}
-
-.tempo-sound {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 11;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  color: #555;
-  cursor: pointer;
-}
-.tempo-sound svg { fill: currentColor; stroke: currentColor; stroke-width: 1.5; }
-.tempo-sound:hover { background: #f2f2f2; color: #000; }
-.tempo-sound:focus-visible { outline: 2px solid #000; outline-offset: 3px; }
-.tempo-sound[aria-pressed="true"] .sound-waves { display: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .tempo-stage { display: none; }
-  .tempo-body, .tempo-wheel, .tempo-flame { animation: none; }
 }
