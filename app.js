@@ -116,6 +116,16 @@ const characters = [
     image: "/assets/goatendra.jpg",
     alt: "Goatendra, LeBron James staring directly at the camera",
   },
+  {
+    name: "Brownendra",
+    image: "/assets/brownendra.png",
+    alt: "Brownendra, a distinguished Indian man in a suit",
+  },
+  {
+    name: "Gyanendra",
+    image: "/assets/gyanendra.png",
+    alt: "Gyanendra, a classic hardcover dictionary",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
