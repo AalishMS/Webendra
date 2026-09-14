@@ -49,6 +49,31 @@ const characters = [
     image: "assets/rockendra.png",
     alt: "An ordinary gray rock",
   },
+  {
+    name: "Duckendra",
+    image: "assets/duckendra.png",
+    alt: "A yellow rubber duck",
+  },
+  {
+    name: "Sockendra",
+    image: "assets/sockendra.png",
+    alt: "A single black-and-white striped sock",
+  },
+  {
+    name: "Sharkendra",
+    image: "assets/sharkendra.png",
+    alt: "A shark facing the camera",
+  },
+  {
+    name: "Catendra",
+    image: "assets/catendra.png",
+    alt: "An unimpressed gray tabby cat",
+  },
+  {
+    name: "Spoonendra",
+    image: "assets/spoonendra.png",
+    alt: "A dramatically lit silver spoon",
+  },
 ];
 
 const figure = document.querySelector(".character");
