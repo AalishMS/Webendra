@@ -421,26 +421,92 @@ document.addEventListener("keydown", (event) => {
 const kfcBtn = document.querySelector("#kfc-btn");
 const kfcClearBtn = document.querySelector("#kfc-clear-btn");
 
+// Short-lived streaks and stars follow movement, never intercepting input.
+function leaveKfcTrail(fromX, fromY, toX, toY) {
+  if (reduceMotion.matches) return;
+  const distance = Math.hypot(toX - fromX, toY - fromY);
+  if (distance < 2) return;
+  const angle = Math.atan2(toY - fromY, toX - fromX);
+  const count = Math.min(8, Math.ceil(distance / 12));
+  for (let i = 1; i <= count; i++) {
+    const spark = document.createElement("span");
+    spark.className = "kfc-spark";
+    spark.setAttribute("aria-hidden", "true");
+    spark.style.left = `${fromX + (toX - fromX) * i / count}px`;
+    spark.style.top = `${fromY + (toY - fromY) * i / count}px`;
+    spark.style.setProperty("--angle", `${angle}rad`);
+    spark.style.setProperty("--tail", `${Math.min(52, 14 + distance / count)}px`);
+    spark.style.setProperty("--color", i % 2 ? "#e9ae35" : "#ae88ed");
+    // Bound the particle count even during rapid multi-touch dragging.
+    if (document.querySelectorAll(".kfc-spark").length >= 160) {
+      document.querySelector(".kfc-spark").remove();
+    }
+    document.body.append(spark);
+    spark.addEventListener("animationend", () => spark.remove(), { once: true });
+    window.setTimeout(() => spark.remove(), 750);
+  }
+}
+
+function positionKfc(kfc, x, y, trail = false) {
+  const oldX = parseFloat(kfc.style.left) || 0;
+  const oldY = parseFloat(kfc.style.top) || 0;
+  const nextX = Math.max(4, Math.min(window.innerWidth - 104, x));
+  const nextY = Math.max(4, Math.min(window.innerHeight - 104, y));
+  kfc.style.left = `${nextX}px`;
+  kfc.style.top = `${nextY}px`;
+  if (trail) leaveKfcTrail(oldX + 50, oldY + 50, nextX + 50, nextY + 50);
+}
+
 if (kfcBtn && kfcClearBtn) {
   kfcBtn.addEventListener("click", () => {
-    const kfc = document.createElement("img");
-    kfc.src = "/assets/kfc.png";
+    const kfc = document.createElement("button");
+    kfc.type = "button";
     kfc.className = "spawned-kfc";
-    kfc.alt = "KFC drumstick";
-
-    // Randomize position
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const x = Math.random() * (vw - 100); // 100px is the width
-    const y = Math.random() * (vh - 100);
-
-    kfc.style.left = `${x}px`;
-    kfc.style.top = `${y}px`;
-
-    document.body.appendChild(kfc);
+    kfc.setAttribute("aria-label", "KFC drumstick. Drag or use arrow keys to move.");
+    const chicken = document.createElement("img");
+    chicken.src = "/assets/kfc.png";
+    chicken.alt = "";
+    chicken.draggable = false;
+    kfc.append(chicken);
+    kfc.style.setProperty("--wiggle-duration", `${1.8 + Math.random()}s`);
+    kfc.style.setProperty("--wiggle-delay", `${-Math.random() * 3}s`);
+    positionKfc(kfc, Math.random() * (innerWidth - 100), Math.random() * (innerHeight - 100));
+    let drag = null;
+    kfc.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0 || drag) return;
+      drag = { id: event.pointerId, x: event.clientX - parseFloat(kfc.style.left), y: event.clientY - parseFloat(kfc.style.top) };
+      kfc.setPointerCapture(event.pointerId);
+      kfc.classList.add("is-dragging");
+      kfc.focus({ preventScroll: true });
+      event.preventDefault();
+    });
+    kfc.addEventListener("pointermove", (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      positionKfc(kfc, event.clientX - drag.x, event.clientY - drag.y, true);
+    });
+    const endDrag = (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      drag = null;
+      kfc.classList.remove("is-dragging");
+      if (kfc.hasPointerCapture(event.pointerId)) kfc.releasePointerCapture(event.pointerId);
+    };
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach(type => kfc.addEventListener(type, endDrag));
+    kfc.addEventListener("keydown", (event) => {
+      const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+      const direction = directions[event.key];
+      if (!direction) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const step = event.shiftKey ? 30 : 10;
+      positionKfc(kfc, parseFloat(kfc.style.left) + direction[0] * step, parseFloat(kfc.style.top) + direction[1] * step, true);
+    });
+    document.body.append(kfc);
   });
 
   kfcClearBtn.addEventListener("click", () => {
-    document.querySelectorAll(".spawned-kfc").forEach(el => el.remove());
+    document.querySelectorAll(".spawned-kfc, .kfc-spark").forEach(el => el.remove());
+  });
+  window.addEventListener("resize", () => {
+    document.querySelectorAll(".spawned-kfc").forEach(kfc => positionKfc(kfc, parseFloat(kfc.style.left), parseFloat(kfc.style.top)));
   });
 }

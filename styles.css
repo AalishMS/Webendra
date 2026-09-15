@@ -194,16 +194,73 @@ button {
 
 .spawned-kfc {
   position: fixed;
-  pointer-events: none;
   z-index: 9998;
   width: 100px;
   height: 100px;
-  object-fit: contain;
-  /* Add some rotation and scale animation for fun */
-  animation: spawnKfc 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-@keyframes spawnKfc {
-  0% { transform: scale(0) rotate(-45deg); opacity: 0; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+.spawned-kfc img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  animation: kfcWiggle var(--wiggle-duration) ease-in-out var(--wiggle-delay) infinite;
+}
+
+.spawned-kfc.is-dragging { cursor: grabbing; }
+.spawned-kfc.is-dragging img { animation-play-state: paused; }
+.spawned-kfc:focus-visible { outline: 2px solid #000; outline-offset: 3px; border-radius: 12px; }
+
+@keyframes kfcWiggle {
+  0%, 100% { transform: translateY(1px) rotate(-4deg); }
+  50% { transform: translateY(-2px) rotate(4deg); }
+}
+
+.kfc-spark {
+  position: fixed;
+  z-index: 9997;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  color: var(--color);
+  animation: kfcSparkFade 650ms ease-out forwards;
+}
+
+.kfc-spark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+}
+
+.kfc-spark::after {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: 3px;
+  width: var(--tail);
+  height: 3px;
+  border-radius: 100%;
+  background: linear-gradient(90deg, transparent, currentColor);
+  transform-origin: right center;
+  transform: rotate(var(--angle));
+}
+
+@keyframes kfcSparkFade {
+  from { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(0.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spawned-kfc img { animation: none; }
+  .kfc-spark { display: none; }
 }
