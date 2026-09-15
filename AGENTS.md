@@ -3,8 +3,7 @@
 ## The premise
 
 Webendra is a gallery of ordinary things given unnecessarily dignified names by
-adding `-endra`. A person holding a basketball is Ballendra. A lonely sock is
-Sockendra. This is the whole joke. Treat it with the seriousness it does not
+adding `-endra`. A person holding a basketball is Ballendra. This is the whole joke. Treat it with the seriousness it does not
 deserve.
 
 ## The humor
@@ -24,7 +23,7 @@ deserve.
 - When suggesting additions, lead with the funniest strong ideas rather than a
   giant list of weak ones.
 
-Good examples include Mugendra, Sockendra, Belendra, Gymendra, and
+Good examples include Belendra, and
 Shailendra. A weak idea is one whose subject cannot be recognized instantly or
 whose name becomes a paragraph wearing a fake moustache.
 
@@ -41,6 +40,18 @@ whose name becomes a paragraph wearing a fake moustache.
   motion.
 - If an image contains a weapon, keep the scene non-threatening: no firing,
   ammunition, aggression, or pointing toward the viewer.
+
+## Idea registry
+
+Before proposing or implementing a new character, read `Ideas.md` completely.
+Never suggest a name or visually equivalent concept already recorded there.
+When suggesting ideas, add every name-and-image combination to the "Previously
+stated / not currently implemented" table in `Ideas.md` before presenting it to
+the user. Record every suggestion whether it is accepted, rejected, ignored, or
+never implemented. Do not present any idea that was not saved to the registry.
+Rejected and unused ideas remain permanently reserved and must not be deleted or
+suggested again. When a character is implemented, move its existing row to the
+implemented table and add its asset path.
 
 ## Adding a new Endra
 

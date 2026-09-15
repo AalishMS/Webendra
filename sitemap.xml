@@ -40,42 +40,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/botendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/botendra.jpg</image:loc>
-      <image:title>Botendra</image:title>
-      <image:caption>Botendra, a friendly silver robot</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/mugendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/mugendra.jpg</image:loc>
-      <image:title>Mugendra</image:title>
-      <image:caption>Mugendra, a steaming black coffee mug</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/sockendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/sockendra.jpg</image:loc>
-      <image:title>Sockendra</image:title>
-      <image:caption>Sockendra, a single black-and-white striped sock</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/catendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/catendra.jpg</image:loc>
-      <image:title>Catendra</image:title>
-      <image:caption>Catendra, an unimpressed gray tabby cat</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://webendra.vercel.app/character/dogendra</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
@@ -85,30 +49,12 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/magendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/magendra.jpg</image:loc>
-      <image:title>Magendra</image:title>
-      <image:caption>Magendra, a studio portrait of Magnus Carlsen</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://webendra.vercel.app/character/fishendra</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/fishendra.jpg</image:loc>
       <image:title>Fishendra</image:title>
       <image:caption>Fishendra, a gorilla-faced fish swimming underwater</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/bootendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/bootendra.jpg</image:loc>
-      <image:title>Bootendra</image:title>
-      <image:caption>Bootendra, a rugged brown leather boot</image:caption>
     </image:image>
   </url>
   <url>
@@ -154,15 +100,6 @@
       <image:loc>https://webendra.vercel.app/assets/devendra.png</image:loc>
       <image:title>Devendra</image:title>
       <image:caption>Devendra, a tired programmer holding an open laptop</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/nagendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/nagendra.png</image:loc>
-      <image:title>Nagendra</image:title>
-      <image:caption>Nagendra, a calm upright cobra with its hood open</image:caption>
     </image:image>
   </url>
   <url>
@@ -220,21 +157,39 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/gymendra</loc>
-    <lastmod>2026-09-14</lastmod>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/gymendra.png</image:loc>
-      <image:title>Gymendra</image:title>
-      <image:caption>Gymendra, a serious man in a gym vest holding a tiny pink dumbbell</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://webendra.vercel.app/character/shailendra</loc>
     <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/shailendra.png</image:loc>
       <image:title>Shailendra</image:title>
       <image:caption>Shailendra, a small sailboat with one white sail</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/ramendra</loc>
+    <lastmod>2026-09-15</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/ramendra.png</image:loc>
+      <image:title>Ramendra</image:title>
+      <image:caption>Ramendra, a bowl of ramen with noodles and a soft-boiled egg</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/tapendra</loc>
+    <lastmod>2026-09-15</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/tapendra.png</image:loc>
+      <image:title>Tapendra</image:title>
+      <image:caption>Tapendra, a polished chrome water tap</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/jugendra</loc>
+    <lastmod>2026-09-15</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/jugendra.png</image:loc>
+      <image:title>Jugendra</image:title>
+      <image:caption>Jugendra, a glass jug of fresh orange juice</image:caption>
     </image:image>
   </url>
 </urlset>

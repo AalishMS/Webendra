@@ -1,3 +1,11 @@
 .DS_Store
 Thumbs.db
 test-output/
+Ideas.md
+
+# Common ignores
+.vscode/
+.idea/
+*.log
+.env
+.env.*

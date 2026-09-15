@@ -22,44 +22,14 @@ const characters = [
     alt: "Bonendra, a bone",
   },
   {
-    name: "Botendra",
-    image: "/assets/botendra.jpg",
-    alt: "Botendra, a friendly silver robot",
-  },
-  {
-    name: "Mugendra",
-    image: "/assets/mugendra.jpg",
-    alt: "Mugendra, a steaming black coffee mug",
-  },
-  {
-    name: "Sockendra",
-    image: "/assets/sockendra.jpg",
-    alt: "Sockendra, a single black-and-white striped sock",
-  },
-  {
-    name: "Catendra",
-    image: "/assets/catendra.jpg",
-    alt: "Catendra, an unimpressed gray tabby cat",
-  },
-  {
     name: "Dogendra",
     image: "/assets/dogendra.jpg",
     alt: "Dogendra, a dog raising one paw at a doorbell camera",
   },
   {
-    name: "Magendra",
-    image: "/assets/magendra.jpg",
-    alt: "Magendra, a studio portrait of Magnus Carlsen",
-  },
-  {
     name: "Fishendra",
     image: "/assets/fishendra.jpg",
     alt: "Fishendra, a gorilla-faced fish swimming underwater",
-  },
-  {
-    name: "Bootendra",
-    image: "/assets/bootendra.jpg",
-    alt: "Bootendra, a rugged brown leather boot",
   },
   {
     name: "Dipendra",
@@ -85,11 +55,6 @@ const characters = [
     name: "Devendra",
     image: "/assets/devendra.png",
     alt: "Devendra, a tired programmer holding an open laptop",
-  },
-  {
-    name: "Nagendra",
-    image: "/assets/nagendra.png",
-    alt: "Nagendra, a calm upright cobra with its hood open",
   },
   {
     name: "Belendra",
@@ -121,11 +86,6 @@ const characters = [
     image: "/assets/shavendra.png",
     alt: "Shavendra, a man with shaving foam covering half his face",
   },
-  {
-    name: "Gymendra",
-    image: "/assets/gymendra.png",
-    alt: "Gymendra, a serious man in a gym vest holding a tiny pink dumbbell",
-  },
     {
     name: "Shailendra",
     image: "/assets/shailendra.png",
@@ -155,7 +115,22 @@ const characters = [
     name: "Yogendra",
     image: "/assets/yogendra.jpg",
     alt: "Yogendra, a person stretching in an advanced yoga pose",
-  }
+  },
+  {
+    name: "Ramendra",
+    image: "/assets/ramendra.png",
+    alt: "Ramendra, a bowl of ramen with noodles and a soft-boiled egg",
+  },
+  {
+    name: "Tapendra",
+    image: "/assets/tapendra.png",
+    alt: "Tapendra, a polished chrome water tap",
+  },
+  {
+    name: "Jugendra",
+    image: "/assets/jugendra.png",
+    alt: "Jugendra, a glass jug of fresh orange juice",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
