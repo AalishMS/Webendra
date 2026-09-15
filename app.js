@@ -442,3 +442,30 @@ document.addEventListener("keydown", (event) => {
     showCharacter(currentIndex + 1);
   }
 });
+
+const kfcBtn = document.querySelector("#kfc-btn");
+const kfcClearBtn = document.querySelector("#kfc-clear-btn");
+
+if (kfcBtn && kfcClearBtn) {
+  kfcBtn.addEventListener("click", () => {
+    const kfc = document.createElement("img");
+    kfc.src = "/assets/kfc.png";
+    kfc.className = "spawned-kfc";
+    kfc.alt = "KFC drumstick";
+
+    // Randomize position
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const x = Math.random() * (vw - 100); // 100px is the width
+    const y = Math.random() * (vh - 100);
+
+    kfc.style.left = `${x}px`;
+    kfc.style.top = `${y}px`;
+
+    document.body.appendChild(kfc);
+  });
+
+  kfcClearBtn.addEventListener("click", () => {
+    document.querySelectorAll(".spawned-kfc").forEach(el => el.remove());
+  });
+}
