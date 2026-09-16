@@ -35,6 +35,24 @@
     <meta name="twitter:image" content="https://webendra.vercel.app/assets/ballendra.png" />
     <meta name="twitter:image:alt" content="Ballendra, Balen Shah holding a basketball" />
 
+    <!-- Early theme initialization to prevent wrong-theme flash -->
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('webendra-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        } catch (e) {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = theme === 'dark' ? '#080a0f' : '#ffffff';
+      })();
+    </script>
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" as="image" href="/assets/ballendra.png" fetchpriority="high" />
     <link rel="stylesheet" href="/styles.css" />
@@ -82,6 +100,8 @@
     </script>
   </head>
   <body>
+    <canvas id="ambient-particles" aria-hidden="true"></canvas>
+
     <main class="showcase" aria-label="Webendra gallery">
       <button class="arrow arrow--previous" type="button" aria-label="Previous character">
         <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -112,6 +132,16 @@
       </button>
     </main>
 
+    <button id="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" hidden>
+      <svg class="theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+      </svg>
+      <svg class="theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
+        <circle cx="12" cy="12" r="5" />
+        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    </button>
+
     <div class="kfc-controls">
       <button id="kfc-btn" type="button">
         <span>KFC</span>
@@ -124,5 +154,6 @@
     </div>
 
     <script src="/app.js"></script>
+    <script src="/theme.js"></script>
   </body>
 </html>

@@ -1,8 +1,23 @@
 :root {
   color: #000;
   background: #fff;
+  --page-bg: #ffffff;
+  --page-fg: #000000;
+  --control-hover: #f2f2f2;
+  --control-outline: #000000;
+  --control-border: #000000;
+  color: var(--page-fg);
+  background: var(--page-bg);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-synthesis: none;
+}
+
+[data-theme="dark"] {
+  --page-bg: #080a0f;
+  --page-fg: #f4f4f5;
+  --control-hover: #20232b;
+  --control-outline: #f4f4f5;
+  --control-border: #858b98;
 }
 
 * {
@@ -18,13 +33,35 @@ body {
 body {
   min-width: 320px;
   background: #fff;
+  background: var(--page-bg);
+  isolation: isolate;
 }
 
 button {
   font: inherit;
 }
 
+/* Hidden attribute must always win */
+[hidden] {
+  display: none !important;
+}
+
+/* --- Canvas backdrop --- */
+
+#ambient-particles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- Gallery --- */
+
 .showcase {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 4rem minmax(0, 38rem) 4rem;
   grid-template-rows: minmax(0, auto) auto;
@@ -50,6 +87,7 @@ button {
   width: 100%;
   overflow: hidden;
   background: #fff;
+  background: transparent;
 }
 
 .image-frame img {
@@ -101,6 +139,8 @@ button {
   opacity: 0;
 }
 
+/* --- Arrow navigation --- */
+
 .arrow {
   display: grid;
   place-items: center;
@@ -110,6 +150,7 @@ button {
   border: 0;
   border-radius: 50%;
   color: #000;
+  color: var(--page-fg);
   background: transparent;
   cursor: pointer;
   transition: background-color 150ms ease, transform 150ms ease;
@@ -138,6 +179,7 @@ button {
 
 .arrow:hover {
   background: #f2f2f2;
+  background: var(--control-hover);
   transform: scale(1.08);
 }
 
@@ -147,6 +189,7 @@ button {
 
 .arrow:focus-visible {
   outline: 2px solid #000;
+  outline: 2px solid var(--control-outline);
   outline-offset: 3px;
 }
 
@@ -175,6 +218,48 @@ button {
   }
 }
 
+/* --- Theme toggle --- */
+
+#theme-toggle {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--control-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--page-fg);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#theme-toggle svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#theme-toggle:hover {
+  background: var(--control-hover);
+}
+
+#theme-toggle:focus-visible {
+  outline: 2px solid var(--control-outline);
+  outline-offset: 3px;
+}
+
+/* --- KFC controls --- */
+
 .kfc-controls {
   position: fixed;
   right: max(1rem, env(safe-area-inset-right));
@@ -191,10 +276,12 @@ button {
   min-height: 3rem;
   padding: 0.3rem 1.05rem;
   border: 1.5px solid #000;
+  border: 1.5px solid var(--control-border);
   border-radius: 999px;
   background: #e31837;
   color: #fff;
   box-shadow: 3px 3px 0 #000;
+  box-shadow: 3px 3px 0 var(--control-border);
   font-size: 0.875rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -206,11 +293,13 @@ button {
   background: #c8102e;
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0 #000;
+  box-shadow: 4px 4px 0 var(--control-border);
 }
 
 #kfc-btn:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 #000;
+  box-shadow: 1px 1px 0 var(--control-border);
 }
 
 #kfc-clear-btn {
@@ -220,10 +309,14 @@ button {
   height: 3rem;
   padding: 0;
   border: 1.5px solid #000;
+  border: 1.5px solid var(--control-border);
   border-radius: 50%;
   background: #fff;
   color: #000;
   box-shadow: 2px 2px 0 #000;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  box-shadow: 2px 2px 0 var(--control-border);
   cursor: pointer;
   transition: color 120ms ease, background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
 }
@@ -241,6 +334,8 @@ button {
 #kfc-clear-btn:hover:not(:disabled) {
   background: #000;
   color: #fff;
+  background: var(--page-fg);
+  color: var(--page-bg);
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0 #e31837;
 }
@@ -248,6 +343,7 @@ button {
 #kfc-clear-btn:active:not(:disabled) {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 #000;
+  box-shadow: 1px 1px 0 var(--control-border);
 }
 
 #kfc-clear-btn:disabled {
@@ -259,6 +355,7 @@ button {
 #kfc-btn:focus-visible,
 #kfc-clear-btn:focus-visible {
   outline: 2px solid #000;
+  outline: 2px solid var(--control-outline);
   outline-offset: 4px;
 }
 
@@ -288,6 +385,7 @@ button {
 .spawned-kfc.is-dragging { cursor: grabbing; }
 .spawned-kfc.is-dragging img { animation-play-state: paused; }
 .spawned-kfc:focus-visible { outline: 2px solid #000; outline-offset: 3px; border-radius: 12px; }
+.spawned-kfc:focus-visible { outline: 2px solid var(--control-outline); outline-offset: 3px; border-radius: 12px; }
 
 @keyframes kfcWiggle {
   0%, 100% { transform: translateY(1px) rotate(-4deg); }
@@ -331,7 +429,42 @@ button {
   to { opacity: 0; transform: translate(calc(-50% + var(--scatter-x)), calc(-50% + var(--scatter-y))) scale(0.15); }
 }
 
+/* --- Theme transitions (enabled after init) --- */
+
+.theme-ready,
+.theme-ready #kfc-btn,
+.theme-ready #kfc-clear-btn,
+.theme-ready .arrow,
+.theme-ready #theme-toggle {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 450ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Preserve existing transform transitions on controls */
+.theme-ready .arrow {
+  transition: color 450ms ease-in-out, background-color 450ms ease-in-out, transform 150ms ease;
+}
+
+.theme-ready #kfc-btn {
+  transition: color 450ms ease-in-out, background-color 450ms ease-in-out, border-color 450ms ease-in-out,
+    box-shadow 450ms ease-in-out, transform 120ms ease;
+}
+
+.theme-ready #kfc-clear-btn {
+  transition: color 450ms ease-in-out, background-color 450ms ease-in-out, border-color 450ms ease-in-out,
+    box-shadow 450ms ease-in-out, opacity 120ms ease, transform 120ms ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .theme-ready,
+  .theme-ready #kfc-btn,
+  .theme-ready #kfc-clear-btn,
+  .theme-ready .arrow,
+  .theme-ready #theme-toggle {
+    transition: none;
+  }
+
   #kfc-btn,
   #kfc-clear-btn {
     transition: none;
