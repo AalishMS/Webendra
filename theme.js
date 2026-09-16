@@ -129,7 +129,10 @@
     var frame = document.querySelector('.image-frame');
     var nameEl = document.getElementById('character-name');
     if (typeof ResizeObserver !== 'undefined' && frame && nameEl) {
-      var ro = new ResizeObserver(function () { boundsDirty = true; });
+      var ro = new ResizeObserver(function () {
+        boundsDirty = true;
+        if (reducedMotion) queueStaticDraw();
+      });
       ro.observe(frame);
       ro.observe(nameEl);
     }
@@ -137,6 +140,7 @@
 
   // ── Motion state ────────────────────────────────────────────────────
   var activeTime = 0;
+  var pointerPresent = false;
   var cursorTargetX = 0, cursorTargetY = 0;
   var cursorSmoothedX = 0, cursorSmoothedY = 0;
   var lastFrameTime = 0;
@@ -145,14 +149,14 @@
   // ── Pointer tracking ───────────────────────────────────────────────
   function onPointerMove(e) {
     if (!hasFinePointer) return;
+    pointerPresent = true;
     // Normalize to [-1, 1] around viewport center
     cursorTargetX = (e.clientX / cssW - 0.5) * 2;
     cursorTargetY = (e.clientY / cssH - 0.5) * 2;
   }
 
   function clearCursor() {
-    cursorTargetX = 0;
-    cursorTargetY = 0;
+    pointerPresent = false;
   }
 
   window.addEventListener('mousemove', onPointerMove, { passive: true });
@@ -191,8 +195,10 @@
     // Smooth cursor
     if (!reducedMotion) {
       var ca = 1 - Math.exp(-dt / 0.18);
-      cursorSmoothedX += (cursorTargetX - cursorSmoothedX) * ca;
-      cursorSmoothedY += (cursorTargetY - cursorSmoothedY) * ca;
+      var tX = pointerPresent ? cursorTargetX : 0;
+      var tY = pointerPresent ? cursorTargetY : 0;
+      cursorSmoothedX += (tX - cursorSmoothedX) * ca;
+      cursorSmoothedY += (tY - cursorSmoothedY) * ca;
     } else {
       cursorSmoothedX = 0;
       cursorSmoothedY = 0;
@@ -242,7 +248,7 @@
       var preRepY = anchorY + driftY + parallaxY;
 
       // Local repulsion
-      if (!reducedMotion && hasFinePointer) {
+      if (!reducedMotion && hasFinePointer && pointerPresent) {
         var rdx = preRepX - cursorPxX;
         var rdy = preRepY - cursorPxY;
         var rdist = Math.hypot(rdx, rdy);
@@ -326,6 +332,16 @@
     drawFrame(0);
   }
 
+  var staticDrawQueued = false;
+  function queueStaticDraw() {
+    if (!reducedMotion || staticDrawQueued) return;
+    staticDrawQueued = true;
+    requestAnimationFrame(function () {
+      staticDrawQueued = false;
+      renderStatic();
+    });
+  }
+
   // ── Theme application ───────────────────────────────────────────────
   function applyTheme(next, persist) {
     currentTheme = next;
@@ -353,7 +369,7 @@
       fromMix = newToMix;
       toMix = newToMix;
       transitionStart = -1;
-      renderStatic();
+      queueStaticDraw();
     } else {
       fromMix = mix; // start from current interpolated value
       toMix = newToMix;
@@ -389,7 +405,11 @@
       transitionStart = -1;
       cursorSmoothedX = 0;
       cursorSmoothedY = 0;
-      renderStatic();
+      for (var i = 0; i < particles.length; i++) {
+        particles[i].localDx = 0;
+        particles[i].localDy = 0;
+      }
+      queueStaticDraw();
     } else {
       // Restore from reduced-motion: resume loop with existing particle state
       lastFrameTime = 0;
@@ -411,7 +431,7 @@
       clearCursor();
       boundsDirty = true;
       if (reducedMotion) {
-        renderStatic();
+        queueStaticDraw();
       } else {
         startLoop();
       }
@@ -428,7 +448,7 @@
         transitionStart = -1;
       }
       resizeCanvas();
-      if (reducedMotion) renderStatic();
+      if (reducedMotion) queueStaticDraw();
       else startLoop();
     }
   });
@@ -436,7 +456,7 @@
   // ── Resize handling ─────────────────────────────────────────────────
   window.addEventListener('resize', function () {
     resizeCanvas();
-    if (reducedMotion) renderStatic();
+    if (reducedMotion) queueStaticDraw();
   });
 
   // Also watch for DPR changes (e.g. moving between monitors)
@@ -444,12 +464,15 @@
     var dprMQ = window.matchMedia('(resolution: ' + (window.devicePixelRatio || 1) + 'dppx)');
     dprMQ.addEventListener('change', function () {
       resizeCanvas();
-      if (reducedMotion) renderStatic();
+      if (reducedMotion) queueStaticDraw();
     });
   }
 
   // Scroll may shift quiet zone relative to fixed canvas
-  window.addEventListener('scroll', function () { boundsDirty = true; }, { passive: true });
+  window.addEventListener('scroll', function () {
+    boundsDirty = true;
+    if (reducedMotion) queueStaticDraw();
+  }, { passive: true });
 
   // ── Initialization ──────────────────────────────────────────────────
   createParticles();
@@ -466,7 +489,7 @@
 
   // Initial draw
   if (reducedMotion) {
-    renderStatic();
+    queueStaticDraw();
   } else {
     startLoop();
   }
