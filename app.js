@@ -131,6 +131,11 @@ const characters = [
     image: "/assets/jugendra.png",
     alt: "Jugendra, a glass jug of fresh orange juice",
   },
+  {
+    name: "Peakendra",
+    image: "/assets/Peakendra.jpg",
+    alt: "Peakendra, a person holding back tears because it's so peak",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
@@ -289,6 +294,10 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   const thisTransition = ++transitionId;
   currentIndex = nextIndex;
 
+  const currentFrameHeight = imageFrame.getBoundingClientRect().height;
+  imageFrame.getAnimations().forEach((animation) => animation.cancel());
+  imageFrame.style.height = `${currentFrameHeight}px`;
+
   const path = getCharacterPath(nextIndex);
   if (updateHistory && window.location.pathname !== path) {
     window.history.pushState({ character: getSlug(character) }, "", path);
@@ -300,7 +309,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
     "img",
     "character-image--incoming",
   );
-  const nextImage = new Image(1254, 1254);
+  const nextImage = new Image();
   nextImage.src = character.image;
   nextImage.alt = character.alt;
   nextImage.className = "character-image character-image--incoming";
@@ -318,6 +327,12 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   nextImage.id = "character-image";
   imageFrame.append(nextImage);
 
+  const maxImageHeight = Number.parseFloat(window.getComputedStyle(nextImage).maxHeight);
+  const targetFrameHeight = Math.min(
+    imageFrame.clientWidth * (nextImage.naturalHeight / nextImage.naturalWidth),
+    Number.isFinite(maxImageHeight) ? maxImageHeight : Number.POSITIVE_INFINITY,
+  );
+
   const previousName = clearPreviousTransition(
     name,
     ".character-name",
@@ -333,6 +348,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
     previousImage.remove();
     nextImage.classList.remove("character-image--incoming");
     nextImage.removeAttribute("style");
+    imageFrame.style.removeProperty("height");
     previousName.remove();
     nextName.classList.remove("character-name--incoming");
     nextName.removeAttribute("style");
@@ -343,6 +359,14 @@ async function showCharacter(index, { updateHistory = true } = {}) {
 
   const duration = 600;
   const easing = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+  const frameAnimation = imageFrame.animate(
+    [
+      { height: `${currentFrameHeight}px` },
+      { height: `${targetFrameHeight}px` },
+    ],
+    { duration, easing, fill: "forwards" },
+  );
 
   const outgoingAnimation = previousImage.animate(
     [
@@ -381,6 +405,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   if (thisTransition === transitionId) {
     outgoingAnimation.cancel();
     outgoingNameAnimation.cancel();
+    frameAnimation.cancel();
     previousImage.remove();
     previousName.remove();
     nextImage.getAnimations().forEach((animation) => animation.cancel());
@@ -389,6 +414,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
     nextName.classList.remove("character-name--incoming");
     nextImage.removeAttribute("style");
     nextName.removeAttribute("style");
+    imageFrame.style.removeProperty("height");
     preloadCharacter(nextIndex - 1);
     preloadCharacter(nextIndex + 1);
   }
