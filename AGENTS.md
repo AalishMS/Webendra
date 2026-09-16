@@ -34,8 +34,11 @@ whose name becomes a paragraph wearing a fake moustache.
 - Preserve the centered square image, name below it, and arrows on either side.
 - Do not add a header, navigation bar, card shell, gradient, decorative copy, or
   other furniture unless the user explicitly requests it.
-- Use clean, realistic, mostly white-background imagery with one obvious
-  subject and no embedded text, logos, borders, or watermarks.
+- Every image must be a true PNG with a transparent background so the subject
+  blends seamlessly into the white page. No solid, colored, or gradient
+  backgrounds behind the subject — it should float directly on white.
+- Use clean, realistic imagery with one obvious subject and no embedded text,
+  logos, borders, or watermarks.
 - Make controls responsive, keyboard-accessible, and respectful of reduced
   motion.
 - If an image contains a weapon, keep the scene non-threatening: no firing,
@@ -56,7 +59,8 @@ implemented table and add its asset path.
 ## Adding a new Endra
 
 1. Choose a clear subject and a name that lands without explanation.
-2. Generate or source a square image consistent with the existing studio style.
+2. Generate or source a square, transparent-background PNG consistent with the
+   existing studio style.
 3. Inspect the final image before adding it to the project.
 4. Save it in `assets/` using the lowercase character name, such as
    `assets/mugendra.png`.
