@@ -441,7 +441,7 @@ function leaveKfcTrail(fromX, fromY, toX, toY) {
     spark.style.setProperty("--size", `${3 + Math.random() * 5}px`);
     spark.style.setProperty("--angle", `${angle}rad`);
     spark.style.setProperty("--tail", `${Math.min(22, 5 + distance / count)}px`);
-    spark.style.setProperty("--color", ["#278cff", "#65caff", "#9be6ff"][i % 3]);
+    spark.style.setProperty("--color", ["#d99a16", "#f5bf42", "#ffe49a"][i % 3]);
     // Bound the particle count even during rapid multi-touch dragging.
     if (document.querySelectorAll(".kfc-spark").length >= 160) {
       document.querySelector(".kfc-spark").remove();

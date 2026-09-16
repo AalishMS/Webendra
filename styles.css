@@ -229,7 +229,7 @@ button {
   z-index: 9997;
   width: var(--size);
   height: var(--size);
-  filter: drop-shadow(0 0 3px #65caff);
+  filter: drop-shadow(0 0 3px #f5bf42);
   pointer-events: none;
   color: var(--color);
   animation: kfcSparkFade 650ms ease-out forwards;
