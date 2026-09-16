@@ -155,41 +155,89 @@ button {
 
 .kfc-controls {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.625rem;
   z-index: 9999;
 }
 
 #kfc-btn {
-  padding: 0.5rem 1rem;
-  background: #f00;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.3rem 1.05rem;
+  border: 1.5px solid #000;
+  border-radius: 999px;
+  background: #e31837;
   color: #fff;
-  border: none;
-  border-radius: 0.25rem;
-  font-weight: bold;
+  box-shadow: 3px 3px 0 #000;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
 }
 
 #kfc-btn:hover {
-  background: #c00;
+  background: #c8102e;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+#kfc-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
 }
 
 #kfc-clear-btn {
-  padding: 0.5rem;
-  background: #eee;
-  border: none;
-  border-radius: 0.25rem;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 1.5px solid #000;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  box-shadow: 2px 2px 0 #000;
   cursor: pointer;
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: color 120ms ease, background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
 }
 
-#kfc-clear-btn:hover {
-  background: #ccc;
+#kfc-clear-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#kfc-clear-btn:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #e31837;
+}
+
+#kfc-clear-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+#kfc-clear-btn:disabled {
+  opacity: 0.35;
+  box-shadow: none;
+  cursor: default;
+}
+
+#kfc-btn:focus-visible,
+#kfc-clear-btn:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 4px;
 }
 
 .spawned-kfc {
@@ -262,6 +310,11 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  #kfc-btn,
+  #kfc-clear-btn {
+    transition: none;
+  }
+
   .spawned-kfc img { animation: none; }
   .kfc-spark { display: none; }
 }

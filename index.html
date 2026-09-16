@@ -113,9 +113,13 @@
     </main>
 
     <div class="kfc-controls">
-      <button id="kfc-btn" type="button">KFC</button>
-      <button id="kfc-clear-btn" type="button" aria-label="Clear KFCs">
-        🗑️
+      <button id="kfc-btn" type="button">
+        <span>KFC</span>
+      </button>
+      <button id="kfc-clear-btn" type="button" aria-label="Clear KFCs" disabled>
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />
+        </svg>
       </button>
     </div>
 

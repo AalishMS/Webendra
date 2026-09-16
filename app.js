@@ -593,12 +593,14 @@ if (kfcBtn && kfcClearBtn) {
       positionKfc(kfc, parseFloat(kfc.style.left) + direction[0] * step, parseFloat(kfc.style.top) + direction[1] * step, true);
     });
     document.body.append(kfc);
+    kfcClearBtn.disabled = false;
   });
 
   kfcClearBtn.addEventListener("click", () => {
     stopKfcMotion();
     kfcBodies.clear();
     document.querySelectorAll(".spawned-kfc, .kfc-spark").forEach(el => el.remove());
+    kfcClearBtn.disabled = true;
   });
   window.addEventListener("resize", () => {
     document.querySelectorAll(".spawned-kfc").forEach(kfc => positionKfc(kfc, parseFloat(kfc.style.left), parseFloat(kfc.style.top)));
