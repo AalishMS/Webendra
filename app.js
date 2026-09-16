@@ -133,6 +133,7 @@ const characters = [
   },
   {
     name: "Peakendra",
+    displayName: "Absolute Peakendra",
     image: "/assets/Peakendra.jpg",
     alt: "Peakendra, a person holding back tears because it's so peak",
   },
@@ -227,7 +228,7 @@ function renderInitialCharacter() {
 
   image.src = character.image;
   image.alt = character.alt;
-  heading.textContent = character.name;
+  heading.textContent = character.displayName ?? character.name;
   updateSeo(currentIndex);
 
   if (window.location.pathname !== expectedPath) {
@@ -340,7 +341,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   );
   const nextName = previousName.cloneNode(false);
   nextName.className = "character-name character-name--incoming";
-  nextName.textContent = character.name;
+  nextName.textContent = character.displayName ?? character.name;
   previousName.setAttribute("aria-hidden", "true");
   name.append(nextName);
 
