@@ -134,7 +134,7 @@ const characters = [
   {
     name: "Peakendra",
     displayName: "Absolute Peakendra",
-    image: "/assets/Peakendra.jpg",
+    image: "/assets/peakendra.jpg",
     alt: "Peakendra, a person holding back tears because it's so peak",
   },
 ];
