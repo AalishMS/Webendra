@@ -1,5 +1,17 @@
 # Webendra
 
-A tiny gallery of ordinary things with `-endra` added to their names, because it sounds funny.
+No agenda. Only `-endra`.
 
-Open `index.html` in a browser, then use the on-screen arrows or the left and right arrow keys to move through the gallery.
+A prestigious gallery of ordinary things with distinguished names.
+
+[Enter the gallery](https://webendra.vercel.app/)
+
+## Private viewing
+
+```sh
+python -m http.server 8000
+```
+
+Open <http://localhost:8000>, then proceed with the arrow keys.
+
+Please maintain decorum.
