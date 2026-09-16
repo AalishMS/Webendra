@@ -37,6 +37,9 @@ whose name becomes a paragraph wearing a fake moustache.
 - Every image must be a true PNG with a transparent background so the subject
   blends seamlessly into the white page. No solid, colored, or gradient
   backgrounds behind the subject — it should float directly on white.
+  When removing backgrounds (e.g. from a generated JPG), extract only the alpha
+  transparency mask and apply it to the original untouched RGB channels. Do not
+  allow background removal tools to modify the original image's colors or details.
 - Use clean, realistic imagery with one obvious subject and no embedded text,
   logos, borders, or watermarks.
 - Make controls responsive, keyboard-accessible, and respectful of reduced

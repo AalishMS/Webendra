@@ -8,42 +8,42 @@ const characters = [
   },
   {
     name: "Birendra",
-    image: "/assets/birendra.jpg",
+    image: "/assets/birendra.png",
     alt: "Birendra, a cold glass of beer",
   },
   {
     name: "Ganendra",
-    image: "/assets/ganendra.jpg",
+    image: "/assets/ganendra.png",
     alt: "Ganendra, a man safely holding a brushed steel pistol pointed down",
   },
   {
     name: "Bonendra",
-    image: "/assets/bonendra.jpg",
+    image: "/assets/bonendra.png",
     alt: "Bonendra, a bone",
   },
   {
     name: "Dogendra",
-    image: "/assets/dogendra.jpg",
+    image: "/assets/dogendra.png",
     alt: "Dogendra, a dog raising one paw at a doorbell camera",
   },
   {
     name: "Fishendra",
-    image: "/assets/fishendra.jpg",
+    image: "/assets/fishendra.png",
     alt: "Fishendra, a gorilla-faced fish swimming underwater",
   },
   {
     name: "Dipendra",
-    image: "/assets/dipendra.jpg",
+    image: "/assets/dipendra.png",
     alt: "Dipendra, a bowl of red dipping sauce",
   },
   {
     name: "Rabindra",
-    image: "/assets/rabindra.jpg",
+    image: "/assets/rabindra.png",
     alt: "Rabindra, a pink rubber eraser",
   },
   {
     name: "Goatendra",
-    image: "/assets/goatendra.jpg",
+    image: "/assets/goatendra.png",
     alt: "Goatendra, LeBron James staring directly at the camera",
   },
   {
@@ -93,27 +93,27 @@ const characters = [
   },
   {
     name: "Calendra",
-    image: "/assets/calendra.jpg",
+    image: "/assets/calendra.png",
     alt: "Calendra, a simple wall calendar",
   },
   {
     name: "Bartendra",
-    image: "/assets/bartendra.jpg",
+    image: "/assets/bartendra.png",
     alt: "Bartendra, a professional bartender shaking a metallic cocktail shaker",
   },
   {
     name: "Deffendra",
-    image: "/assets/deffendra.jpg",
+    image: "/assets/deffendra.png",
     alt: "Deffendra, a medieval knight's large metal shield",
   },
   {
     name: "Pretendra",
-    image: "/assets/pretendra.jpg",
+    image: "/assets/pretendra.png",
     alt: "Pretendra, a classic Groucho Marx disguise",
   },
   {
     name: "Yogendra",
-    image: "/assets/yogendra.jpg",
+    image: "/assets/yogendra.png",
     alt: "Yogendra, a person stretching in an advanced yoga pose",
   },
   {
@@ -134,7 +134,7 @@ const characters = [
   {
     name: "Peakendra",
     displayName: "Absolute Peakendra",
-    image: "/assets/peakendra-v2.jpg",
+    image: "/assets/peakendra-v2.png",
     alt: "Peakendra, a person holding back tears because it's so peak",
   },
 ];
