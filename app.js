@@ -434,13 +434,13 @@ function leaveKfcTrail(fromX, fromY, toX, toY) {
     spark.setAttribute("aria-hidden", "true");
     spark.style.left = `${fromX + (toX - fromX) * i / count}px`;
     spark.style.top = `${fromY + (toY - fromY) * i / count}px`;
-    spark.style.marginLeft = `${(Math.random() - 0.5) * 22}px`;
-    spark.style.marginTop = `${(Math.random() - 0.5) * 22}px`;
+    spark.style.marginLeft = `${(Math.random() - 0.5) * 28}px`;
+    spark.style.marginTop = `${(Math.random() - 0.5) * 28}px`;
     spark.style.setProperty("--scatter-x", `${(Math.random() - 0.5) * 28}px`);
     spark.style.setProperty("--scatter-y", `${(Math.random() - 0.5) * 28}px`);
-    spark.style.setProperty("--size", `${3 + Math.random() * 5}px`);
+    spark.style.setProperty("--size", `${4 + Math.random() * 6}px`);
     spark.style.setProperty("--angle", `${angle}rad`);
-    spark.style.setProperty("--tail", `${Math.min(22, 5 + distance / count)}px`);
+    spark.style.setProperty("--tail", `${Math.min(28, 7 + 1.25 * distance / count)}px`);
     spark.style.setProperty("--color", ["#d99a16", "#f5bf42", "#ffe49a"][i % 3]);
     // Bound the particle count even during rapid multi-touch dragging.
     if (document.querySelectorAll(".kfc-spark").length >= 160) {
