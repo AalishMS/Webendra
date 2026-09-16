@@ -434,9 +434,14 @@ function leaveKfcTrail(fromX, fromY, toX, toY) {
     spark.setAttribute("aria-hidden", "true");
     spark.style.left = `${fromX + (toX - fromX) * i / count}px`;
     spark.style.top = `${fromY + (toY - fromY) * i / count}px`;
+    spark.style.marginLeft = `${(Math.random() - 0.5) * 22}px`;
+    spark.style.marginTop = `${(Math.random() - 0.5) * 22}px`;
+    spark.style.setProperty("--scatter-x", `${(Math.random() - 0.5) * 28}px`);
+    spark.style.setProperty("--scatter-y", `${(Math.random() - 0.5) * 28}px`);
+    spark.style.setProperty("--size", `${3 + Math.random() * 5}px`);
     spark.style.setProperty("--angle", `${angle}rad`);
-    spark.style.setProperty("--tail", `${Math.min(52, 14 + distance / count)}px`);
-    spark.style.setProperty("--color", i % 2 ? "#e9ae35" : "#ae88ed");
+    spark.style.setProperty("--tail", `${Math.min(22, 5 + distance / count)}px`);
+    spark.style.setProperty("--color", ["#278cff", "#65caff", "#9be6ff"][i % 3]);
     // Bound the particle count even during rapid multi-touch dragging.
     if (document.querySelectorAll(".kfc-spark").length >= 160) {
       document.querySelector(".kfc-spark").remove();
@@ -457,6 +462,73 @@ function positionKfc(kfc, x, y, trail = false) {
   if (trail) leaveKfcTrail(oldX + 50, oldY + 50, nextX + 50, nextY + 50);
 }
 
+// Velocities use pixels per second so the drift feels the same at any refresh rate.
+const kfcBodies = new Map();
+let kfcFrame = 0;
+let kfcLastTime = 0;
+
+function wakeKfcMotion() {
+  if (kfcFrame || reduceMotion.matches || document.hidden) return;
+  kfcLastTime = performance.now();
+  kfcFrame = requestAnimationFrame(tickKfcMotion);
+}
+
+function tickKfcMotion(time) {
+  kfcFrame = 0;
+  const dt = Math.min((time - kfcLastTime) / 1000, 0.032);
+  kfcLastTime = time;
+  let moving = false;
+  for (const [kfc, body] of kfcBodies) {
+    if (body.dragging) {
+      moving = true;
+      // A held chicken has a soft personal-space radius.
+      const x = parseFloat(kfc.style.left);
+      const y = parseFloat(kfc.style.top);
+      for (const [other, neighbor] of kfcBodies) {
+        if (other === kfc || neighbor.dragging) continue;
+        const dx = parseFloat(other.style.left) - x;
+        const dy = parseFloat(other.style.top) - y;
+        const distance = Math.hypot(dx, dy);
+        if (distance >= 135) continue;
+        const nx = distance > 0.1 ? dx / distance : 1;
+        const ny = distance > 0.1 ? dy / distance : 0;
+        const force = (1 - distance / 135) * 2200 * dt;
+        neighbor.vx += nx * force;
+        neighbor.vy += ny * force;
+      }
+    }
+  }
+  for (const [kfc, body] of kfcBodies) {
+    if (body.dragging) continue;
+    const speed = Math.hypot(body.vx, body.vy);
+    if (speed < 5) { body.vx = body.vy = 0; continue; }
+    moving = true;
+    const x = parseFloat(kfc.style.left) + body.vx * dt;
+    const y = parseFloat(kfc.style.top) + body.vy * dt;
+    positionKfc(kfc, x, y, true);
+    // Gentle edge rebounds keep every chicken reachable.
+    if (x < 4 || x > innerWidth - 104) body.vx *= -0.35;
+    if (y < 4 || y > innerHeight - 104) body.vy *= -0.35;
+    const friction = Math.exp(-3.2 * dt);
+    body.vx *= friction;
+    body.vy *= friction;
+  }
+  if (moving && !reduceMotion.matches) kfcFrame = requestAnimationFrame(tickKfcMotion);
+}
+
+function stopKfcMotion() {
+  cancelAnimationFrame(kfcFrame);
+  kfcFrame = 0;
+  for (const body of kfcBodies.values()) body.vx = body.vy = 0;
+}
+reduceMotion.addEventListener("change", () => {
+  if (reduceMotion.matches) stopKfcMotion();
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) stopKfcMotion();
+  else wakeKfcMotion();
+});
+
 if (kfcBtn && kfcClearBtn) {
   kfcBtn.addEventListener("click", () => {
     const kfc = document.createElement("button");
@@ -471,10 +543,16 @@ if (kfcBtn && kfcClearBtn) {
     kfc.style.setProperty("--wiggle-duration", `${1.8 + Math.random()}s`);
     kfc.style.setProperty("--wiggle-delay", `${-Math.random() * 3}s`);
     positionKfc(kfc, Math.random() * (innerWidth - 100), Math.random() * (innerHeight - 100));
+    const body = { vx: 0, vy: 0, dragging: false };
+    kfcBodies.set(kfc, body);
     let drag = null;
     kfc.addEventListener("pointerdown", (event) => {
       if (event.button !== 0 || drag) return;
       drag = { id: event.pointerId, x: event.clientX - parseFloat(kfc.style.left), y: event.clientY - parseFloat(kfc.style.top) };
+      body.vx = body.vy = 0;
+      body.dragging = true;
+      drag.time = performance.now();
+      wakeKfcMotion();
       kfc.setPointerCapture(event.pointerId);
       kfc.classList.add("is-dragging");
       kfc.focus({ preventScroll: true });
@@ -482,11 +560,24 @@ if (kfcBtn && kfcClearBtn) {
     });
     kfc.addEventListener("pointermove", (event) => {
       if (!drag || drag.id !== event.pointerId) return;
+      const oldX = parseFloat(kfc.style.left);
+      const oldY = parseFloat(kfc.style.top);
       positionKfc(kfc, event.clientX - drag.x, event.clientY - drag.y, true);
+      const now = performance.now();
+      const dt = Math.max((now - drag.time) / 1000, 0.008);
+      body.vx = Math.max(-1000, Math.min(1000, (parseFloat(kfc.style.left) - oldX) / dt));
+      body.vy = Math.max(-1000, Math.min(1000, (parseFloat(kfc.style.top) - oldY) / dt));
+      drag.time = now;
     });
     const endDrag = (event) => {
       if (!drag || drag.id !== event.pointerId) return;
+      // Pausing before release or cancelling a gesture should not fling it.
+      if (event.type !== "pointerup" || performance.now() - drag.time > 100 || reduceMotion.matches) {
+        body.vx = body.vy = 0;
+      }
+      body.dragging = false;
       drag = null;
+      wakeKfcMotion();
       kfc.classList.remove("is-dragging");
       if (kfc.hasPointerCapture(event.pointerId)) kfc.releasePointerCapture(event.pointerId);
     };
@@ -497,6 +588,7 @@ if (kfcBtn && kfcClearBtn) {
       if (!direction) return;
       event.preventDefault();
       event.stopPropagation();
+      body.vx = body.vy = 0;
       const step = event.shiftKey ? 30 : 10;
       positionKfc(kfc, parseFloat(kfc.style.left) + direction[0] * step, parseFloat(kfc.style.top) + direction[1] * step, true);
     });
@@ -504,6 +596,8 @@ if (kfcBtn && kfcClearBtn) {
   });
 
   kfcClearBtn.addEventListener("click", () => {
+    stopKfcMotion();
+    kfcBodies.clear();
     document.querySelectorAll(".spawned-kfc, .kfc-spark").forEach(el => el.remove());
   });
   window.addEventListener("resize", () => {

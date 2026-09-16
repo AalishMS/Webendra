@@ -227,8 +227,9 @@ button {
 .kfc-spark {
   position: fixed;
   z-index: 9997;
-  width: 9px;
-  height: 9px;
+  width: var(--size);
+  height: var(--size);
+  filter: drop-shadow(0 0 3px #65caff);
   pointer-events: none;
   color: var(--color);
   animation: kfcSparkFade 650ms ease-out forwards;
@@ -246,9 +247,9 @@ button {
   content: "";
   position: absolute;
   right: 50%;
-  top: 3px;
+  top: 45%;
   width: var(--tail);
-  height: 3px;
+  height: 1px;
   border-radius: 100%;
   background: linear-gradient(90deg, transparent, currentColor);
   transform-origin: right center;
@@ -257,7 +258,7 @@ button {
 
 @keyframes kfcSparkFade {
   from { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
-  to { opacity: 0; transform: translate(-50%, -50%) scale(0.15); }
+  to { opacity: 0; transform: translate(calc(-50% + var(--scatter-x)), calc(-50% + var(--scatter-y))) scale(0.15); }
 }
 
 @media (prefers-reduced-motion: reduce) {
