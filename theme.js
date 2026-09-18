@@ -40,7 +40,7 @@
     // 11. Pearlescent Diamond / Icy Tint
     { dark: [224, 242, 254], light: [80, 95, 110] },
     // 12. Supernova Brilliant White
-    { dark: [255, 255, 255], light: [70, 80, 95] }
+    { dark: [255, 255, 255], light: [70, 80, 95] },
     // 1. Electric Cyan (brilliant starlight) -> soft atmospheric sky-slate dust
     { dark: [56, 189, 248],  light: [90, 130, 165] },
     // 2. Neon Sky Blue (radiant celestial) -> atmospheric mineral blue-grey

@@ -192,4 +192,31 @@
       <image:caption>Jugendra, a glass jug of fresh orange juice</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/peakendra</loc>
+    <lastmod>2026-09-18</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/peakendra-v2.png</image:loc>
+      <image:title>Peakendra</image:title>
+      <image:caption>Peakendra, a person holding back tears because it's so peak</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/lokendra</loc>
+    <lastmod>2026-09-18</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/lokendra.png</image:loc>
+      <image:title>Lokendra</image:title>
+      <image:caption>Lokendra, Tom Hiddleston as Loki staring at the camera</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/hugendra</loc>
+    <lastmod>2026-09-18</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/hugendra.png</image:loc>
+      <image:title>Hugendra</image:title>
+      <image:caption>Hugendra, a man sitting on the toilet straining with intense effort</image:caption>
+    </image:image>
+  </url>
 </urlset>

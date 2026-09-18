@@ -142,6 +142,11 @@ const characters = [
     image: "/assets/lokendra.png",
     alt: "Lokendra, Tom Hiddleston as Loki staring at the camera",
   },
+  {
+    name: "Hugendra",
+    image: "/assets/hugendra.png",
+    alt: "Hugendra, a man sitting on the toilet straining with intense effort",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
