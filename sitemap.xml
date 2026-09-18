@@ -219,4 +219,13 @@
       <image:caption>Hugendra, a man sitting on the toilet straining with intense effort</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/shrugendra</loc>
+    <lastmod>2026-09-18</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/shrugendra.png</image:loc>
+      <image:title>Shrugendra</image:title>
+      <image:caption>Shrugendra, a deadpan person performing an exaggerated shrug with open palms</image:caption>
+    </image:image>
+  </url>
 </urlset>

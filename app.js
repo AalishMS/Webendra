@@ -147,6 +147,11 @@ const characters = [
     image: "/assets/hugendra.png",
     alt: "Hugendra, a man sitting on the toilet straining with intense effort",
   },
+  {
+    name: "Shrugendra",
+    image: "/assets/shrugendra.png",
+    alt: "Shrugendra, a deadpan person performing an exaggerated shrug with open palms",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");

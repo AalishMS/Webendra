@@ -3,8 +3,8 @@ from rembg import remove
 import numpy as np
 
 # Load original image
-original_path = r"C:\Users\Aalish\.gemini\antigravity\brain\6b497394-1602-4ffa-941b-bfe980138819\hugendra_1789718794060.jpg"
-out_path = r"e:\pet_project\Webendra\assets\hugendra.png"
+original_path = r"C:\Users\Aalish\.gemini\antigravity\brain\783fd07d-33e3-45f1-913a-320f477c2271\shrugendra_1789723433674.jpg"
+out_path = r"e:\pet_project\Webendra\assets\shrugendra.png"
 
 original = Image.open(original_path).convert("RGBA")
 
