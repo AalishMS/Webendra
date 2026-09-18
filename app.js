@@ -137,6 +137,11 @@ const characters = [
     image: "/assets/peakendra-v2.png",
     alt: "Peakendra, a person holding back tears because it's so peak",
   },
+  {
+    name: "Lokendra",
+    image: "/assets/lokendra.png",
+    alt: "Lokendra, Tom Hiddleston as Loki staring at the camera",
+  },
 ];
 
 const imageFrame = document.querySelector(".image-frame");
