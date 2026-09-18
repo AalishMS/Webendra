@@ -17,30 +17,6 @@
   // Each entry has [darkR, darkG, darkB] for glowing stars on dark (#080a0f),
   // and [lightR, lightG, lightB] for refined chromatic dust on white (#ffffff).
   var STAR_PALETTES = [
-    // 1. Electric Cyan (brilliant starlight)
-    { dark: [56, 189, 248],  light: [30, 110, 160] },
-    // 2. Neon Sky Blue (radiant celestial)
-    { dark: [96, 165, 250],  light: [45, 95, 175] },
-    // 3. Bright Aquamarine / Teal
-    { dark: [34, 211, 238],  light: [15, 125, 150] },
-    // 4. Ethereal Lavender / Violet
-    { dark: [192, 132, 252], light: [120, 70, 170] },
-    // 5. Deep Cosmic Purple / Amethyst
-    { dark: [168, 85, 247],  light: [110, 45, 165] },
-    // 6. Nebula Rose / Pink
-    { dark: [244, 114, 182], light: [165, 55, 115] },
-    // 7. Radiant Magenta / Crimson Glow
-    { dark: [251, 113, 133], light: [175, 60, 80] },
-    // 8. Solar Gold / Starlight Amber
-    { dark: [251, 191, 36],  light: [160, 110, 20] },
-    // 9. Warm Tangerine / Solar Flare
-    { dark: [251, 146, 60],  light: [170, 90, 25] },
-    // 10. Aurora Emerald / Mint
-    { dark: [52, 211, 153],  light: [30, 130, 90] },
-    // 11. Pearlescent Diamond / Icy Tint
-    { dark: [224, 242, 254], light: [80, 95, 110] },
-    // 12. Supernova Brilliant White
-    { dark: [255, 255, 255], light: [70, 80, 95] },
     // 1. Electric Cyan (brilliant starlight) -> soft atmospheric sky-slate dust
     { dark: [56, 189, 248],  light: [90, 130, 165] },
     // 2. Neon Sky Blue (radiant celestial) -> atmospheric mineral blue-grey
