@@ -10,9 +10,62 @@
   var STORAGE_KEY = 'webendra-theme';
   var TRANSITION_MS = 450;
 
-  // Particle color tuples [R, G, B]
-  var LIGHT_RGB = [105, 113, 125];
-  var DARK_RGB = [235, 240, 255];
+  // ── Colorful Celestial Star & Dust Palettes ─────────────────────────
+  // Curated color spectrum inspired by OpenAI Astra / cosmic starfields:
+  // Electric cyan/blue, cosmic violet/purple, nebula magenta/pink,
+  // warm gold/amber, emerald aurora/teal, and brilliant diamond white.
+  // Each entry has [darkR, darkG, darkB] for glowing stars on dark (#080a0f),
+  // and [lightR, lightG, lightB] for refined chromatic dust on white (#ffffff).
+  var STAR_PALETTES = [
+    // 1. Electric Cyan (brilliant starlight)
+    { dark: [56, 189, 248],  light: [30, 110, 160] },
+    // 2. Neon Sky Blue (radiant celestial)
+    { dark: [96, 165, 250],  light: [45, 95, 175] },
+    // 3. Bright Aquamarine / Teal
+    { dark: [34, 211, 238],  light: [15, 125, 150] },
+    // 4. Ethereal Lavender / Violet
+    { dark: [192, 132, 252], light: [120, 70, 170] },
+    // 5. Deep Cosmic Purple / Amethyst
+    { dark: [168, 85, 247],  light: [110, 45, 165] },
+    // 6. Nebula Rose / Pink
+    { dark: [244, 114, 182], light: [165, 55, 115] },
+    // 7. Radiant Magenta / Crimson Glow
+    { dark: [251, 113, 133], light: [175, 60, 80] },
+    // 8. Solar Gold / Starlight Amber
+    { dark: [251, 191, 36],  light: [160, 110, 20] },
+    // 9. Warm Tangerine / Solar Flare
+    { dark: [251, 146, 60],  light: [170, 90, 25] },
+    // 10. Aurora Emerald / Mint
+    { dark: [52, 211, 153],  light: [30, 130, 90] },
+    // 11. Pearlescent Diamond / Icy Tint
+    { dark: [224, 242, 254], light: [80, 95, 110] },
+    // 12. Supernova Brilliant White
+    { dark: [255, 255, 255], light: [70, 80, 95] }
+    // 1. Electric Cyan (brilliant starlight) -> soft atmospheric sky-slate dust
+    { dark: [56, 189, 248],  light: [90, 130, 165] },
+    // 2. Neon Sky Blue (radiant celestial) -> atmospheric mineral blue-grey
+    { dark: [96, 165, 250],  light: [100, 125, 165] },
+    // 3. Bright Aquamarine / Teal -> sea-mist mineral dust
+    { dark: [34, 211, 238],  light: [75, 140, 150] },
+    // 4. Ethereal Lavender / Violet -> warm twilight mauve dust
+    { dark: [192, 132, 252], light: [145, 115, 165] },
+    // 5. Deep Cosmic Purple / Amethyst -> soft bronze-mauve dust
+    { dark: [168, 85, 247],  light: [140, 100, 145] },
+    // 6. Nebula Rose / Pink -> warm terracotta rose dust
+    { dark: [244, 114, 182], light: [180, 110, 115] },
+    // 7. Radiant Magenta / Crimson Glow -> desert terracotta dust
+    { dark: [251, 113, 133], light: [185, 105, 105] },
+    // 8. Solar Gold / Starlight Amber -> warm sunbeam amber dust
+    { dark: [251, 191, 36],  light: [190, 135, 45] },
+    // 9. Warm Tangerine / Solar Flare -> warm champagne ochre dust
+    { dark: [251, 146, 60],  light: [185, 120, 50] },
+    // 10. Aurora Emerald / Mint -> sunlit meadow pollen / sage
+    { dark: [52, 211, 153],  light: [95, 145, 110] },
+    // 11. Pearlescent Diamond / Icy Tint -> silvery pearl dust
+    { dark: [224, 242, 254], light: [130, 140, 150] },
+    // 12. Supernova Brilliant White -> warm mineral ivory dust
+    { dark: [255, 255, 255], light: [155, 145, 135] }
+  ];
 
   // ── DOM references ───────────────────────────────────────────────────
   var root = document.documentElement;
@@ -20,6 +73,8 @@
   var toggleBtn = document.getElementById('theme-toggle');
   var moonIcon = toggleBtn ? toggleBtn.querySelector('.theme-icon-moon') : null;
   var sunIcon = toggleBtn ? toggleBtn.querySelector('.theme-icon-sun') : null;
+  var darkText = toggleBtn ? toggleBtn.querySelector('.theme-text-dark') : null;
+  var lightText = toggleBtn ? toggleBtn.querySelector('.theme-text-light') : null;
   var themeMeta = document.querySelector('meta[name="theme-color"]');
 
   // ── State ────────────────────────────────────────────────────────────
@@ -57,14 +112,18 @@
   function createParticles() {
     particles = [];
     for (var i = 0; i < MAX_PARTICLES; i++) {
+      var colorDef = STAR_PALETTES[i % STAR_PALETTES.length];
       particles.push({
         u: Math.random(),              // normalized x anchor [0,1]
         v: Math.random(),              // normalized y anchor [0,1]
         depth: 0.2 + Math.random() * 0.8,
-        radius: 0.5 + Math.random() * 0.8, // base radius in CSS px
-        brightness: 0.65 + Math.random() * 0.35,
+        radius: 0.7 + Math.random() * 1.1, // base radius in CSS px (0.7 to 1.8px)
+        brightness: 0.70 + Math.random() * 0.30,
         phaseX: Math.random() * Math.PI * 2,
         phaseY: Math.random() * Math.PI * 2,
+        twinkleSpeed: 0.7 + Math.random() * 1.5,
+        twinklePhase: Math.random() * Math.PI * 2,
+        color: colorDef,
         localDx: 0,                   // current local repulsion offset
         localDy: 0
       });
@@ -98,7 +157,7 @@
     if (!frame || !nameEl) { quietRect = null; return; }
     var fr = frame.getBoundingClientRect();
     var nr = nameEl.getBoundingClientRect();
-    var pad = 24;
+    var pad = Math.min(24, Math.max(12, Math.round(cssW * 0.02)));
     quietRect = {
       left:   Math.min(fr.left, nr.left) - pad,
       top:    Math.min(fr.top, nr.top) - pad,
@@ -210,19 +269,17 @@
     // Clear
     ctx.clearRect(0, 0, cssW, cssH);
 
-    // Interpolate colors
-    var r = LIGHT_RGB[0] + (DARK_RGB[0] - LIGHT_RGB[0]) * mix;
-    var g = LIGHT_RGB[1] + (DARK_RGB[1] - LIGHT_RGB[1]) * mix;
-    var b = LIGHT_RGB[2] + (DARK_RGB[2] - LIGHT_RGB[2]) * mix;
-
-    // Light alpha: 0.10 + 0.12 * depth; Dark alpha: 0.30 + 0.45 * depth
-    var alphaBase0 = 0.10, alphaScale0 = 0.12; // light
-    var alphaBase1 = 0.30, alphaScale1 = 0.45; // dark
+    // Light alpha: 0.28 + 0.26 * depth; Dark alpha: 0.38 + 0.52 * depth
+    var alphaBase0 = 0.28, alphaScale0 = 0.26; // light (warm sunlit dust)
+    var alphaBase1 = 0.38, alphaScale1 = 0.52; // dark (vivid celestial luminosity)
 
     var cursorPxX = cursorSmoothedX * cssW * 0.5 + cssW * 0.5;
     var cursorPxY = cursorSmoothedY * cssH * 0.5 + cssH * 0.5;
 
     var repulseSmooth = 1 - Math.exp(-dt / 0.22);
+    var lightProg = 1 - mix;
+    var quietFadeDist = Math.min(100, Math.max(40, cssW * 0.08));
+    var quietFloor = 0.25 + (0.15 - 0.25) * mix;
 
     for (var i = 0; i < visibleCount && i < particles.length; i++) {
       var p = particles[i];
@@ -275,28 +332,93 @@
       var finalX = preRepX + p.localDx;
       var finalY = preRepY + p.localDy;
 
+      // Per-particle interpolated RGB
+      var lightC = p.color ? p.color.light : [155, 145, 135];
+      var darkC = p.color ? p.color.dark : [235, 240, 255];
+      var r = lightC[0] + (darkC[0] - lightC[0]) * mix;
+      var g = lightC[1] + (darkC[1] - lightC[1]) * mix;
+      var b = lightC[2] + (darkC[2] - lightC[2]) * mix;
+
       // Alpha
       var alphaLight = (alphaBase0 + alphaScale0 * depth) * p.brightness;
       var alphaDark  = (alphaBase1 + alphaScale1 * depth) * p.brightness;
       var alpha = alphaLight + (alphaDark - alphaLight) * mix;
 
-      // Quiet-zone fade
+      // Dynamic shimmer / twinkling (respects reduced motion)
+      if (!reducedMotion) {
+        // Gentle starlight twinkling in dark mode
+        if (mix > 0.05) {
+          var twinkle = 1 + (0.22 * Math.sin(activeTime * p.twinkleSpeed + p.twinklePhase)) * mix;
+          alpha = Math.min(1, alpha * twinkle);
+        }
+        // Sunlit dust shimmer in light mode (simulating rotating/tumbling reflective dust facets)
+        if (lightProg > 0.05) {
+          var shimmer = 1 + (0.30 * Math.sin(activeTime * (p.twinkleSpeed * 0.85) + p.twinklePhase)) * lightProg;
+          alpha = Math.min(1, alpha * shimmer);
+        }
+      }
+
+      // Quiet-zone fade (adaptive floor and fade distance)
       var qd = distToQuietZone(finalX, finalY);
-      alpha *= 0.15 + 0.85 * smoothstep(0, 100, qd);
+      alpha *= quietFloor + (1 - quietFloor) * smoothstep(0, quietFadeDist, qd);
 
       if (alpha < 0.005) continue;
 
-      // Draw dot
+      var rInt = Math.round(r);
+      var gInt = Math.round(g);
+      var bInt = Math.round(b);
+
+      // ── Dark mode: Outer ethereal bloom for prominent stars ──
+      if (mix > 0.01 && depth > 0.65) {
+        ctx.beginPath();
+        ctx.arc(finalX, finalY, p.radius * 4.2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.10 * mix).toFixed(4) + ')';
+        ctx.fill();
+      }
+
+      // ── Dark mode: Chromatic halo for stars ──
+      if (mix > 0.01 && depth > 0.38) {
+        ctx.beginPath();
+        ctx.arc(finalX, finalY, p.radius * 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.28 * mix).toFixed(4) + ')';
+        ctx.fill();
+      }
+
+      // ── Light mode: Soft ambient bokeh aura for foreground dust motes ──
+      if (lightProg > 0.01 && depth > 0.45) {
+        ctx.beginPath();
+        ctx.arc(finalX, finalY, p.radius * 3.4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.18 * lightProg).toFixed(4) + ')';
+        ctx.fill();
+      }
+
+      // ── Light mode: Diffuse dust halo ──
+      if (lightProg > 0.01 && depth > 0.25) {
+        ctx.beginPath();
+        ctx.arc(finalX, finalY, p.radius * 2.0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.32 * lightProg).toFixed(4) + ')';
+        ctx.fill();
+      }
+
+      // ── Core particle disc (stars & dust motes) ──
       ctx.beginPath();
       ctx.arc(finalX, finalY, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + alpha.toFixed(3) + ')';
+      ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + alpha.toFixed(3) + ')';
       ctx.fill();
 
-      // Glow halo for deep particles in dark mode
-      if (depth > 0.8 && mix > 0.01) {
+      // ── Dark mode: Brilliant white-hot starlight pinpoint ──
+      if (mix > 0.5 && depth > 0.72) {
         ctx.beginPath();
-        ctx.arc(finalX, finalY, p.radius * 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + (alpha * 0.12 * mix).toFixed(4) + ')';
+        ctx.arc(finalX, finalY, p.radius * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255,' + (alpha * 0.75 * mix).toFixed(3) + ')';
+        ctx.fill();
+      }
+
+      // ── Light mode: Sunlit specular glint for prominent dust motes ──
+      if (lightProg > 0.5 && depth > 0.70) {
+        ctx.beginPath();
+        ctx.arc(finalX, finalY, p.radius * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255,' + (alpha * 0.60 * lightProg).toFixed(3) + ')';
         ctx.fill();
       }
     }
@@ -355,6 +477,8 @@
       toggleBtn.setAttribute('aria-pressed', String(isDark));
       if (moonIcon) moonIcon.style.display = isDark ? 'none' : 'block';
       if (sunIcon) sunIcon.style.display = isDark ? 'block' : 'none';
+      if (darkText) darkText.style.display = isDark ? 'none' : 'block';
+      if (lightText) lightText.style.display = isDark ? 'block' : 'none';
     }
 
     if (persist) {
@@ -485,6 +609,8 @@
     toggleBtn.setAttribute('aria-pressed', String(isDark));
     if (moonIcon) moonIcon.style.display = isDark ? 'none' : 'block';
     if (sunIcon) sunIcon.style.display = isDark ? 'block' : 'none';
+    if (darkText) darkText.style.display = isDark ? 'none' : 'block';
+    if (lightText) lightText.style.display = isDark ? 'block' : 'none';
   }
 
   // Initial draw
@@ -500,4 +626,3 @@
   });
 
 })();
-
