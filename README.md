@@ -21,3 +21,35 @@ corner. Your chosen themendra is saved in `localStorage` and restored on return.
 Without a saved choice the gallery follows the operating system preference.
 
 Watch the stars in Darkendra mode.
+
+## Install on a phone
+
+Visit the deployed HTTPS site first. In Android Chrome, open the menu and choose
+**Install app** or **Add to Home screen**. In iPhone Safari, use **Share → Add to
+Home Screen**, then open Webendra from its icon. It opens without the browser bar;
+the phone may still show its status bar.
+
+## Offline viewing
+
+Open the site online once and wait for it to finish loading. The page and its
+scripts are saved for offline use. Each character image is saved when you view
+that character; the gallery does not download the whole collection in advance.
+An image you have not viewed cannot be opened offline.
+
+To check, view a few characters, turn on airplane mode, and reopen Webendra
+from the home screen. The characters you viewed should still appear, including
+when you open one of their `/character/...` links directly. Try the arrow keys
+on a computer and tap the arrows on a phone. Check both themes and wraparound.
+Turn connectivity back on and reopen the app to receive newly deployed
+characters and images.
+
+## Deploy on Vercel
+
+Commit and push the site files to the Git repository connected to the Vercel
+project. Vercel serves this static site without a build command. Keep
+`vercel.json` with the deployment: its rewrites serve the gallery for direct
+character links, and its cache headers let returning visitors check for
+updates. Deploy over HTTPS, as service workers and installation require a
+secure origin. When changing the service worker's cache layout, increase its
+`CACHE_VERSION`; activation removes older Webendra app-shell caches while
+keeping viewed character images.

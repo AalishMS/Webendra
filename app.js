@@ -153,6 +153,19 @@ const collectionStructuredData = structuredData.textContent;
 let currentIndex = getIndexFromPath();
 let toastTimeout = 0;
 
+function cacheViewedImage(path) {
+  if (!("serviceWorker" in navigator) || navigator.serviceWorker.controller) return;
+  navigator.serviceWorker.ready.then((registration) => {
+    registration.active?.postMessage({ type: "CACHE_VIEWED_IMAGE", url: path });
+  }).catch(() => {});
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+  }, { once: true });
+}
+
 function updateCuratorMeta(index) {
   const character = characters[index];
   const digits = String(characters.length).length;
@@ -269,6 +282,11 @@ function renderInitialCharacter() {
 
   image.src = character.image;
   image.alt = character.alt;
+  if (image.complete && image.naturalWidth > 0) {
+    cacheViewedImage(character.image);
+  } else {
+    image.addEventListener("load", () => cacheViewedImage(character.image), { once: true });
+  }
   heading.textContent = character.displayName ?? character.name;
   updateCuratorMeta(currentIndex);
   updateSeo(currentIndex);
@@ -279,29 +297,6 @@ function renderInitialCharacter() {
 }
 
 renderInitialCharacter();
-
-function preloadCharacter(index) {
-  const character = characters[(index + characters.length) % characters.length];
-  const preload = new Image();
-  preload.src = character.image;
-}
-
-window.addEventListener(
-  "load",
-  () => {
-    const preloadNeighbors = () => {
-      preloadCharacter(currentIndex - 1);
-      preloadCharacter(currentIndex + 1);
-    };
-
-    if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(preloadNeighbors);
-    } else {
-      window.setTimeout(preloadNeighbors, 200);
-    }
-  },
-  { once: true },
-);
 
 let transitionId = 0;
 
@@ -337,6 +332,33 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   const thisTransition = ++transitionId;
   currentIndex = nextIndex;
   updateCuratorMeta(nextIndex);
+  updateSeo(nextIndex);
+  const nextImage = new Image();
+  nextImage.src = character.image;
+  nextImage.alt = character.alt;
+  nextImage.className = "character-image character-image--incoming";
+
+  try {
+    await nextImage.decode();
+  } catch {
+    if (!nextImage.naturalWidth) {
+      if (thisTransition === transitionId) {
+        const displayedPath = new URL(document.querySelector("#character-image").src).pathname;
+        const displayedIndex = characters.findIndex((item) => item.image === displayedPath);
+        currentIndex = displayedIndex < 0 ? 0 : displayedIndex;
+        updateCuratorMeta(currentIndex);
+        updateSeo(currentIndex);
+        window.history.replaceState(
+          { character: getSlug(characters[currentIndex]) }, "", getCharacterPath(currentIndex),
+        );
+        showToast("Character image unavailable.");
+      }
+      return;
+    }
+  }
+
+  if (thisTransition !== transitionId) return;
+  cacheViewedImage(character.image);
 
   const currentFrameHeight = imageFrame.getBoundingClientRect().height;
   imageFrame.getAnimations().forEach((animation) => animation.cancel());
@@ -346,25 +368,11 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   if (updateHistory && window.location.pathname !== path) {
     window.history.pushState({ character: getSlug(character) }, "", path);
   }
-  updateSeo(nextIndex);
-
   const previousImage = clearPreviousTransition(
     imageFrame,
     "img",
     "character-image--incoming",
   );
-  const nextImage = new Image();
-  nextImage.src = character.image;
-  nextImage.alt = character.alt;
-  nextImage.className = "character-image character-image--incoming";
-
-  try {
-    await nextImage.decode();
-  } catch {
-    // The load event will still paint the image if decode is unavailable.
-  }
-
-  if (thisTransition !== transitionId) return;
 
   previousImage.removeAttribute("id");
   previousImage.setAttribute("aria-hidden", "true");
@@ -396,8 +404,6 @@ async function showCharacter(index, { updateHistory = true } = {}) {
     previousName.remove();
     nextName.classList.remove("character-name--incoming");
     nextName.removeAttribute("style");
-    preloadCharacter(nextIndex - 1);
-    preloadCharacter(nextIndex + 1);
     return;
   }
 
@@ -459,8 +465,6 @@ async function showCharacter(index, { updateHistory = true } = {}) {
     nextImage.removeAttribute("style");
     nextName.removeAttribute("style");
     imageFrame.style.removeProperty("height");
-    preloadCharacter(nextIndex - 1);
-    preloadCharacter(nextIndex + 1);
   }
 }
 
