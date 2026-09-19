@@ -42,11 +42,6 @@ const characters = [
     alt: "Rabindra, a pink rubber eraser",
   },
   {
-    name: "Goatendra",
-    image: "/assets/goatendra.png",
-    alt: "Goatendra, LeBron James staring directly at the camera",
-  },
-  {
     name: "Gyanendra",
     image: "/assets/gyanendra.png",
     alt: "Gyanendra, a classic hardcover dictionary",
@@ -67,11 +62,6 @@ const characters = [
     alt: "Chillendra, a relaxed reclining sloth",
   },
   {
-    name: "Puffendra",
-    image: "/assets/puffendra.png",
-    alt: "Puffendra, a fully inflated pufferfish facing forward",
-  },
-  {
     name: "Blendra",
     image: "/assets/blendra.png",
     alt: "Blendra, an ordinary kitchen blender with an empty transparent jug",
@@ -82,11 +72,6 @@ const characters = [
     alt: "Cylendra, a red household LPG cylinder",
   },
   {
-    name: "Shavendra",
-    image: "/assets/shavendra.png",
-    alt: "Shavendra, a man with shaving foam covering half his face",
-  },
-    {
     name: "Shailendra",
     image: "/assets/shailendra.png",
     alt: "Shailendra, a small sailboat with one white sail",
