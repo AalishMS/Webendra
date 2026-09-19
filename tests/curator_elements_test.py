@@ -23,11 +23,10 @@ with sync_playwright() as playwright:
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
 
     page.locator(".image-frame").hover()
-    page.wait_for_timeout(450)
     transform = page.locator("#character-image").evaluate(
         "image => getComputedStyle(image).transform"
     )
-    assert transform.startswith("matrix(1.04,"), transform
+    assert transform == "none", transform
 
     page.get_by_role("button", name="Next character").click()
     assert page.locator("#catalogue-number").inner_text() == "№ 02 / 28"
