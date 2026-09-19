@@ -186,8 +186,7 @@ button {
   stroke-linejoin: round;
 }
 
-.curator-btn:hover,
-.curator-btn.is-speaking {
+.curator-btn:hover {
   color: var(--page-fg);
   background: var(--control-hover);
 }

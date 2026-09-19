@@ -19,7 +19,7 @@ with sync_playwright() as playwright:
     page.wait_for_load_state("networkidle")
 
     assert page.locator("#catalogue-number").inner_text() == "№ 01 / 28"
-    assert page.get_by_role("button", name="Pronounce Ballendra").is_visible()
+    assert page.locator("#pronounce-btn").count() == 0
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
 
     page.locator(".image-frame").hover()
@@ -29,42 +29,18 @@ with sync_playwright() as playwright:
     )
     assert transform.startswith("matrix(1.04,"), transform
 
-    assert page.evaluate("""() => {
-      const voices = [{ lang: 'en-GB' }, { lang: 'en_US' }, { lang: 'en-IN' }];
-      return choosePronunciationVoice(voices)?.lang;
-    }""") == "en-IN"
-    assert page.evaluate("""() => choosePronunciationVoice([{ lang: 'en-GB' }, { lang: 'en-US' }])?.lang""") == "en-US"
-    assert page.evaluate("""() => choosePronunciationVoice([{ lang: 'en-GB' }])""") is None
-
-    page.evaluate("""() => {
-      window.__spoken = [];
-      speechSynthesis.getVoices = () => [];
-      speechSynthesis.speak = utterance => {
-        window.__spoken.push({ text: utterance.text, lang: utterance.lang });
-        utterance.onstart?.();
-      };
-    }""")
-    page.get_by_role("button", name="Pronounce Ballendra").click()
-    assert page.evaluate("window.__spoken[0].text") == "Ballendra"
-    assert page.evaluate("window.__spoken[0].lang") == "en-IN"
-    assert page.locator("#pronounce-btn").evaluate("button => button.classList.contains('is-speaking')")
-
     page.get_by_role("button", name="Next character").click()
     assert page.locator("#catalogue-number").inner_text() == "№ 02 / 28"
-    assert page.get_by_role("button", name="Pronounce Birendra").is_visible()
-    assert not page.locator("#pronounce-btn").evaluate("button => button.classList.contains('is-speaking')")
     page.get_by_role("button", name="Copy link to Birendra").click()
     assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/birendra"
-    assert page.locator("#toast").inner_text() == "Catalogue link preserved."
+    assert page.locator("#toast").inner_text() == "Art piece copied."
     page.evaluate("() => { window.__writeText = navigator.clipboard.writeText.bind(navigator.clipboard); navigator.clipboard.writeText = () => Promise.reject(new Error('blocked')); }")
     page.get_by_role("button", name="Copy link to Birendra").click()
     assert page.locator("#toast").inner_text() == "Link could not be copied."
     page.evaluate("() => { navigator.clipboard.writeText = window.__writeText; }")
 
-    page.keyboard.press("p")
-    assert page.evaluate("window.__spoken.at(-1).text") == "Birendra"
     page.keyboard.press("c")
-    page.wait_for_function("document.querySelector('#toast').textContent === 'Catalogue link preserved.'")
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
     page.get_by_role("button", name="Previous character").click()
     assert page.locator("#catalogue-number").inner_text() == "№ 01 / 28"
     page.get_by_role("button", name="Previous character").click()

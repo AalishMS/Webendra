@@ -149,8 +149,6 @@ const name = document.querySelector("#character-name");
 const previousButton = document.querySelector(".arrow--previous");
 const nextButton = document.querySelector(".arrow--next");
 const catalogueNumber = document.querySelector("#catalogue-number");
-const pronounceButton = document.querySelector("#pronounce-btn");
-const pronounceSeparator = document.querySelector("#pronounce-separator");
 const shareButton = document.querySelector("#share-btn");
 const toast = document.querySelector("#toast");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -159,18 +157,11 @@ const collectionStructuredData = structuredData.textContent;
 
 let currentIndex = getIndexFromPath();
 let toastTimeout = 0;
-let speechRequest = 0;
-
-if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
-  pronounceButton.hidden = true;
-  pronounceSeparator.hidden = true;
-}
 
 function updateCuratorMeta(index) {
   const character = characters[index];
   const digits = String(characters.length).length;
   catalogueNumber.textContent = `№ ${String(index + 1).padStart(digits, "0")} / ${String(characters.length).padStart(digits, "0")}`;
-  pronounceButton.setAttribute("aria-label", `Pronounce ${character.name}`);
   shareButton.setAttribute("aria-label", `Copy link to ${character.name}`);
 }
 
@@ -186,58 +177,17 @@ function showToast(message) {
   }, 2200);
 }
 
-function stopPronunciation() {
-  if (pronounceButton.hidden) return;
-  speechRequest++;
-  window.speechSynthesis.cancel();
-  pronounceButton.classList.remove("is-speaking");
-}
-
-function choosePronunciationVoice(voices) {
-  const preferredLocales = ["en-in", "en-np", "en-pk", "en-bd", "en-lk", "en-us", "en-ca", "en-au", "en-nz"];
-  const language = (voice) => voice.lang.replaceAll("_", "-").toLowerCase();
-  for (const locale of preferredLocales) {
-    const voice = voices.find((candidate) => language(candidate).startsWith(locale));
-    if (voice) return voice;
-  }
-  return voices.find((voice) => language(voice).startsWith("en") && !language(voice).startsWith("en-gb")) || null;
-}
-
-function pronounceCurrentCharacter() {
-  if (pronounceButton.hidden) return;
-  stopPronunciation();
-  const thisSpeech = speechRequest;
-  const utterance = new SpeechSynthesisUtterance(characters[currentIndex].name);
-  const voices = window.speechSynthesis.getVoices();
-  utterance.voice = choosePronunciationVoice(voices);
-  utterance.lang = utterance.voice?.lang || "en-IN";
-  utterance.rate = 0.85;
-  utterance.pitch = 0.9;
-  utterance.onstart = () => {
-    if (thisSpeech === speechRequest) pronounceButton.classList.add("is-speaking");
-  };
-  utterance.onend = utterance.onerror = () => {
-    if (thisSpeech === speechRequest) pronounceButton.classList.remove("is-speaking");
-  };
-  try {
-    window.speechSynthesis.speak(utterance);
-  } catch {
-    showToast("Pronunciation unavailable.");
-  }
-}
-
 async function shareCurrentCharacter() {
   const url = `${SITE_URL}${getCharacterPath(currentIndex)}`;
   try {
     if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
     await navigator.clipboard.writeText(url);
-    showToast("Catalogue link preserved.");
+    showToast("Art piece copied.");
   } catch {
     showToast("Link could not be copied.");
   }
 }
 
-pronounceButton.addEventListener("click", pronounceCurrentCharacter);
 shareButton.addEventListener("click", shareCurrentCharacter);
 
 function getSlug(character) {
@@ -385,7 +335,6 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   const character = characters[nextIndex];
   const direction = nextIndex === (currentIndex - 1 + characters.length) % characters.length ? -1 : 1;
   const thisTransition = ++transitionId;
-  stopPronunciation();
   currentIndex = nextIndex;
   updateCuratorMeta(nextIndex);
 
@@ -536,10 +485,6 @@ document.addEventListener("keydown", (event) => {
 
   if (event.key === "ArrowRight") {
     showCharacter(currentIndex + 1);
-  }
-
-  if (event.code === "KeyP" && !event.shiftKey) {
-    pronounceCurrentCharacter();
   }
 
   if (event.code === "KeyC" && !event.shiftKey) {
