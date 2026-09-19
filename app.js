@@ -133,11 +133,6 @@ const characters = [
     alt: "Hugendra, a man sitting on the toilet straining with intense effort",
   },
   {
-    name: "Shrugendra",
-    image: "/assets/shrugendra.png",
-    alt: "Shrugendra, a deadpan person performing an exaggerated shrug with open palms",
-  },
-  {
     name: "Topendra",
     image: "/assets/topendra.png",
     alt: "Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage",

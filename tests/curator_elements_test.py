@@ -18,7 +18,7 @@ with sync_playwright() as playwright:
     page.goto(BASE)
     page.wait_for_load_state("networkidle")
 
-    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 28"
+    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 27"
     assert page.locator("#pronounce-btn").count() == 0
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
 
@@ -29,7 +29,7 @@ with sync_playwright() as playwright:
     assert transform == "none", transform
 
     page.get_by_role("button", name="Next character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 02 / 28"
+    assert page.locator("#catalogue-number").inner_text() == "№ 02 / 27"
     page.get_by_role("button", name="Copy link to Birendra").click()
     assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/birendra"
     assert page.locator("#toast").inner_text() == "Art piece copied."
@@ -41,9 +41,9 @@ with sync_playwright() as playwright:
     page.keyboard.press("c")
     page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
     page.get_by_role("button", name="Previous character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 28"
+    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 27"
     page.get_by_role("button", name="Previous character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 28 / 28"
+    assert page.locator("#catalogue-number").inner_text() == "№ 27 / 27"
 
     page.wait_for_timeout(700)
     page.locator(".image-frame").hover()
