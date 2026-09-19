@@ -216,8 +216,13 @@ function updateSeo(index) {
   const character = characters[index];
   const path = getCharacterPath(index);
   const url = `${SITE_URL}${path}`;
-  const imageUrl = `${SITE_URL}${character.image}`;
   const isHome = index === 0;
+  const imageUrl = isHome
+    ? `${SITE_URL}/assets/webendra-share.png`
+    : `${SITE_URL}${character.image}`;
+  const imageAlt = isHome
+    ? "Webendra, written in wobbly black hand lettering on white"
+    : character.alt;
   const title = isHome
     ? "Webendra"
     : `${character.name} — Webendra`;
@@ -232,11 +237,11 @@ function updateSeo(index) {
   setMeta('meta[property="og:description"]', description);
   setMeta('meta[property="og:url"]', url);
   setMeta('meta[property="og:image"]', imageUrl);
-  setMeta('meta[property="og:image:alt"]', character.alt);
+  setMeta('meta[property="og:image:alt"]', imageAlt);
   setMeta('meta[name="twitter:title"]', title);
   setMeta('meta[name="twitter:description"]', description);
   setMeta('meta[name="twitter:image"]', imageUrl);
-  setMeta('meta[name="twitter:image:alt"]', character.alt);
+  setMeta('meta[name="twitter:image:alt"]', imageAlt);
 
   structuredData.textContent = isHome
     ? collectionStructuredData
