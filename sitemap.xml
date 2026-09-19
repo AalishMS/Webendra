@@ -201,4 +201,13 @@
       <image:caption>Shrugendra, a deadpan person performing an exaggerated shrug with open palms</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/topendra</loc>
+    <lastmod>2026-09-19</lastmod>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/topendra.png</image:loc>
+      <image:title>Topendra</image:title>
+      <image:caption>Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage</image:caption>
+    </image:image>
+  </url>
 </urlset>
