@@ -1,4 +1,4 @@
-/* theme.js — Dust and stars for Webendra
+/* theme.js — Celestial stars for Webendra
  * Wrapped in an IIFE to avoid lexical collisions with app.js.
  */
 (function () {
@@ -10,37 +10,35 @@
   var STORAGE_KEY = 'webendra-theme';
   var TRANSITION_MS = 450;
 
-  // ── Colorful Celestial Star & Dust Palettes ─────────────────────────
+  // ── Colorful Celestial Star Palettes ─────────────────────────────────
   // Curated color spectrum inspired by OpenAI Astra / cosmic starfields:
   // Electric cyan/blue, cosmic violet/purple, nebula magenta/pink,
   // warm gold/amber, emerald aurora/teal, and brilliant diamond white.
-  // Each entry has [darkR, darkG, darkB] for glowing stars on dark (#080a0f),
-  // and [lightR, lightG, lightB] for refined chromatic dust on white (#ffffff).
   var STAR_PALETTES = [
-    // 1. Electric Cyan (brilliant starlight) -> soft atmospheric sky-slate dust
-    { dark: [56, 189, 248],  light: [90, 130, 165] },
-    // 2. Neon Sky Blue (radiant celestial) -> atmospheric mineral blue-grey
-    { dark: [96, 165, 250],  light: [100, 125, 165] },
-    // 3. Bright Aquamarine / Teal -> sea-mist mineral dust
-    { dark: [34, 211, 238],  light: [75, 140, 150] },
-    // 4. Ethereal Lavender / Violet -> warm twilight mauve dust
-    { dark: [192, 132, 252], light: [145, 115, 165] },
-    // 5. Deep Cosmic Purple / Amethyst -> soft bronze-mauve dust
-    { dark: [168, 85, 247],  light: [140, 100, 145] },
-    // 6. Nebula Rose / Pink -> warm terracotta rose dust
-    { dark: [244, 114, 182], light: [180, 110, 115] },
-    // 7. Radiant Magenta / Crimson Glow -> desert terracotta dust
-    { dark: [251, 113, 133], light: [185, 105, 105] },
-    // 8. Solar Gold / Starlight Amber -> warm sunbeam amber dust
-    { dark: [251, 191, 36],  light: [190, 135, 45] },
-    // 9. Warm Tangerine / Solar Flare -> warm champagne ochre dust
-    { dark: [251, 146, 60],  light: [185, 120, 50] },
-    // 10. Aurora Emerald / Mint -> sunlit meadow pollen / sage
-    { dark: [52, 211, 153],  light: [95, 145, 110] },
-    // 11. Pearlescent Diamond / Icy Tint -> silvery pearl dust
-    { dark: [224, 242, 254], light: [130, 140, 150] },
-    // 12. Supernova Brilliant White -> warm mineral ivory dust
-    { dark: [255, 255, 255], light: [155, 145, 135] }
+    // 1. Electric Cyan (brilliant starlight)
+    [56, 189, 248],
+    // 2. Neon Sky Blue (radiant celestial)
+    [96, 165, 250],
+    // 3. Bright Aquamarine / Teal
+    [34, 211, 238],
+    // 4. Ethereal Lavender / Violet
+    [192, 132, 252],
+    // 5. Deep Cosmic Purple / Amethyst
+    [168, 85, 247],
+    // 6. Nebula Rose / Pink
+    [244, 114, 182],
+    // 7. Radiant Magenta / Crimson Glow
+    [251, 113, 133],
+    // 8. Solar Gold / Starlight Amber
+    [251, 191, 36],
+    // 9. Warm Tangerine / Solar Flare
+    [251, 146, 60],
+    // 10. Aurora Emerald / Mint
+    [52, 211, 153],
+    // 11. Pearlescent Diamond / Icy Tint
+    [224, 242, 254],
+    // 12. Supernova Brilliant White
+    [255, 255, 255]
   ];
 
   // ── DOM references ───────────────────────────────────────────────────
@@ -166,7 +164,7 @@
     if (typeof ResizeObserver !== 'undefined' && frame && nameEl) {
       var ro = new ResizeObserver(function () {
         boundsDirty = true;
-        if (reducedMotion) queueStaticDraw();
+        if (reducedMotion || (mix <= 0.001 && transitionStart < 0)) queueStaticDraw();
       });
       ro.observe(frame);
       ro.observe(nameEl);
@@ -245,17 +243,18 @@
     // Clear
     ctx.clearRect(0, 0, cssW, cssH);
 
-    // Light alpha: 0.28 + 0.26 * depth; Dark alpha: 0.38 + 0.52 * depth
-    var alphaBase0 = 0.28, alphaScale0 = 0.26; // light (warm sunlit dust)
-    var alphaBase1 = 0.38, alphaScale1 = 0.52; // dark (vivid celestial luminosity)
+    // In pure light mode with no transition running, keep canvas clean and exit
+    if (mix <= 0.001 && transitionStart < 0) {
+      return;
+    }
 
+    var alphaBase = 0.38, alphaScale = 0.52; // dark mode celestial luminosity
     var cursorPxX = cursorSmoothedX * cssW * 0.5 + cssW * 0.5;
     var cursorPxY = cursorSmoothedY * cssH * 0.5 + cssH * 0.5;
 
     var repulseSmooth = 1 - Math.exp(-dt / 0.22);
-    var lightProg = 1 - mix;
     var quietFadeDist = Math.min(100, Math.max(40, cssW * 0.08));
-    var quietFloor = 0.25 + (0.15 - 0.25) * mix;
+    var quietFloor = 0.15;
 
     for (var i = 0; i < visibleCount && i < particles.length; i++) {
       var p = particles[i];
@@ -308,93 +307,52 @@
       var finalX = preRepX + p.localDx;
       var finalY = preRepY + p.localDy;
 
-      // Per-particle interpolated RGB
-      var lightC = p.color ? p.color.light : [155, 145, 135];
-      var darkC = p.color ? p.color.dark : [235, 240, 255];
-      var r = lightC[0] + (darkC[0] - lightC[0]) * mix;
-      var g = lightC[1] + (darkC[1] - lightC[1]) * mix;
-      var b = lightC[2] + (darkC[2] - lightC[2]) * mix;
+      // Alpha: stars smoothly fade to 0 in light mode
+      var alpha = (alphaBase + alphaScale * depth) * p.brightness * mix;
 
-      // Alpha
-      var alphaLight = (alphaBase0 + alphaScale0 * depth) * p.brightness;
-      var alphaDark  = (alphaBase1 + alphaScale1 * depth) * p.brightness;
-      var alpha = alphaLight + (alphaDark - alphaLight) * mix;
-
-      // Dynamic shimmer / twinkling (respects reduced motion)
-      if (!reducedMotion) {
-        // Gentle starlight twinkling in dark mode
-        if (mix > 0.05) {
-          var twinkle = 1 + (0.22 * Math.sin(activeTime * p.twinkleSpeed + p.twinklePhase)) * mix;
-          alpha = Math.min(1, alpha * twinkle);
-        }
-        // Sunlit dust shimmer in light mode (simulating rotating/tumbling reflective dust facets)
-        if (lightProg > 0.05) {
-          var shimmer = 1 + (0.30 * Math.sin(activeTime * (p.twinkleSpeed * 0.85) + p.twinklePhase)) * lightProg;
-          alpha = Math.min(1, alpha * shimmer);
-        }
+      // Gentle starlight twinkling in dark mode (respects reduced motion)
+      if (!reducedMotion && mix > 0.05) {
+        var twinkle = 1 + (0.22 * Math.sin(activeTime * p.twinkleSpeed + p.twinklePhase)) * mix;
+        alpha = Math.min(1, alpha * twinkle);
       }
 
-      // Quiet-zone fade (adaptive floor and fade distance)
+      // Quiet-zone fade around showcase portrait and name
       var qd = distToQuietZone(finalX, finalY);
       alpha *= quietFloor + (1 - quietFloor) * smoothstep(0, quietFadeDist, qd);
 
       if (alpha < 0.005) continue;
 
-      var rInt = Math.round(r);
-      var gInt = Math.round(g);
-      var bInt = Math.round(b);
+      var rInt = p.color[0];
+      var gInt = p.color[1];
+      var bInt = p.color[2];
 
-      // ── Dark mode: Outer ethereal bloom for prominent stars ──
-      if (mix > 0.01 && depth > 0.65) {
+      // ── Outer ethereal bloom for prominent stars ──
+      if (depth > 0.65) {
         ctx.beginPath();
         ctx.arc(finalX, finalY, p.radius * 4.2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.10 * mix).toFixed(4) + ')';
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.10).toFixed(4) + ')';
         ctx.fill();
       }
 
-      // ── Dark mode: Chromatic halo for stars ──
-      if (mix > 0.01 && depth > 0.38) {
+      // ── Chromatic halo for stars ──
+      if (depth > 0.38) {
         ctx.beginPath();
         ctx.arc(finalX, finalY, p.radius * 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.28 * mix).toFixed(4) + ')';
+        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.28).toFixed(4) + ')';
         ctx.fill();
       }
 
-      // ── Light mode: Soft ambient bokeh aura for foreground dust motes ──
-      if (lightProg > 0.01 && depth > 0.45) {
-        ctx.beginPath();
-        ctx.arc(finalX, finalY, p.radius * 3.4, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.18 * lightProg).toFixed(4) + ')';
-        ctx.fill();
-      }
-
-      // ── Light mode: Diffuse dust halo ──
-      if (lightProg > 0.01 && depth > 0.25) {
-        ctx.beginPath();
-        ctx.arc(finalX, finalY, p.radius * 2.0, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + (alpha * 0.32 * lightProg).toFixed(4) + ')';
-        ctx.fill();
-      }
-
-      // ── Core particle disc (stars & dust motes) ──
+      // ── Core star disc ──
       ctx.beginPath();
       ctx.arc(finalX, finalY, p.radius, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(' + rInt + ',' + gInt + ',' + bInt + ',' + alpha.toFixed(3) + ')';
       ctx.fill();
 
-      // ── Dark mode: Brilliant white-hot starlight pinpoint ──
-      if (mix > 0.5 && depth > 0.72) {
+      // ── Brilliant white-hot starlight pinpoint ──
+      if (depth > 0.72) {
         ctx.beginPath();
         ctx.arc(finalX, finalY, p.radius * 0.45, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255,' + (alpha * 0.75 * mix).toFixed(3) + ')';
-        ctx.fill();
-      }
-
-      // ── Light mode: Sunlit specular glint for prominent dust motes ──
-      if (lightProg > 0.5 && depth > 0.70) {
-        ctx.beginPath();
-        ctx.arc(finalX, finalY, p.radius * 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255,' + (alpha * 0.60 * lightProg).toFixed(3) + ')';
+        ctx.fillStyle = 'rgba(255, 255, 255,' + (alpha * 0.75).toFixed(3) + ')';
         ctx.fill();
       }
     }
@@ -406,7 +364,7 @@
     var dt = lastFrameTime ? (time - lastFrameTime) / 1000 : 0.016;
     lastFrameTime = time;
     drawFrame(dt);
-    if (!reducedMotion && !document.hidden) {
+    if (!reducedMotion && !document.hidden && (mix > 0.001 || transitionStart >= 0)) {
       startLoop();
     }
   }
@@ -474,6 +432,7 @@
       fromMix = mix; // start from current interpolated value
       toMix = newToMix;
       transitionStart = performance.now();
+      lastFrameTime = 0;
       startLoop();
     }
   }
@@ -511,9 +470,13 @@
       }
       queueStaticDraw();
     } else {
-      // Restore from reduced-motion: resume loop with existing particle state
+      // Restore from reduced-motion: resume loop only if dark mode or transitioning
       lastFrameTime = 0;
-      startLoop();
+      if (mix > 0.001 || transitionStart >= 0) {
+        startLoop();
+      } else {
+        renderStatic();
+      }
     }
   });
 
@@ -532,8 +495,10 @@
       boundsDirty = true;
       if (reducedMotion) {
         queueStaticDraw();
-      } else {
+      } else if (mix > 0.001 || transitionStart >= 0) {
         startLoop();
+      } else {
+        renderStatic();
       }
     }
   });
@@ -548,15 +513,20 @@
         transitionStart = -1;
       }
       resizeCanvas();
-      if (reducedMotion) queueStaticDraw();
-      else startLoop();
+      if (reducedMotion) {
+        queueStaticDraw();
+      } else if (mix > 0.001 || transitionStart >= 0) {
+        startLoop();
+      } else {
+        renderStatic();
+      }
     }
   });
 
   // ── Resize handling ─────────────────────────────────────────────────
   window.addEventListener('resize', function () {
     resizeCanvas();
-    if (reducedMotion) queueStaticDraw();
+    if (reducedMotion || (mix <= 0.001 && transitionStart < 0)) queueStaticDraw();
   });
 
   // Also watch for DPR changes (e.g. moving between monitors)
@@ -564,14 +534,14 @@
     var dprMQ = window.matchMedia('(resolution: ' + (window.devicePixelRatio || 1) + 'dppx)');
     dprMQ.addEventListener('change', function () {
       resizeCanvas();
-      if (reducedMotion) queueStaticDraw();
+      if (reducedMotion || (mix <= 0.001 && transitionStart < 0)) queueStaticDraw();
     });
   }
 
   // Scroll may shift quiet zone relative to fixed canvas
   window.addEventListener('scroll', function () {
     boundsDirty = true;
-    if (reducedMotion) queueStaticDraw();
+    if (reducedMotion || (mix <= 0.001 && transitionStart < 0)) queueStaticDraw();
   }, { passive: true });
 
   // ── Initialization ──────────────────────────────────────────────────
@@ -592,8 +562,10 @@
   // Initial draw
   if (reducedMotion) {
     queueStaticDraw();
-  } else {
+  } else if (currentTheme === 'dark') {
     startLoop();
+  } else {
+    renderStatic();
   }
 
   // Enable CSS transitions now that initial paint is done

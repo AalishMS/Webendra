@@ -125,9 +125,10 @@ button {
   position: relative;
   margin-top: clamp(1rem, 2.5vh, 1.75rem);
   font-size: clamp(2rem, 5vw, 3.75rem);
-  font-weight: 600;
-  letter-spacing: -0.055em;
-  line-height: 1;
+  font-family: "Baskerville", "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .character-name {
@@ -224,6 +225,7 @@ button {
 /* --- Arrow navigation --- */
 
 .arrow {
+  position: relative;
   display: grid;
   place-items: center;
   width: 4rem;
@@ -236,6 +238,39 @@ button {
   background: transparent;
   cursor: pointer;
   transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.arrow::after {
+  position: absolute;
+  top: calc(100% + 0.3rem);
+  color: var(--meta-fg);
+  content: attr(data-cue);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.arrow--previous::after {
+  left: 0;
+}
+
+.arrow--next::after {
+  right: 0;
+}
+
+@media (hover: hover) {
+  .arrow:hover::after {
+    opacity: 1;
+  }
+}
+
+.arrow:focus-visible::after {
+  opacity: 1;
 }
 
 .arrow--previous {
@@ -295,6 +330,7 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .arrow,
+  .arrow::after,
   .image-frame img {
     transition: none;
   }
