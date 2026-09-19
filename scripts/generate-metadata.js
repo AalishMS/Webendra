@@ -5,6 +5,7 @@ const characters = require("../catalogue.js");
 const root = path.resolve(__dirname, "..");
 const siteUrl = "https://webendra.vercel.app";
 const check = process.argv.includes("--check");
+const normalizeNewlines = (value) => value.replace(/\r\n/g, "\n");
 
 if (!characters.length) throw new Error("The catalogue is empty");
 const seen = new Set();
@@ -79,7 +80,8 @@ const sitemap = [
 
 for (const [file, content] of [[indexPath, generatedIndex], [path.join(root, "sitemap.xml"), sitemap]]) {
   const current = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
-  if (check && current !== content) throw new Error(`${path.basename(file)} is out of date. Run node scripts/generate-metadata.js`);
-  if (!check && current !== content) fs.writeFileSync(file, content);
+  const changed = normalizeNewlines(current) !== normalizeNewlines(content);
+  if (check && changed) throw new Error(`${path.basename(file)} is out of date. Run node scripts/generate-metadata.js`);
+  if (!check && changed) fs.writeFileSync(file, normalizeNewlines(content));
 }
 console.log(check ? "Metadata is current." : "Metadata generated.");
