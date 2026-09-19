@@ -31,7 +31,9 @@ the phone may still show its status bar.
 
 ## Offline viewing
 
-Open the site online once and wait for it to finish loading. The page and its
+The site is offline friendly for images that have been opened when online. 
+
+To check, Open the site online once and wait for it to finish loading. The page and its
 scripts are saved for offline use. Each character image is saved when you view
 that character; the gallery does not download the whole collection in advance.
 An image you have not viewed cannot be opened offline.
@@ -43,13 +45,7 @@ on a computer and tap the arrows on a phone. Check both themes and wraparound.
 Turn connectivity back on and reopen the app to receive newly deployed
 characters and images.
 
-## Deploy on Vercel
+## Deployed on Vercel
 
-Commit and push the site files to the Git repository connected to the Vercel
-project. Vercel serves this static site without a build command. Keep
-`vercel.json` with the deployment: its rewrites serve the gallery for direct
-character links, and its cache headers let returning visitors check for
-updates. Deploy over HTTPS, as service workers and installation require a
-secure origin. When changing the service worker's cache layout, increase its
-`CACHE_VERSION`; activation removes older Webendra app-shell caches while
-keeping viewed character images.
+Changes are deployed to Vercel on push. The site's Git repository is connected to the Vercel
+project. Vercel serves this static site without a build command.
