@@ -193,15 +193,24 @@ function stopPronunciation() {
   pronounceButton.classList.remove("is-speaking");
 }
 
+function choosePronunciationVoice(voices) {
+  const preferredLocales = ["en-in", "en-np", "en-pk", "en-bd", "en-lk", "en-us", "en-ca", "en-au", "en-nz"];
+  const language = (voice) => voice.lang.replaceAll("_", "-").toLowerCase();
+  for (const locale of preferredLocales) {
+    const voice = voices.find((candidate) => language(candidate).startsWith(locale));
+    if (voice) return voice;
+  }
+  return voices.find((voice) => language(voice).startsWith("en") && !language(voice).startsWith("en-gb")) || null;
+}
+
 function pronounceCurrentCharacter() {
   if (pronounceButton.hidden) return;
   stopPronunciation();
   const thisSpeech = speechRequest;
   const utterance = new SpeechSynthesisUtterance(characters[currentIndex].name);
   const voices = window.speechSynthesis.getVoices();
-  utterance.voice = voices.find((voice) => voice.lang.toLowerCase().startsWith("en-gb")) ||
-    voices.find((voice) => voice.lang.toLowerCase().startsWith("en")) || null;
-  utterance.lang = utterance.voice?.lang || "en-GB";
+  utterance.voice = choosePronunciationVoice(voices);
+  utterance.lang = utterance.voice?.lang || "en-IN";
   utterance.rate = 0.85;
   utterance.pitch = 0.9;
   utterance.onstart = () => {

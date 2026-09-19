@@ -29,15 +29,24 @@ with sync_playwright() as playwright:
     )
     assert transform.startswith("matrix(1.04,"), transform
 
+    assert page.evaluate("""() => {
+      const voices = [{ lang: 'en-GB' }, { lang: 'en_US' }, { lang: 'en-IN' }];
+      return choosePronunciationVoice(voices)?.lang;
+    }""") == "en-IN"
+    assert page.evaluate("""() => choosePronunciationVoice([{ lang: 'en-GB' }, { lang: 'en-US' }])?.lang""") == "en-US"
+    assert page.evaluate("""() => choosePronunciationVoice([{ lang: 'en-GB' }])""") is None
+
     page.evaluate("""() => {
       window.__spoken = [];
+      speechSynthesis.getVoices = () => [];
       speechSynthesis.speak = utterance => {
-        window.__spoken.push(utterance.text);
+        window.__spoken.push({ text: utterance.text, lang: utterance.lang });
         utterance.onstart?.();
       };
     }""")
     page.get_by_role("button", name="Pronounce Ballendra").click()
-    assert page.evaluate("window.__spoken") == ["Ballendra"]
+    assert page.evaluate("window.__spoken[0].text") == "Ballendra"
+    assert page.evaluate("window.__spoken[0].lang") == "en-IN"
     assert page.locator("#pronounce-btn").evaluate("button => button.classList.contains('is-speaking')")
 
     page.get_by_role("button", name="Next character").click()
@@ -53,7 +62,7 @@ with sync_playwright() as playwright:
     page.evaluate("() => { navigator.clipboard.writeText = window.__writeText; }")
 
     page.keyboard.press("p")
-    assert page.evaluate("window.__spoken")[-1] == "Birendra"
+    assert page.evaluate("window.__spoken.at(-1).text") == "Birendra"
     page.keyboard.press("c")
     page.wait_for_function("document.querySelector('#toast').textContent === 'Catalogue link preserved.'")
     page.get_by_role("button", name="Previous character").click()
