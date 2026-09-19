@@ -125,6 +125,21 @@
         <figcaption id="character-name">
           <h1 class="character-name">Ballendra</h1>
         </figcaption>
+        <div class="character-meta">
+          <span id="catalogue-number" class="catalogue-number">№ 01 / 28</span>
+          <span id="pronounce-separator" class="meta-separator" aria-hidden="true">·</span>
+          <button id="pronounce-btn" class="curator-btn" type="button" aria-label="Pronounce Ballendra" title="Pronounce">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M4 9v6h4l5 4V5L8 9H4Zm12-1a6 6 0 0 1 0 8m2.5-11a10 10 0 0 1 0 14" />
+            </svg>
+          </button>
+          <span class="meta-separator" aria-hidden="true">·</span>
+          <button id="share-btn" class="curator-btn" type="button" aria-label="Copy link to Ballendra" title="Copy link">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1" />
+            </svg>
+          </button>
+        </div>
       </figure>
 
       <button class="arrow arrow--next" type="button" aria-label="Next character">
@@ -133,6 +148,8 @@
         </svg>
       </button>
     </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <button id="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" hidden>
       <span class="theme-text-dark">Darkendra</span>
