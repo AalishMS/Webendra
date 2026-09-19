@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const CACHE_PREFIX = "webendra-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${CACHE_VERSION}`;
 // Keep viewed portraits across shell upgrades; online requests refresh them.
@@ -7,6 +7,7 @@ const APP_FILES = [
   "/",
   "/index.html",
   "/styles.css",
+  "/catalogue.js",
   "/app.js",
   "/theme.js",
   "/manifest.webmanifest",

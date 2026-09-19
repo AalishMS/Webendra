@@ -1,21 +1,33 @@
+"""Apply a background-removal mask without changing the source RGB pixels."""
+
+import argparse
+from pathlib import Path
+
 from PIL import Image
 from rembg import remove
-import numpy as np
 
-# Load original image
-original_path = r"C:\Users\Aalish\.gemini\antigravity-cli\brain\8626ab7e-e113-4de1-a0ba-cdb7cdd1d994\topendra_cannon_1789811457458.jpg"
-out_path = r"e:\pet_project\Webendra\assets\topendra.png"
 
-original = Image.open(original_path).convert("RGBA")
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", type=Path, help="Input image")
+    parser.add_argument("output", type=Path, help="Transparent PNG to write")
+    args = parser.parse_args()
 
-# Use rembg just to get the mask, to prevent it from altering colors
-# `remove` has an `only_mask=True` parameter!
-mask = remove(original, only_mask=True).convert("L")
+    if args.output.suffix.lower() != ".png":
+        parser.error("output must be a PNG file")
+    with Image.open(args.source) as source:
+        original = source.convert("RGBA")
+    if original.width != original.height:
+        parser.error("source image must be square")
 
-# Now apply this mask to the original image's alpha channel
-# to keep the original RGB channels completely untouched
-original.putalpha(mask)
+    mask = remove(original, only_mask=True).convert("L")
+    if mask.size != original.size:
+        raise ValueError("background mask dimensions do not match source")
+    original.putalpha(mask)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    original.save(args.output, "PNG")
+    print(f"Saved {args.output}")
 
-original.save(out_path, "PNG")
-print(f"Saved transparent PNG to {out_path}")
 
+if __name__ == "__main__":
+    main()

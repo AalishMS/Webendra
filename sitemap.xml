@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://webendra.vercel.app/</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/ballendra.png</image:loc>
       <image:title>Ballendra</image:title>
@@ -14,70 +10,62 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/birendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/birendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/birendra.png</image:loc>
       <image:title>Birendra</image:title>
       <image:caption>Birendra, a cold glass of beer</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/ganendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/ganendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/ganendra.png</image:loc>
       <image:title>Ganendra</image:title>
       <image:caption>Ganendra, a man safely holding a brushed steel pistol pointed down</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/bonendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/bonendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/bonendra.png</image:loc>
       <image:title>Bonendra</image:title>
       <image:caption>Bonendra, a bone</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/dogendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/dogendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/dogendra.png</image:loc>
       <image:title>Dogendra</image:title>
       <image:caption>Dogendra, a dog raising one paw at a doorbell camera</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/fishendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/fishendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/fishendra.png</image:loc>
       <image:title>Fishendra</image:title>
       <image:caption>Fishendra, a gorilla-faced fish swimming underwater</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/dipendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/dipendra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/dipendra.png</image:loc>
       <image:title>Dipendra</image:title>
       <image:caption>Dipendra, a bowl of red dipping sauce</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/rabindra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/rabindra.jpg</image:loc>
+      <image:loc>https://webendra.vercel.app/assets/rabindra.png</image:loc>
       <image:title>Rabindra</image:title>
       <image:caption>Rabindra, a pink rubber eraser</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/gyanendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/gyanendra.png</image:loc>
       <image:title>Gyanendra</image:title>
@@ -86,7 +74,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/devendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/devendra.png</image:loc>
       <image:title>Devendra</image:title>
@@ -95,7 +82,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/belendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/belendra.png</image:loc>
       <image:title>Belendra</image:title>
@@ -104,7 +90,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/chillendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/chillendra.png</image:loc>
       <image:title>Chillendra</image:title>
@@ -113,7 +98,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/blendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/blendra.png</image:loc>
       <image:title>Blendra</image:title>
@@ -122,7 +106,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/cylendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/cylendra.png</image:loc>
       <image:title>Cylendra</image:title>
@@ -131,7 +114,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/shailendra</loc>
-    <lastmod>2026-09-14</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/shailendra.png</image:loc>
       <image:title>Shailendra</image:title>
@@ -139,8 +121,47 @@
     </image:image>
   </url>
   <url>
+    <loc>https://webendra.vercel.app/character/calendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/calendra.png</image:loc>
+      <image:title>Calendra</image:title>
+      <image:caption>Calendra, a simple wall calendar</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/bartendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/bartendra.png</image:loc>
+      <image:title>Bartendra</image:title>
+      <image:caption>Bartendra, a professional bartender shaking a metallic cocktail shaker</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/deffendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/deffendra.png</image:loc>
+      <image:title>Deffendra</image:title>
+      <image:caption>Deffendra, a medieval knight&apos;s large metal shield</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/pretendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/pretendra.png</image:loc>
+      <image:title>Pretendra</image:title>
+      <image:caption>Pretendra, a classic Groucho Marx disguise</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/yogendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/yogendra.png</image:loc>
+      <image:title>Yogendra</image:title>
+      <image:caption>Yogendra, a person stretching in an advanced yoga pose</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://webendra.vercel.app/character/ramendra</loc>
-    <lastmod>2026-09-15</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/ramendra.png</image:loc>
       <image:title>Ramendra</image:title>
@@ -149,7 +170,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/tapendra</loc>
-    <lastmod>2026-09-15</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/tapendra.png</image:loc>
       <image:title>Tapendra</image:title>
@@ -158,7 +178,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/jugendra</loc>
-    <lastmod>2026-09-15</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/jugendra.png</image:loc>
       <image:title>Jugendra</image:title>
@@ -167,16 +186,14 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/peakendra</loc>
-    <lastmod>2026-09-18</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/peakendra-v2.png</image:loc>
       <image:title>Peakendra</image:title>
-      <image:caption>Peakendra, a person holding back tears because it's so peak</image:caption>
+      <image:caption>Peakendra, a person holding back tears because it&apos;s so peak</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/lokendra</loc>
-    <lastmod>2026-09-18</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/lokendra.png</image:loc>
       <image:title>Lokendra</image:title>
@@ -185,7 +202,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/hugendra</loc>
-    <lastmod>2026-09-18</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/hugendra.png</image:loc>
       <image:title>Hugendra</image:title>
@@ -194,7 +210,6 @@
   </url>
   <url>
     <loc>https://webendra.vercel.app/character/topendra</loc>
-    <lastmod>2026-09-19</lastmod>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/topendra.png</image:loc>
       <image:title>Topendra</image:title>

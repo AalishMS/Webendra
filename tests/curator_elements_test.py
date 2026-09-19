@@ -1,11 +1,31 @@
 """Browser checks for the catalogue details beneath the gallery portrait."""
 
 from pathlib import Path
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from threading import Thread
+from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
 
 
-BASE = "http://127.0.0.1:43118"
+ROOT = Path(__file__).resolve().parents[1]
+Path("test-output").mkdir(exist_ok=True)
+
+
+class SiteHandler(SimpleHTTPRequestHandler):
+    def do_GET(self):
+        if urlsplit(self.path).path.startswith("/character/"):
+            self.path = "/index.html"
+        super().do_GET()
+
+    def log_message(self, *_args):
+        pass
+
+
+server = ThreadingHTTPServer(("127.0.0.1", 0), partial(SiteHandler, directory=str(ROOT)))
+Thread(target=server.serve_forever, daemon=True).start()
+BASE = f"http://127.0.0.1:{server.server_port}"
 
 
 with sync_playwright() as playwright:
@@ -18,7 +38,8 @@ with sync_playwright() as playwright:
     page.goto(BASE)
     page.wait_for_load_state("networkidle")
 
-    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 27"
+    total = page.evaluate("JSON.parse(document.querySelector('#structured-data').textContent).mainEntity.numberOfItems")
+    assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     assert page.locator("#pronounce-btn").count() == 0
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
 
@@ -28,8 +49,8 @@ with sync_playwright() as playwright:
     )
     assert transform == "none", transform
 
-    page.get_by_role("button", name="Next character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 02 / 27"
+    page.get_by_role("button", name="Rightendra, next character").click()
+    assert page.locator("#catalogue-number").inner_text() == f"№ 02 / {total:02}"
     page.get_by_role("button", name="Copy link to Birendra").click()
     assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/birendra"
     assert page.locator("#toast").inner_text() == "Art piece copied."
@@ -40,10 +61,10 @@ with sync_playwright() as playwright:
 
     page.keyboard.press("c")
     page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
-    page.get_by_role("button", name="Previous character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 01 / 27"
-    page.get_by_role("button", name="Previous character").click()
-    assert page.locator("#catalogue-number").inner_text() == "№ 27 / 27"
+    page.get_by_role("button", name="Leftendra, previous character").click()
+    assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
+    page.get_by_role("button", name="Leftendra, previous character").click()
+    assert page.locator("#catalogue-number").inner_text() == f"№ {total:02} / {total:02}"
 
     page.wait_for_timeout(700)
     page.locator(".image-frame").hover()
@@ -58,8 +79,8 @@ with sync_playwright() as playwright:
     mobile.goto(BASE)
     mobile.wait_for_load_state("networkidle")
     assert mobile.locator("#catalogue-number").is_visible()
-    assert mobile.get_by_role("button", name="Previous character").is_visible()
-    assert mobile.get_by_role("button", name="Next character").is_visible()
+    assert mobile.get_by_role("button", name="Leftendra, previous character").is_visible()
+    assert mobile.get_by_role("button", name="Rightendra, next character").is_visible()
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )
@@ -73,3 +94,5 @@ with sync_playwright() as playwright:
     browser.close()
 
 print("Curator elements passed on desktop, mobile, and reduced motion.")
+server.shutdown()
+server.server_close()

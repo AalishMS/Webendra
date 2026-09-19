@@ -1,11 +1,12 @@
 .DS_Store
 Thumbs.db
 test-output/
-Ideas.md
 
 # Common ignores
 .vscode/
 .idea/
 *.log
+__pycache__/
+*.pyc
 .env
 .env.*

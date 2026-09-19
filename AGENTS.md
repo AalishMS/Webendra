@@ -67,7 +67,8 @@ implemented table and add its asset path.
 3. Inspect the final image before adding it to the project.
 4. Save it in `assets/` using the lowercase character name, such as
    `assets/mugendra.png`.
-5. Add the name, image path, and useful alt text to `characters` in `app.js`.
+5. Add the name, image path, and useful alt text to `characters` in
+   `catalogue.js`, then run `node scripts/generate-metadata.js`.
 6. Test button navigation, keyboard navigation, image loading, and wraparound at
    desktop and mobile sizes.
 7. Commit meaningful batches periodically and push the completed work.

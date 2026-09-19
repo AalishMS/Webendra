@@ -14,6 +14,24 @@ python -m http.server 8000
 
 Open <http://localhost:8000>, then proceed with the arrow keys.
 
+## Maintaining the gallery
+
+Edit `catalogue.js` when adding a character. Keep the asset as a square PNG with
+a transparent background, update `Ideas.md`, then regenerate the sitemap and
+collection metadata:
+
+```sh
+node scripts/generate-metadata.js
+node scripts/generate-metadata.js --check
+```
+
+The generator verifies that every listed image exists. To cut out a new image
+without changing its colors, install `Pillow` and `rembg`, then run
+`python remove_bg.py input.jpg assets/nameendra.png`.
+
+For browser checks, install Python Playwright and its Chromium browser, then run
+`python tests/curator_elements_test.py` and `python tests/pwa_test.py`.
+
 ## Theme
 
 Darkendra and Lightendra toggles sit in the top-right

@@ -53,7 +53,7 @@ try:
         assert page.evaluate("fetch('/manifest.webmanifest').then(r => r.json()).then(m => m.display)") == "standalone"
         assert set(path for path in requested_images if path.endswith("endra.png")) == {"/assets/ballendra.png"}
 
-        page.get_by_role("button", name="Next character").click()
+        page.get_by_role("button", name="Rightendra, next character").click()
         page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Birendra'")
         page.wait_for_function("""async () => {
           const cache = await caches.open('webendra-images');
@@ -66,7 +66,7 @@ try:
         assert page.locator("#character-name").inner_text() == "Birendra"
         assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
 
-        page.get_by_role("button", name="Next character").click()
+        page.get_by_role("button", name="Rightendra, next character").click()
         page.wait_for_function("document.querySelector('#toast').textContent.includes('unavailable')")
         assert page.locator("#character-name").inner_text() == "Birendra"
         assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
@@ -74,7 +74,7 @@ try:
         page.keyboard.press("ArrowLeft")
         page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Ballendra'")
         page.set_viewport_size({"width": 375, "height": 812})
-        page.get_by_role("button", name="Next character").tap()
+        page.get_by_role("button", name="Rightendra, next character").tap()
         page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Birendra'")
         page.get_by_role("button", name="Toggle theme").click()
         assert page.locator("html").get_attribute("data-theme") == "dark"
@@ -83,7 +83,7 @@ try:
         assert not errors, errors
         context.set_offline(False)
         page.evaluate("""async () => {
-          const cache = await caches.open('webendra-shell-v1');
+          const cache = await caches.open('webendra-shell-v2');
           await cache.put('/app.js', new Response('window.staleAppLoaded = true'));
         }""")
         page.reload()
