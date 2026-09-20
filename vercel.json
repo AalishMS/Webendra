@@ -1,4 +1,5 @@
 {
+  "buildCommand": "node scripts/generate-metadata.js --skip-share-cards",
   "trailingSlash": false,
   "rewrites": [
     {

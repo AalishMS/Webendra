@@ -1,7 +1,7 @@
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_PREFIX = "webendra-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${CACHE_VERSION}`;
-// Keep viewed portraits across shell upgrades; online requests refresh them.
+// Exact content-version URLs preserve unchanged portraits across shell upgrades.
 const IMAGE_CACHE = `${CACHE_PREFIX}images`;
 const APP_FILES = [
   "/",
@@ -22,7 +22,7 @@ const APP_PATHS = new Set(APP_FILES);
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
-      .then((cache) => cache.addAll(APP_FILES))
+      .then((cache) => cache.addAll(APP_FILES.map((url) => new Request(url, { cache: "reload" }))))
       .then(() => self.skipWaiting()),
   );
 });
@@ -49,7 +49,7 @@ function isSuccessfulImage(response) {
 async function networkFirst(request, cacheName, cacheKey = request) {
   let response;
   try {
-    response = await fetch(request);
+    response = await fetch(request, { cache: "no-cache" });
   } catch (error) {
     const cached = await caches.match(cacheKey, { cacheName });
     if (cached) return cached;
@@ -67,9 +67,14 @@ async function networkFirst(request, cacheName, cacheKey = request) {
 }
 
 async function viewedImage(request) {
+  const versioned = /^[a-f0-9]{16}$/.test(new URL(request.url).searchParams.get("v") || "");
+  if (versioned) {
+    const cached = await caches.match(request, { cacheName: IMAGE_CACHE });
+    if (cached) return cached;
+  }
   let response;
   try {
-    response = await fetch(request);
+    response = await fetch(request, { cache: "no-cache" });
   } catch (error) {
     const cached = await caches.match(request, { cacheName: IMAGE_CACHE });
     if (cached) return cached;
@@ -79,6 +84,12 @@ async function viewedImage(request) {
     try {
       const cache = await caches.open(IMAGE_CACHE);
       await cache.put(request, response.clone());
+      // Retire older versions only after the new portrait is safely cached.
+      const pathname = new URL(request.url).pathname;
+      const keys = await cache.keys();
+      await Promise.all(keys
+        .filter((key) => new URL(key.url).pathname === pathname && key.url !== request.url)
+        .map((key) => cache.delete(key)));
     } catch {
       // A full or disabled cache must not prevent online viewing.
     }

@@ -10,11 +10,14 @@ from playwright.sync_api import sync_playwright
 
 
 ROOT = Path(__file__).resolve().parents[1]
+image_requests = []
 
 
 class SiteHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
+        if path.startswith("/assets/") and path.endswith(".png"):
+            image_requests.append(self.path)
         if path == "/character":
             self.path = "/index.html"
         elif path.startswith("/character/"):
@@ -50,17 +53,43 @@ try:
         page.evaluate("navigator.serviceWorker.ready")
         page.wait_for_function("""async () => {
           const cache = await caches.open('webendra-images');
-          return !!(await cache.match('/assets/ballendra.png'));
+          return !!(await cache.match(characters[0].image));
         }""")
         assert page.locator('link[rel="manifest"]').get_attribute("href") == "/manifest.webmanifest"
         assert page.evaluate("fetch('/manifest.webmanifest').then(r => r.json()).then(m => m.display)") == "standalone"
         assert set(path for path in requested_images if path.endswith("endra.png")) == {"/assets/ballendra.png"}
 
+        # Seed a stale unversioned portrait, then require the current URL to fetch real bytes.
+        page.evaluate("""async () => {
+          const cache = await caches.open('webendra-images');
+          await cache.delete(characters[0].image);
+          await cache.put('/assets/ballendra.png', new Response('stale portrait', {
+            headers: { 'Content-Type': 'image/png' }
+          }));
+        }""")
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
+        assert page.evaluate("""async () => {
+          const cache = await caches.open('webendra-images');
+          const response = await cache.match(characters[0].image);
+          return response && (await response.blob()).size > 100;
+        }""")
+        portrait_url = page.evaluate("characters[0].image")
+        count_before = image_requests.count(portrait_url)
+        page.reload()
+        page.wait_for_load_state("networkidle")
+        assert image_requests.count(portrait_url) == count_before
+        assert not page.evaluate("""async () => {
+          const cache = await caches.open('webendra-images');
+          return !!(await cache.match('/assets/ballendra.png'));
+        }""")
+
         page.get_by_role("button", name="Rightendra, next character").click()
         page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Birendra'")
         page.wait_for_function("""async () => {
           const cache = await caches.open('webendra-images');
-          return !!(await cache.match('/assets/birendra.png'));
+          return !!(await cache.match(characters[1].image));
         }""")
 
         context.set_offline(True)
@@ -86,7 +115,7 @@ try:
         assert not errors, errors
         context.set_offline(False)
         page.evaluate("""async () => {
-          const cache = await caches.open('webendra-shell-v2');
+          const cache = await caches.open('webendra-shell-v3');
           await cache.put('/app.js', new Response('window.staleAppLoaded = true'));
         }""")
         page.reload()
@@ -113,7 +142,7 @@ try:
         page.wait_for_function("""async () => !(await caches.keys()).includes('webendra-shell-v0')""")
         assert page.evaluate("""async () => {
           const cache = await caches.open('webendra-images');
-          return !!(await cache.match('/assets/birendra.png'));
+          return !!(await cache.match(characters[1].image));
         }""")
 
         direct_context = browser.new_context()

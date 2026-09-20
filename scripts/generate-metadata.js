@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
+const { createHash } = require("node:crypto");
 const characters = require("../catalogue.js");
 
 const root = path.resolve(__dirname, "..");
@@ -10,18 +11,26 @@ const normalizeNewlines = (value) => value.replace(/\r\n/g, "\n");
 
 if (!characters.length) throw new Error("The catalogue is empty");
 const seen = new Set();
+const cataloguePath = path.join(root, "catalogue.js");
+let catalogueSource = fs.readFileSync(cataloguePath, "utf8");
 for (const character of characters) {
   const slug = character.name.toLowerCase();
   if (!/^[a-z]+$/.test(slug) || seen.has(slug)) {
     throw new Error(`Invalid or duplicate character name: ${character.name}`);
   }
   seen.add(slug);
-  if (!character.alt || !/^\/assets\/[a-z0-9-]+\.png$/.test(character.image)) {
+  const imagePath = character.image.split("?")[0];
+  if (!character.alt || !/^\/assets\/[a-z0-9-]+\.png$/.test(imagePath)) {
     throw new Error(`Invalid image or alt text for ${character.name}`);
   }
-  if (!fs.existsSync(path.join(root, character.image.slice(1)))) {
+  if (!fs.existsSync(path.join(root, imagePath.slice(1)))) {
     throw new Error(`Missing image for ${character.name}: ${character.image}`);
   }
+  // Stable URLs for unchanged bytes; no timestamps or manual version bumps.
+  const hash = createHash("sha256").update(fs.readFileSync(path.join(root, imagePath.slice(1)))).digest("hex").slice(0, 16);
+  const versioned = `${imagePath}?v=${hash}`;
+  catalogueSource = catalogueSource.replace(`image: "${character.image}"`, `image: "${versioned}"`);
+  character.image = versioned;
 }
 
 const urlFor = (character) => `${siteUrl}/character/${character.name.toLowerCase()}`;
@@ -61,6 +70,7 @@ if (!/<script id="structured-data" type="application\/ld\+json">[\s\S]*?<\/scrip
 }
 const data = JSON.stringify(collection, null, 2).split("\n").map((line) => `      ${line}`).join("\n");
 const generatedIndex = index
+  .replace(/(id="character-image"\s+)(?:src="[^"]*"\s+)?/, `$1src="${characters[0].image}"\n            `)
   .replace(/(<script id="structured-data" type="application\/ld\+json">)[\s\S]*?(\s*<\/script>)/,
     `$1\n${data}\n    </script>`)
   .replace(/(id="catalogue-number" class="catalogue-number">)№ \d+ \/ \d+/, (_, prefix) =>
@@ -98,7 +108,7 @@ function characterPage(character, position) {
     [/content="https:\/\/webendra\.vercel\.app\/assets\/webendra-share\.png"/g, `content="${card}"`],
     [/content="Webendra, written in wobbly black hand lettering on white"/g, `content="${escapeHtml(cardAlt)}"`],
     [/(<script id="structured-data" type="application\/ld\+json">)[\s\S]*?(\s*<\/script>)/, `$1\n${structured}\n    </script>`],
-    [/alt="Ballendra, Balen Shah holding a basketball"/, `src="${character.image}"\n            alt="${escapeHtml(character.alt)}"`],
+    [/src="[^"]*"\s+alt="Ballendra, Balen Shah holding a basketball"/, `src="${character.image}"\n            alt="${escapeHtml(character.alt)}"`],
     [/<h1 class="character-name">Ballendra<\/h1>/, `<h1 class="character-name">${escapeHtml(character.displayName ?? character.name)}</h1>`],
     [/(id="catalogue-number" class="catalogue-number">)№ 01 \/ \d+/, `$1№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`],
     [/aria-label="Copy link to Ballendra"/, `aria-label="Copy link to ${escapeHtml(character.name)}"`],
@@ -134,6 +144,7 @@ const pages = characters.map((character, offset) => [
 const characterDirectory = path.join(root, "character");
 if (!check) fs.mkdirSync(characterDirectory, { recursive: true });
 const vercel = {
+  buildCommand: "node scripts/generate-metadata.js --skip-share-cards",
   trailingSlash: false,
   rewrites: [
     { source: "/character", destination: "/index.html" },
@@ -146,7 +157,7 @@ const vercel = {
   headers: JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8")).headers,
 };
 const generatedVercel = JSON.stringify(vercel, null, 2) + "\n";
-for (const [file, content] of [[indexPath, generatedIndex], [path.join(root, "sitemap.xml"), sitemap], [path.join(root, "vercel.json"), generatedVercel], ...pages]) {
+for (const [file, content] of [[cataloguePath, catalogueSource], [indexPath, generatedIndex], [path.join(root, "sitemap.xml"), sitemap], [path.join(root, "vercel.json"), generatedVercel], ...pages]) {
   const current = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
   const changed = normalizeNewlines(current) !== normalizeNewlines(content);
   if (check && changed) throw new Error(`${path.basename(file)} is out of date. Run node scripts/generate-metadata.js`);
@@ -162,9 +173,12 @@ if (fs.existsSync(characterDirectory)) {
     }
   }
 }
-const python = process.platform === "win32" ? "python" : "python3";
-const cards = spawnSync(python, [path.join(__dirname, "generate-share-cards.py"), ...(check ? ["--check"] : [])], {
-  cwd: root, encoding: "utf8", input: JSON.stringify(characters),
-});
-if (cards.status !== 0) throw new Error(cards.stderr || cards.stdout || "Share card generation failed");
+if (!process.argv.includes("--skip-share-cards")) {
+  // Vercel only needs URL/HTML generation; share cards are generated locally.
+  const python = process.platform === "win32" ? "python" : "python3";
+  const cards = spawnSync(python, [path.join(__dirname, "generate-share-cards.py"), ...(check ? ["--check"] : [])], {
+    cwd: root, encoding: "utf8", input: JSON.stringify(characters),
+  });
+  if (cards.status !== 0) throw new Error(cards.stderr || cards.stdout || "Share card generation failed");
+}
 console.log(check ? "Metadata is current." : "Metadata generated.");

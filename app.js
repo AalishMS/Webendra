@@ -45,7 +45,7 @@ function cacheViewedImage(path) {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
+    navigator.serviceWorker.register("/service-worker.js", { updateViaCache: "none" }).catch(() => {});
   }, { once: true });
 }
 
@@ -270,7 +270,8 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   } catch {
     if (!nextImage.naturalWidth) {
       if (thisTransition === transitionId) {
-        const displayedPath = new URL(document.querySelector("#character-image").src).pathname;
+        const displayedUrl = new URL(document.querySelector("#character-image").src);
+        const displayedPath = displayedUrl.pathname + displayedUrl.search;
         const displayedIndex = characters.findIndex((item) => item.image === displayedPath);
         currentIndex = displayedIndex < 0 ? 0 : displayedIndex;
         updateCuratorMeta(currentIndex);

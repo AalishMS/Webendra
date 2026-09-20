@@ -32,7 +32,7 @@ expected = set()
 for character in CHARACTERS:
     name = character["name"]
     display_name = character.get("displayName", name)
-    image = Image.open(ROOT / character["image"].lstrip("/")).convert("RGBA")
+    image = Image.open(ROOT / character["image"].split("?")[0].lstrip("/")).convert("RGBA")
     bounds = image.getchannel("A").getbbox()
     if not bounds:
         raise RuntimeError(f"Empty character image: {name}")
