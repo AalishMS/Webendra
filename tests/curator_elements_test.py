@@ -102,6 +102,8 @@ with sync_playwright() as playwright:
     colophon_btn = page.locator("#curator-colophon-btn")
     curator_dialog = page.locator("#curator-dialog")
     assert colophon_btn.is_visible()
+    assert "Chef:" in colophon_btn.inner_text()
+    assert "Aalish" in colophon_btn.inner_text()
     assert colophon_btn.get_attribute("aria-expanded") == "false"
     assert curator_dialog.is_hidden()
 
@@ -110,15 +112,33 @@ with sync_playwright() as playwright:
     assert colophon_btn.get_attribute("aria-expanded") == "true"
     assert curator_dialog.is_visible()
     assert page.locator("#curator-dialog-title").inner_text() == "Aalish Man Singh"
+    assert page.locator(".curator-dialog-desc").inner_text() == "Creator of Webendra — A gallery filled with dumb ideas."
+    assert page.locator(".curator-tip-title").inner_text() == "Support Webendra"
+    assert page.locator(".curator-tip-subtitle").inner_text() == "Pleasendra"
+    assert page.locator("#curator-devendra-link").is_visible()
     assert page.locator(".curator-link[href*='linkedin.com']").is_visible()
     assert page.locator(".curator-link[href*='github.com']").is_visible()
     assert page.locator(".curator-link[href*='instagram.com']").is_visible()
     assert page.locator(".curator-qr-img").is_visible()
+    save_qr_btn = page.locator("#curator-save-qr-btn")
+    assert save_qr_btn.is_hidden()
 
     # Screenshot in dark mode
     page.screenshot(path=str(Path("test-output") / "curator-dialog-dark.png"))
 
+    # Test Devendra easter egg navigation
+    page.locator("#curator-devendra-link").click()
+    assert curator_dialog.is_hidden()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Visiting Devendra.'")
+    page.wait_for_url("**/character/devendra")
+    page.wait_for_timeout(700)
+    assert page.locator("#catalogue-number").inner_text() == f"№ 10 / {total:02}"
+    assert page.locator(".character-name:not([aria-hidden])").inner_text() == "Devendra"
+
     # Close via Escape
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
     page.keyboard.press("Escape")
     assert curator_dialog.is_hidden()
     assert colophon_btn.get_attribute("aria-expanded") == "false"
@@ -155,7 +175,17 @@ with sync_playwright() as playwright:
     assert mobile.locator("#curator-dialog").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )
+    mob_save_qr = mobile.locator("#curator-save-qr-btn")
+    assert mob_save_qr.is_visible()
+    assert mob_save_qr.inner_text().strip() == "Save QR"
+    assert mob_save_qr.get_attribute("href") == "/assets/esewa-qr.png"
+    assert mob_save_qr.get_attribute("download") == "webendra-esewa-qr.png"
+    assert mob_save_qr.evaluate(
+        "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
+    )
     mobile.screenshot(path=str(Path("test-output") / "curator-dialog-mobile.png"))
+    mob_save_qr.click()
+    mobile.wait_for_function("document.querySelector('#toast').textContent === 'QR code saved.'")
     mobile.locator("#curator-dialog-close").click()
     assert mobile.locator("#curator-dialog").is_hidden()
 

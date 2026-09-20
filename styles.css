@@ -100,7 +100,7 @@ button {
   display: block;
   width: auto;
   max-width: 100%;
-  max-height: calc(100svh - clamp(8rem, 18svh, 11rem));
+  max-height: calc(100svh - 14rem);
   height: auto;
   margin-inline: auto;
   object-fit: contain;
@@ -199,7 +199,7 @@ button {
 
 .toast {
   position: fixed;
-  z-index: 10001;
+  z-index: 9999;
   left: 50%;
   bottom: max(1rem, env(safe-area-inset-bottom));
   max-width: calc(100vw - 2rem);
@@ -403,7 +403,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  z-index: 9999;
+  z-index: 10001;
 }
 
 #kfc-btn {
@@ -583,6 +583,26 @@ button {
   font-weight: 600;
 }
 
+.curator-devendra-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--control-border);
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+.curator-devendra-link:hover {
+  color: var(--page-fg);
+  text-decoration-color: var(--page-fg);
+}
+
+.curator-devendra-link:focus-visible {
+  outline: 2px solid var(--control-outline);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .curator-dialog-close {
   display: grid;
   place-items: center;
@@ -716,6 +736,60 @@ button {
   color: #1f2937;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.curator-save-qr-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: 0.65rem;
+  padding: 0.45rem 0.6rem;
+  border: 1.5px solid var(--control-border);
+  border-radius: 0.5rem;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--control-border);
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 42rem), (pointer: coarse) {
+  .curator-save-qr-btn {
+    display: flex;
+  }
+}
+
+.curator-save-qr-btn svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+}
+
+.curator-save-qr-btn:hover {
+  background: var(--control-hover);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--control-border);
+}
+
+.curator-save-qr-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--control-border);
+}
+
+.curator-save-qr-btn:focus-visible {
+  outline: 2px solid var(--control-outline);
+  outline-offset: 2px;
 }
 
 .spawned-kfc {

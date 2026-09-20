@@ -417,10 +417,12 @@ if (curatorBtn && curatorDialog) {
   function openCuratorDialog() {
     curatorDialog.hidden = false;
     curatorBtn.setAttribute("aria-expanded", "true");
+    curatorCloseBtn?.focus({ preventScroll: true });
   }
 
   function closeCuratorDialog() {
     curatorDialog.hidden = true;
+    if (focusWasInside) curatorBtn.focus({ preventScroll: true });
     curatorBtn.setAttribute("aria-expanded", "false");
   }
 
@@ -437,6 +439,47 @@ if (curatorBtn && curatorDialog) {
     event.stopPropagation();
     closeCuratorDialog();
     curatorBtn.focus();
+  });
+
+  const devendraLink = document.querySelector("#curator-devendra-link");
+  devendraLink?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    closeCuratorDialog();
+    const devendraIndex = characters.findIndex(
+      (item) => item.name.toLowerCase() === "devendra"
+    );
+    if (devendraIndex !== -1) {
+      showCharacter(devendraIndex);
+      showToast("Visiting Devendra.");
+    }
+  });
+
+  const saveQrBtn = document.querySelector("#curator-save-qr-btn");
+  saveQrBtn?.addEventListener("click", async (event) => {
+    event.stopPropagation();
+    if (navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch("/assets/esewa-qr.png");
+        const blob = await response.blob();
+        const file = new File([blob], "webendra-esewa-qr.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          event.preventDefault();
+          await navigator.share({
+            files: [file],
+            title: "Webendra eSewa QR",
+          });
+          showToast("QR code saved.");
+          return;
+        }
+      } catch (err) {
+        if (err.name === "AbortError") {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+    showToast("QR code saved.");
   });
 
   curatorDialog.addEventListener("click", (event) => {
