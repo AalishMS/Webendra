@@ -2,7 +2,7 @@
 
 No agenda. Only `-endra`.
 
-A prestigious gallery of ordinary things with distinguished names.
+A tiny gallery of ordinary things with `-endra` added to their names, because it sounds funny.
 
 [Enter the gallery](https://webendra.vercel.app/)
 
