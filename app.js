@@ -16,6 +16,11 @@ const collectionStructuredData = JSON.stringify({
   name: "Webendra",
   url: `${SITE_URL}/`,
   description: "A small collection of things with -endra at the end.",
+  author: {
+    "@type": "Person",
+    name: "Aalish Man Singh",
+    url: "https://github.com/AalishMS",
+  },
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: characters.length,
@@ -182,6 +187,11 @@ function updateSeo(index, path = getCharacterPath(index)) {
         contentUrl: `${SITE_URL}${character.image}`,
         thumbnailUrl: imageUrl,
         caption: character.alt,
+        author: {
+          "@type": "Person",
+          name: "Aalish Man Singh",
+          url: "https://github.com/AalishMS",
+        },
         isPartOf: {
           "@type": "CollectionPage",
           name: "Webendra",
@@ -399,7 +409,100 @@ window.addEventListener("popstate", () => {
   }
 });
 
+const curatorBtn = document.querySelector("#curator-colophon-btn");
+const curatorDialog = document.querySelector("#curator-dialog");
+const curatorCloseBtn = document.querySelector("#curator-dialog-close");
+
+if (curatorBtn && curatorDialog) {
+  function openCuratorDialog() {
+    curatorDialog.hidden = false;
+    curatorBtn.setAttribute("aria-expanded", "true");
+    curatorCloseBtn?.focus({ preventScroll: true });
+  }
+
+  function closeCuratorDialog() {
+    const focusWasInside = curatorDialog.contains(document.activeElement);
+    curatorDialog.hidden = true;
+    if (focusWasInside) curatorBtn.focus({ preventScroll: true });
+    curatorBtn.setAttribute("aria-expanded", "false");
+  }
+
+  curatorBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    if (curatorDialog.hidden) {
+      openCuratorDialog();
+    } else {
+      closeCuratorDialog();
+    }
+  });
+
+  curatorCloseBtn?.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeCuratorDialog();
+    curatorBtn.focus();
+  });
+
+  const devendraLink = document.querySelector("#curator-devendra-link");
+  devendraLink?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    closeCuratorDialog();
+    const devendraIndex = characters.findIndex(
+      (item) => item.name.toLowerCase() === "devendra"
+    );
+    if (devendraIndex !== -1) {
+      showCharacter(devendraIndex);
+      showToast("Visiting Devendra.");
+    }
+  });
+
+  const saveQrBtn = document.querySelector("#curator-save-qr-btn");
+  saveQrBtn?.addEventListener("click", async (event) => {
+    event.stopPropagation();
+    if (navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch("/assets/esewa-qr.png");
+        const blob = await response.blob();
+        const file = new File([blob], "webendra-esewa-qr.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          event.preventDefault();
+          await navigator.share({
+            files: [file],
+            title: "Webendra eSewa QR",
+          });
+          showToast("QR code saved.");
+          return;
+        }
+      } catch (err) {
+        if (err.name === "AbortError") {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
+    showToast("QR code saved.");
+  });
+
+  curatorDialog.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!curatorDialog.hidden && !curatorDialog.contains(event.target) && event.target !== curatorBtn) {
+      closeCuratorDialog();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !curatorDialog.hidden) {
+      closeCuratorDialog();
+      curatorBtn.focus();
+    }
+  });
+}
+
 document.addEventListener("keydown", (event) => {
+  if (curatorDialog && !curatorDialog.hidden) return;
   if (event.repeat || event.altKey || event.ctrlKey || event.metaKey ||
       event.target.matches("input, textarea, select, [contenteditable=true]")) return;
   if (event.key === "ArrowLeft" || event.key === "ArrowRight") event.preventDefault();

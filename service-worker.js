@@ -15,6 +15,7 @@ const APP_FILES = [
   "/assets/webendra-icon-192.png",
   "/assets/webendra-maskable-512.png",
   "/assets/webendra-apple-touch.png",
+  "/assets/esewa-qr.png",
 ];
 const APP_PATHS = new Set(APP_FILES);
 

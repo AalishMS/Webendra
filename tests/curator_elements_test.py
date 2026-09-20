@@ -98,6 +98,73 @@ with sync_playwright() as playwright:
     page.wait_for_timeout(900)
     page.screenshot(path=str(Path("test-output") / "curator-dark.png"))
 
+    # Curator colophon & dialog tests
+    colophon_btn = page.locator("#curator-colophon-btn")
+    curator_dialog = page.locator("#curator-dialog")
+    assert colophon_btn.is_visible()
+    assert "Chef:" in colophon_btn.inner_text()
+    assert "Aalish" in colophon_btn.inner_text()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+    assert curator_dialog.is_hidden()
+
+    # Open dialog
+    colophon_btn.click()
+    assert colophon_btn.get_attribute("aria-expanded") == "true"
+    assert curator_dialog.is_visible()
+    assert page.locator("#curator-dialog-title").inner_text() == "Aalish Man Singh"
+    assert page.locator(".curator-dialog-desc").inner_text() == "Creator of Webendra — A gallery filled with dumb ideas."
+    assert page.locator(".curator-tip-title").inner_text() == "Support Webendra"
+    assert page.locator(".curator-tip-subtitle").inner_text() == "Pleasendra"
+    assert page.locator("#curator-devendra-link").is_visible()
+    linkedin_link = page.locator(".curator-link[href*='linkedin.com']")
+    assert linkedin_link.is_visible()
+    linkedin_svg_box = linkedin_link.locator("svg").bounding_box()
+    linkedin_span_box = linkedin_link.locator("span").bounding_box()
+    svg_center_y = linkedin_svg_box["y"] + linkedin_svg_box["height"] / 2
+    span_center_y = linkedin_span_box["y"] + linkedin_span_box["height"] / 2
+    assert abs(svg_center_y - span_center_y) <= 1.0, f"LinkedIn logo and text misaligned: {svg_center_y} vs {span_center_y}"
+    assert page.locator(".curator-link[href*='github.com']").is_visible()
+    assert page.locator(".curator-link[href*='instagram.com']").is_visible()
+    border_style = linkedin_link.evaluate("el => getComputedStyle(el).borderStyle")
+    assert border_style in ("none", "hidden"), f"Expected no border, got {border_style}"
+    svg_width = linkedin_link.locator("svg").evaluate("el => parseFloat(getComputedStyle(el).width)")
+    assert svg_width >= 16.0, f"Expected icon width >= 16px, got {svg_width}"
+    assert page.locator(".curator-qr-img").is_visible()
+    save_qr_btn = page.locator("#curator-save-qr-btn")
+    assert save_qr_btn.is_hidden()
+
+    # Screenshot in dark mode
+    page.screenshot(path=str(Path("test-output") / "curator-dialog-dark.png"))
+
+    # Test Devendra easter egg navigation
+    page.locator("#curator-devendra-link").click()
+    assert curator_dialog.is_hidden()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Visiting Devendra.'")
+    page.wait_for_url("**/character/devendra")
+    page.wait_for_timeout(700)
+    assert page.locator("#catalogue-number").inner_text() == f"№ 10 / {total:02}"
+    assert page.locator(".character-name:not([aria-hidden])").inner_text() == "Devendra"
+
+    # Close via Escape
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
+    page.keyboard.press("Escape")
+    assert curator_dialog.is_hidden()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+
+    # Open and close via close button
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
+    page.locator("#curator-dialog-close").click()
+    assert curator_dialog.is_hidden()
+
+    # Open and close via outside click
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
+    page.locator(".character figcaption").click()
+    assert curator_dialog.is_hidden()
+
     mobile = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
     mobile.goto(BASE)
     mobile.wait_for_load_state("networkidle")
@@ -109,6 +176,29 @@ with sync_playwright() as playwright:
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )
+
+    # Mobile colophon tap
+    mob_colophon = mobile.locator("#curator-colophon-btn")
+    assert mob_colophon.is_visible()
+    mob_colophon.click()
+    assert mobile.locator("#curator-dialog").is_visible()
+    assert mobile.locator("#curator-dialog").evaluate(
+        "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
+    )
+    mob_save_qr = mobile.locator("#curator-save-qr-btn")
+    assert mob_save_qr.is_visible()
+    assert mob_save_qr.inner_text().strip() == "Save QR"
+    assert mob_save_qr.get_attribute("href") == "/assets/esewa-qr.png"
+    assert mob_save_qr.get_attribute("download") == "webendra-esewa-qr.png"
+    assert mob_save_qr.evaluate(
+        "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
+    )
+    mobile.screenshot(path=str(Path("test-output") / "curator-dialog-mobile.png"))
+    mob_save_qr.click()
+    mobile.wait_for_function("document.querySelector('#toast').textContent === 'QR code saved.'")
+    mobile.locator("#curator-dialog-close").click()
+    assert mobile.locator("#curator-dialog").is_hidden()
+
     mobile.set_viewport_size({"width": 320, "height": 700})
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
