@@ -116,9 +116,19 @@ with sync_playwright() as playwright:
     assert page.locator(".curator-tip-title").inner_text() == "Support Webendra"
     assert page.locator(".curator-tip-subtitle").inner_text() == "Pleasendra"
     assert page.locator("#curator-devendra-link").is_visible()
-    assert page.locator(".curator-link[href*='linkedin.com']").is_visible()
+    linkedin_link = page.locator(".curator-link[href*='linkedin.com']")
+    assert linkedin_link.is_visible()
+    linkedin_svg_box = linkedin_link.locator("svg").bounding_box()
+    linkedin_span_box = linkedin_link.locator("span").bounding_box()
+    svg_center_y = linkedin_svg_box["y"] + linkedin_svg_box["height"] / 2
+    span_center_y = linkedin_span_box["y"] + linkedin_span_box["height"] / 2
+    assert abs(svg_center_y - span_center_y) <= 1.0, f"LinkedIn logo and text misaligned: {svg_center_y} vs {span_center_y}"
     assert page.locator(".curator-link[href*='github.com']").is_visible()
     assert page.locator(".curator-link[href*='instagram.com']").is_visible()
+    border_style = linkedin_link.evaluate("el => getComputedStyle(el).borderStyle")
+    assert border_style in ("none", "hidden"), f"Expected no border, got {border_style}"
+    svg_width = linkedin_link.locator("svg").evaluate("el => parseFloat(getComputedStyle(el).width)")
+    assert svg_width >= 16.0, f"Expected icon width >= 16px, got {svg_width}"
     assert page.locator(".curator-qr-img").is_visible()
     save_qr_btn = page.locator("#curator-save-qr-btn")
     assert save_qr_btn.is_hidden()

@@ -421,6 +421,7 @@ if (curatorBtn && curatorDialog) {
   }
 
   function closeCuratorDialog() {
+    const focusWasInside = curatorDialog.contains(document.activeElement);
     curatorDialog.hidden = true;
     if (focusWasInside) curatorBtn.focus({ preventScroll: true });
     curatorBtn.setAttribute("aria-expanded", "false");
