@@ -145,6 +145,7 @@ const characterDirectory = path.join(root, "character");
 if (!check) fs.mkdirSync(characterDirectory, { recursive: true });
 const vercel = {
   buildCommand: "node scripts/generate-metadata.js --skip-share-cards",
+  outputDirectory: ".",
   trailingSlash: false,
   rewrites: [
     { source: "/character", destination: "/index.html" },
