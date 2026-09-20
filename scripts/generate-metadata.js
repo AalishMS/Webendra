@@ -92,6 +92,7 @@ function characterPage(character, position) {
     [/<h1 class="character-name">Ballendra<\/h1>/, `<h1 class="character-name">${escapeHtml(character.displayName ?? character.name)}</h1>`],
     [/(id="catalogue-number" class="catalogue-number">)№ 01 \/ \d+/, `$1№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`],
     [/aria-label="Copy link to Ballendra"/, `aria-label="Copy link to ${escapeHtml(character.name)}"`],
+    [/aria-label="Copy image of Ballendra"/, `aria-label="Copy image of ${escapeHtml(character.name)}"`],
   ];
   return replacements.reduce((html, [pattern, value]) => html.replace(pattern, value), generatedIndex);
 }

@@ -6,6 +6,7 @@ const previousButton = document.querySelector(".arrow--previous");
 const nextButton = document.querySelector(".arrow--next");
 const catalogueNumber = document.querySelector("#catalogue-number");
 const shareButton = document.querySelector("#share-btn");
+const copyImageButton = document.querySelector("#copy-image-btn");
 const toast = document.querySelector("#toast");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const structuredData = document.querySelector("#structured-data");
@@ -48,6 +49,7 @@ function updateCuratorMeta(index) {
   const digits = String(characters.length).length;
   catalogueNumber.textContent = `№ ${String(index + 1).padStart(digits, "0")} / ${String(characters.length).padStart(digits, "0")}`;
   shareButton.setAttribute("aria-label", `Copy link to ${character.name}`);
+  copyImageButton?.setAttribute("aria-label", `Copy image of ${character.name}`);
 }
 
 function showToast(message) {
@@ -74,6 +76,43 @@ async function shareCurrentCharacter() {
 }
 
 shareButton.addEventListener("click", shareCurrentCharacter);
+
+async function copyCurrentImage() {
+  const character = characters[currentIndex];
+  try {
+    if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+      throw new Error("Clipboard image unavailable");
+    }
+    let blob;
+    if ("caches" in window) {
+      try {
+        const cache = await caches.open("webendra-images");
+        const match = await cache.match(character.image);
+        if (match) {
+          blob = await match.blob();
+        }
+      } catch {
+        // Cache read failure should not block fetching directly
+      }
+    }
+    if (!blob) {
+      const response = await fetch(character.image);
+      if (!response.ok) throw new Error("Image fetch failed");
+      blob = await response.blob();
+    }
+    const pngBlob = blob.type === "image/png" ? blob : new Blob([blob], { type: "image/png" });
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "image/png": pngBlob,
+      }),
+    ]);
+    showToast("Image copied");
+  } catch {
+    showToast("Image could not be copied.");
+  }
+}
+
+copyImageButton?.addEventListener("click", copyCurrentImage);
 
 function getSlug(character) {
   return character.name.toLowerCase();

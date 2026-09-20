@@ -44,8 +44,23 @@ with sync_playwright() as playwright:
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     assert page.locator("#pronounce-btn").count() == 0
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
+    assert page.get_by_role("button", name="Copy image of Ballendra").is_visible()
     page.get_by_role("button", name="Copy link to Ballendra").click()
     assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/ballendra"
+
+    page.get_by_role("button", name="Copy image of Ballendra").click()
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Image copied'")
+    page.screenshot(path=str(Path("test-output") / "image-copied-toast.png"))
+    has_png = page.evaluate("""async () => {
+        const items = await navigator.clipboard.read();
+        return items.some(item => item.types.includes('image/png'));
+    }""")
+    assert has_png
+
+    page.evaluate("() => { window.__write = navigator.clipboard.write.bind(navigator.clipboard); navigator.clipboard.write = () => Promise.reject(new Error('blocked')); }")
+    page.get_by_role("button", name="Copy image of Ballendra").click()
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Image could not be copied.'")
+    page.evaluate("() => { navigator.clipboard.write = window.__write; }")
 
     page.locator(".image-frame").hover()
     transform = page.locator("#character-image").evaluate(
@@ -55,6 +70,9 @@ with sync_playwright() as playwright:
 
     page.get_by_role("button", name="Rightendra, next character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ 02 / {total:02}"
+    assert page.get_by_role("button", name="Copy image of Birendra").is_visible()
+    page.get_by_role("button", name="Copy image of Birendra").click()
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Image copied'")
     page.get_by_role("button", name="Copy link to Birendra").click()
     assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/birendra"
     assert page.locator("#toast").inner_text() == "Art piece copied."
@@ -86,6 +104,12 @@ with sync_playwright() as playwright:
     assert mobile.locator("#catalogue-number").is_visible()
     assert mobile.get_by_role("button", name="Leftendra, previous character").is_visible()
     assert mobile.get_by_role("button", name="Rightendra, next character").is_visible()
+    assert mobile.get_by_role("button", name="Copy link to Ballendra").is_visible()
+    assert mobile.get_by_role("button", name="Copy image of Ballendra").is_visible()
+    assert mobile.locator(".character-meta").evaluate(
+        "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
+    )
+    mobile.set_viewport_size({"width": 320, "height": 700})
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )
