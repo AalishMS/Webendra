@@ -35,6 +35,45 @@ const collectionStructuredData = JSON.stringify({
 
 let currentIndex = getIndexFromPath();
 let toastTimeout = 0;
+const nearbyImages = new Map();
+let nearbyTimer = 0;
+
+function prepareNearbyImage(index) {
+  if (nearbyImages.has(index)) return nearbyImages.get(index);
+
+  const image = new Image();
+  image.fetchPriority = "low";
+  image.src = characters[index].image;
+  const prepared = { image, decoded: image.decode() };
+  nearbyImages.set(index, prepared);
+  prepared.decoded.catch(() => {
+    if (nearbyImages.get(index) === prepared) nearbyImages.delete(index);
+  });
+  return prepared;
+}
+
+function queueNearbyImages(index) {
+  window.clearTimeout(nearbyTimer);
+  if (navigator.connection?.saveData) return;
+
+  nearbyTimer = window.setTimeout(async () => {
+    if (index !== currentIndex || document.hidden) return;
+    const next = (index + 1) % characters.length;
+    const previous = (index - 1 + characters.length) % characters.length;
+    for (const key of nearbyImages.keys()) {
+      if (key !== next && key !== previous) nearbyImages.delete(key);
+    }
+    // The next arrow is the common path. Fetch the other neighbor afterward.
+    for (const neighbor of [next, previous]) {
+      if (index !== currentIndex) return;
+      try {
+        await prepareNearbyImage(neighbor).decoded;
+      } catch {
+        // Navigation will report an image failure if this image is selected.
+      }
+    }
+  }, 0);
+}
 
 function cacheViewedImage(path) {
   if (!("serviceWorker" in navigator) || navigator.serviceWorker.controller) return;
@@ -211,8 +250,12 @@ function renderInitialCharacter() {
   image.alt = character.alt;
   if (image.complete && image.naturalWidth > 0) {
     cacheViewedImage(character.image);
+    queueNearbyImages(currentIndex);
   } else {
-    image.addEventListener("load", () => cacheViewedImage(character.image), { once: true });
+    image.addEventListener("load", () => {
+      cacheViewedImage(character.image);
+      queueNearbyImages(currentIndex);
+    }, { once: true });
   }
   heading.textContent = character.displayName ?? character.name;
   updateCuratorMeta(currentIndex);
@@ -260,13 +303,18 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   currentIndex = nextIndex;
   updateCuratorMeta(nextIndex);
   updateSeo(nextIndex, !updateHistory && window.location.pathname === "/" ? "/" : getCharacterPath(nextIndex));
-  const nextImage = new Image();
-  nextImage.src = character.image;
+  const prepared = nearbyImages.get(nextIndex);
+  nearbyImages.delete(nextIndex);
+  const nextImage = prepared?.image ?? new Image();
+  if (!prepared) {
+    nextImage.fetchPriority = "high";
+    nextImage.src = character.image;
+  }
   nextImage.alt = character.alt;
   nextImage.className = "character-image character-image--incoming";
 
   try {
-    await nextImage.decode();
+    await (prepared?.decoded ?? nextImage.decode());
   } catch {
     if (!nextImage.naturalWidth) {
       if (thisTransition === transitionId) {
@@ -307,6 +355,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   previousImage.setAttribute("aria-hidden", "true");
   nextImage.id = "character-image";
   imageFrame.append(nextImage);
+  queueNearbyImages(nextIndex);
 
   const maxImageHeight = Number.parseFloat(window.getComputedStyle(nextImage).maxHeight);
   const targetFrameHeight = Math.min(
