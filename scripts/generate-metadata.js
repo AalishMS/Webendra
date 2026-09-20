@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { spawnSync } = require("node:child_process");
 const characters = require("../catalogue.js");
 
 const root = path.resolve(__dirname, "..");
@@ -23,12 +24,11 @@ for (const character of characters) {
   }
 }
 
-const urlFor = (character, index) => index === 0
-  ? `${siteUrl}/`
-  : `${siteUrl}/character/${character.name.toLowerCase()}`;
+const urlFor = (character) => `${siteUrl}/character/${character.name.toLowerCase()}`;
 const escapeXml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;",
 })[char]);
+const escapeHtml = (value) => escapeXml(value);
 
 const collection = {
   "@context": "https://schema.org",
@@ -61,9 +61,47 @@ const generatedIndex = index
   .replace(/(id="catalogue-number" class="catalogue-number">)№ \d+ \/ \d+/, (_, prefix) =>
     `${prefix}№ 01 / ${String(characters.length).padStart(2, "0")}`);
 
+function characterPage(character, position) {
+  const slug = character.name.toLowerCase();
+  const url = `${siteUrl}/character/${slug}`;
+  const title = `${character.name} — Webendra`;
+  const description = `${character.name} — A small collection of things with -endra at the end.`;
+  const card = `${siteUrl}/assets/share/${slug}.png`;
+  const cardAlt = `${character.name} on a Webendra share card`;
+  const structured = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+    name: character.name,
+    description,
+    url,
+    contentUrl: siteUrl + character.image,
+    thumbnailUrl: card,
+    caption: character.alt,
+    isPartOf: { "@type": "CollectionPage", name: "Webendra", url: `${siteUrl}/` },
+  }, null, 2).split("\n").map((line) => `      ${line}`).join("\n");
+  const replacements = [
+    [/<title>Webendra<\/title>/, `<title>${escapeHtml(title)}</title>`],
+    [/content="A small collection of things with -endra at the end\."/g, `content="${escapeHtml(description)}"`],
+    [/href="https:\/\/webendra\.vercel\.app\/"(?= \/>)/, `href="${url}"`],
+    [/(<meta (?:property="og:title"|name="twitter:title") content=")Webendra(" \/>)/g, `$1${escapeHtml(title)}$2`],
+    [/content="https:\/\/webendra\.vercel\.app\/"(?= \/>)/, `content="${url}"`],
+    [/content="https:\/\/webendra\.vercel\.app\/assets\/webendra-share\.png"/g, `content="${card}"`],
+    [/content="Webendra, written in wobbly black hand lettering on white"/g, `content="${escapeHtml(cardAlt)}"`],
+    [/(<script id="structured-data" type="application\/ld\+json">)[\s\S]*?(\s*<\/script>)/, `$1\n${structured}\n    </script>`],
+    [/alt="Ballendra, Balen Shah holding a basketball"/, `src="${character.image}"\n            alt="${escapeHtml(character.alt)}"`],
+    [/<h1 class="character-name">Ballendra<\/h1>/, `<h1 class="character-name">${escapeHtml(character.displayName ?? character.name)}</h1>`],
+    [/(id="catalogue-number" class="catalogue-number">)№ 01 \/ \d+/, `$1№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`],
+    [/aria-label="Copy link to Ballendra"/, `aria-label="Copy link to ${escapeHtml(character.name)}"`],
+  ];
+  return replacements.reduce((html, [pattern, value]) => html.replace(pattern, value), generatedIndex);
+}
+
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
+  "  <url>",
+  `    <loc>${siteUrl}/</loc>`,
+  "  </url>",
   ...characters.flatMap((character, index) => [
     "  <url>",
     `    <loc>${escapeXml(urlFor(character, index))}</loc>`,
@@ -78,10 +116,44 @@ const sitemap = [
   "",
 ].join("\n");
 
-for (const [file, content] of [[indexPath, generatedIndex], [path.join(root, "sitemap.xml"), sitemap]]) {
+const pages = characters.map((character, offset) => [
+  path.join(root, "character", `${character.name.toLowerCase()}.html`),
+  characterPage(character, offset),
+]);
+const characterDirectory = path.join(root, "character");
+if (!check) fs.mkdirSync(characterDirectory, { recursive: true });
+const vercel = {
+  trailingSlash: false,
+  rewrites: [
+    { source: "/character", destination: "/index.html" },
+    ...characters.map((character) => ({
+      source: `/character/${character.name.toLowerCase()}`,
+      destination: `/character/${character.name.toLowerCase()}.html`,
+    })),
+    { source: "/character/(.*)", destination: "/index.html" },
+  ],
+  headers: JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8")).headers,
+};
+const generatedVercel = JSON.stringify(vercel, null, 2) + "\n";
+for (const [file, content] of [[indexPath, generatedIndex], [path.join(root, "sitemap.xml"), sitemap], [path.join(root, "vercel.json"), generatedVercel], ...pages]) {
   const current = fs.existsSync(file) ? fs.readFileSync(file, "utf8") : "";
   const changed = normalizeNewlines(current) !== normalizeNewlines(content);
   if (check && changed) throw new Error(`${path.basename(file)} is out of date. Run node scripts/generate-metadata.js`);
   if (!check && changed) fs.writeFileSync(file, normalizeNewlines(content));
 }
+const expectedPages = new Set(pages.map(([file]) => file));
+if (fs.existsSync(characterDirectory)) {
+  for (const file of fs.readdirSync(characterDirectory).filter((name) => name.endsWith(".html"))) {
+    const fullPath = path.join(characterDirectory, file);
+    if (!expectedPages.has(fullPath)) {
+      if (check) throw new Error(`Stale character page: ${file}`);
+      fs.unlinkSync(fullPath);
+    }
+  }
+}
+const python = process.platform === "win32" ? "python" : "python3";
+const cards = spawnSync(python, [path.join(__dirname, "generate-share-cards.py"), ...(check ? ["--check"] : [])], {
+  cwd: root, encoding: "utf8", input: JSON.stringify(characters),
+});
+if (cards.status !== 0) throw new Error(cards.stderr || cards.stdout || "Share card generation failed");
 console.log(check ? "Metadata is current." : "Metadata generated.");

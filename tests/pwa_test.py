@@ -15,8 +15,11 @@ ROOT = Path(__file__).resolve().parents[1]
 class SiteHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
-        if path == "/character" or path.startswith("/character/"):
+        if path == "/character":
             self.path = "/index.html"
+        elif path.startswith("/character/"):
+            page = ROOT / "character" / f"{path.removeprefix('/character/')}.html"
+            self.path = f"/character/{page.name}" if page.is_file() else "/index.html"
         super().do_GET()
 
     def end_headers(self):

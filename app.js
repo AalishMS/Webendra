@@ -9,7 +9,23 @@ const shareButton = document.querySelector("#share-btn");
 const toast = document.querySelector("#toast");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const structuredData = document.querySelector("#structured-data");
-const collectionStructuredData = structuredData.textContent;
+const collectionStructuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Webendra",
+  url: `${SITE_URL}/`,
+  description: "A small collection of things with -endra at the end.",
+  mainEntity: {
+    "@type": "ItemList",
+    numberOfItems: characters.length,
+    itemListElement: characters.map((character, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: character.name,
+      url: `${SITE_URL}/character/${character.name.toLowerCase()}`,
+    })),
+  },
+});
 
 let currentIndex = getIndexFromPath();
 let toastTimeout = 0;
@@ -64,7 +80,7 @@ function getSlug(character) {
 }
 
 function getCharacterPath(index) {
-  return index === 0 ? "/" : `/character/${getSlug(characters[index])}`;
+  return `/character/${getSlug(characters[index])}`;
 }
 
 function getIndexFromPath() {
@@ -86,17 +102,16 @@ function setMeta(selector, value) {
   }
 }
 
-function updateSeo(index) {
+function updateSeo(index, path = getCharacterPath(index)) {
   const character = characters[index];
-  const path = getCharacterPath(index);
   const url = `${SITE_URL}${path}`;
-  const isHome = index === 0;
+  const isHome = path === "/";
   const imageUrl = isHome
     ? `${SITE_URL}/assets/webendra-share.png`
-    : `${SITE_URL}${character.image}`;
+    : `${SITE_URL}/assets/share/${character.name.toLowerCase()}.png`;
   const imageAlt = isHome
     ? "Webendra, written in wobbly black hand lettering on white"
-    : character.alt;
+    : `${character.name} on a Webendra share card`;
   const title = isHome
     ? "Webendra"
     : `${character.name} — Webendra`;
@@ -125,7 +140,8 @@ function updateSeo(index) {
         name: character.name,
         description,
         url,
-        contentUrl: imageUrl,
+        contentUrl: `${SITE_URL}${character.image}`,
+        thumbnailUrl: imageUrl,
         caption: character.alt,
         isPartOf: {
           "@type": "CollectionPage",
@@ -139,7 +155,8 @@ function renderInitialCharacter() {
   const character = characters[currentIndex];
   const image = document.querySelector("#character-image");
   const heading = document.querySelector("#character-name .character-name");
-  const expectedPath = getCharacterPath(currentIndex);
+  const expectedPath = currentIndex === 0 && window.location.pathname === "/"
+    ? "/" : getCharacterPath(currentIndex);
 
   image.src = character.image;
   image.alt = character.alt;
@@ -150,7 +167,7 @@ function renderInitialCharacter() {
   }
   heading.textContent = character.displayName ?? character.name;
   updateCuratorMeta(currentIndex);
-  updateSeo(currentIndex);
+  updateSeo(currentIndex, expectedPath);
 
   if (window.location.pathname !== expectedPath) {
     window.history.replaceState({ character: getSlug(character) }, "", expectedPath);
@@ -193,7 +210,7 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   const thisTransition = ++transitionId;
   currentIndex = nextIndex;
   updateCuratorMeta(nextIndex);
-  updateSeo(nextIndex);
+  updateSeo(nextIndex, !updateHistory && window.location.pathname === "/" ? "/" : getCharacterPath(nextIndex));
   const nextImage = new Image();
   nextImage.src = character.image;
   nextImage.alt = character.alt;
@@ -208,9 +225,10 @@ async function showCharacter(index, { updateHistory = true } = {}) {
         const displayedIndex = characters.findIndex((item) => item.image === displayedPath);
         currentIndex = displayedIndex < 0 ? 0 : displayedIndex;
         updateCuratorMeta(currentIndex);
-        updateSeo(currentIndex);
+        const previousPath = window.location.pathname === "/" ? "/" : getCharacterPath(currentIndex);
+        updateSeo(currentIndex, previousPath);
         window.history.replaceState(
-          { character: getSlug(characters[currentIndex]) }, "", getCharacterPath(currentIndex),
+          { character: getSlug(characters[currentIndex]) }, "", previousPath,
         );
         showToast("Character image unavailable.");
       }
@@ -337,6 +355,8 @@ window.addEventListener("popstate", () => {
 
   if (index !== currentIndex) {
     showCharacter(index, { updateHistory: false });
+  } else {
+    updateSeo(index, window.location.pathname === "/" ? "/" : getCharacterPath(index));
   }
 });
 

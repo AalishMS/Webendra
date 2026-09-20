@@ -29,6 +29,11 @@ The generator verifies that every listed image exists. To cut out a new image
 without changing its colors, install `Pillow` and `rembg`, then run
 `python remove_bg.py input.jpg assets/nameendra.png`.
 
+The metadata generator also creates each character's static HTML page and
+1200×630 PNG sharing card. Install Pillow before running it; Vercel serves the
+generated files directly, so shared links have character metadata before any
+JavaScript runs.
+
 For browser checks, install Python Playwright and its Chromium browser, then run
 `python tests/curator_elements_test.py` and `python tests/pwa_test.py`.
 

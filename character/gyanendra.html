@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gyanendra — Webendra</title>
+    <meta
+      name="description"
+      content="Gyanendra — A small collection of things with -endra at the end."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="application-name" content="Webendra" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Webendra" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="canonical" href="https://webendra.vercel.app/character/gyanendra" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Webendra" />
+    <meta property="og:title" content="Gyanendra — Webendra" />
+    <meta
+      property="og:description"
+      content="Gyanendra — A small collection of things with -endra at the end."
+    />
+    <meta property="og:url" content="https://webendra.vercel.app/character/gyanendra" />
+    <meta property="og:image" content="https://webendra.vercel.app/assets/share/gyanendra.png" />
+    <meta property="og:image:alt" content="Gyanendra on a Webendra share card" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gyanendra — Webendra" />
+    <meta
+      name="twitter:description"
+      content="Gyanendra — A small collection of things with -endra at the end."
+    />
+    <meta name="twitter:image" content="https://webendra.vercel.app/assets/share/gyanendra.png" />
+    <meta name="twitter:image:alt" content="Gyanendra on a Webendra share card" />
+
+    <!-- Early theme initialization to prevent wrong-theme flash -->
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('webendra-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        } catch (e) {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = theme === 'dark' ? '#080a0f' : '#ffffff';
+      })();
+    </script>
+
+    <link rel="icon" href="/assets/webendra-logo.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/webendra-apple-touch.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href="/styles.css" />
+
+    <script id="structured-data" type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ImageObject",
+        "name": "Gyanendra",
+        "description": "Gyanendra — A small collection of things with -endra at the end.",
+        "url": "https://webendra.vercel.app/character/gyanendra",
+        "contentUrl": "https://webendra.vercel.app/assets/gyanendra.png",
+        "thumbnailUrl": "https://webendra.vercel.app/assets/share/gyanendra.png",
+        "caption": "Gyanendra, a classic hardcover dictionary",
+        "isPartOf": {
+          "@type": "CollectionPage",
+          "name": "Webendra",
+          "url": "https://webendra.vercel.app/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="ambient-particles" aria-hidden="true"></canvas>
+
+    <main class="showcase" aria-label="Webendra gallery">
+      <button class="arrow arrow--previous" type="button" aria-label="Leftendra, previous character" data-cue="Leftendra">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m14.5 5-7 7 7 7" />
+        </svg>
+      </button>
+
+      <figure class="character" aria-live="polite" aria-atomic="true">
+        <div class="image-frame">
+          <img
+            id="character-image"
+            src="/assets/gyanendra.png"
+            alt="Gyanendra, a classic hardcover dictionary"
+            width="1254"
+            height="1254"
+            fetchpriority="high"
+          />
+        </div>
+        <figcaption id="character-name">
+          <h1 class="character-name">Gyanendra</h1>
+        </figcaption>
+        <div class="character-meta">
+          <span id="catalogue-number" class="catalogue-number">№ 09 / 27</span>
+          <span class="meta-separator" aria-hidden="true">·</span>
+          <button id="share-btn" class="curator-btn" type="button" aria-label="Copy link to Gyanendra" title="Copy link">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1 0l-2 2a5 5 0 0 0 7.1 7.1l1.1-1.1" />
+            </svg>
+          </button>
+        </div>
+      </figure>
+
+      <button class="arrow arrow--next" type="button" aria-label="Rightendra, next character" data-cue="Rightendra">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m9.5 5 7 7-7 7" />
+        </svg>
+      </button>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <button id="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" hidden>
+      <span class="theme-text-dark">Darkendra</span>
+      <svg class="theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+      </svg>
+      <span class="theme-text-light" style="display:none">Lightendra</span>
+      <svg class="theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
+        <circle cx="12" cy="12" r="5" />
+        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    </button>
+
+    <div class="kfc-controls">
+      <button id="kfc-btn" type="button">
+        <span>KFC</span>
+      </button>
+      <button id="kfc-clear-btn" type="button" aria-label="Clear KFCs" disabled>
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />
+        </svg>
+      </button>
+    </div>
+
+    <script src="/catalogue.js"></script>
+    <script src="/app.js"></script>
+    <script src="/theme.js"></script>
+  </body>
+</html>

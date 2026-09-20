@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://webendra.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/ballendra</loc>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/ballendra.png</image:loc>
       <image:title>Ballendra</image:title>

@@ -15,8 +15,10 @@ Path("test-output").mkdir(exist_ok=True)
 
 class SiteHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
-        if urlsplit(self.path).path.startswith("/character/"):
-            self.path = "/index.html"
+        path = urlsplit(self.path).path
+        if path.startswith("/character/"):
+            page = ROOT / "character" / f"{path.removeprefix('/character/')}.html"
+            self.path = f"/character/{page.name}" if page.is_file() else "/index.html"
         super().do_GET()
 
     def log_message(self, *_args):
@@ -42,6 +44,8 @@ with sync_playwright() as playwright:
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     assert page.locator("#pronounce-btn").count() == 0
     assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
+    page.get_by_role("button", name="Copy link to Ballendra").click()
+    assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/ballendra"
 
     page.locator(".image-frame").hover()
     transform = page.locator("#character-image").evaluate(
@@ -63,6 +67,7 @@ with sync_playwright() as playwright:
     page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
     page.get_by_role("button", name="Leftendra, previous character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
+    page.wait_for_url("**/character/ballendra")
     page.get_by_role("button", name="Leftendra, previous character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ {total:02} / {total:02}"
 

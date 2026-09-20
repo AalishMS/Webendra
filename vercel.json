@@ -1,22 +1,148 @@
 {
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/character", "destination": "/index.html" },
-    { "source": "/character/(.*)", "destination": "/index.html" }
+    {
+      "source": "/character",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/character/ballendra",
+      "destination": "/character/ballendra.html"
+    },
+    {
+      "source": "/character/birendra",
+      "destination": "/character/birendra.html"
+    },
+    {
+      "source": "/character/ganendra",
+      "destination": "/character/ganendra.html"
+    },
+    {
+      "source": "/character/bonendra",
+      "destination": "/character/bonendra.html"
+    },
+    {
+      "source": "/character/dogendra",
+      "destination": "/character/dogendra.html"
+    },
+    {
+      "source": "/character/fishendra",
+      "destination": "/character/fishendra.html"
+    },
+    {
+      "source": "/character/dipendra",
+      "destination": "/character/dipendra.html"
+    },
+    {
+      "source": "/character/rabindra",
+      "destination": "/character/rabindra.html"
+    },
+    {
+      "source": "/character/gyanendra",
+      "destination": "/character/gyanendra.html"
+    },
+    {
+      "source": "/character/devendra",
+      "destination": "/character/devendra.html"
+    },
+    {
+      "source": "/character/belendra",
+      "destination": "/character/belendra.html"
+    },
+    {
+      "source": "/character/chillendra",
+      "destination": "/character/chillendra.html"
+    },
+    {
+      "source": "/character/blendra",
+      "destination": "/character/blendra.html"
+    },
+    {
+      "source": "/character/cylendra",
+      "destination": "/character/cylendra.html"
+    },
+    {
+      "source": "/character/shailendra",
+      "destination": "/character/shailendra.html"
+    },
+    {
+      "source": "/character/calendra",
+      "destination": "/character/calendra.html"
+    },
+    {
+      "source": "/character/bartendra",
+      "destination": "/character/bartendra.html"
+    },
+    {
+      "source": "/character/deffendra",
+      "destination": "/character/deffendra.html"
+    },
+    {
+      "source": "/character/pretendra",
+      "destination": "/character/pretendra.html"
+    },
+    {
+      "source": "/character/yogendra",
+      "destination": "/character/yogendra.html"
+    },
+    {
+      "source": "/character/ramendra",
+      "destination": "/character/ramendra.html"
+    },
+    {
+      "source": "/character/tapendra",
+      "destination": "/character/tapendra.html"
+    },
+    {
+      "source": "/character/jugendra",
+      "destination": "/character/jugendra.html"
+    },
+    {
+      "source": "/character/peakendra",
+      "destination": "/character/peakendra.html"
+    },
+    {
+      "source": "/character/lokendra",
+      "destination": "/character/lokendra.html"
+    },
+    {
+      "source": "/character/hugendra",
+      "destination": "/character/hugendra.html"
+    },
+    {
+      "source": "/character/topendra",
+      "destination": "/character/topendra.html"
+    },
+    {
+      "source": "/character/(.*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/manifest.webmanifest",
       "headers": [
-        { "key": "Content-Type", "value": "application/manifest+json" }
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
       ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     }
   ]
