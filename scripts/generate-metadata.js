@@ -36,6 +36,11 @@ const collection = {
   name: "Webendra",
   url: `${siteUrl}/`,
   description: "A small collection of things with -endra at the end.",
+  author: {
+    "@type": "Person",
+    name: "Aalish Man Singh",
+    url: "https://github.com/AalishMS",
+  },
   mainEntity: {
     "@type": "ItemList",
     numberOfItems: characters.length,
@@ -77,6 +82,11 @@ function characterPage(character, position) {
     contentUrl: siteUrl + character.image,
     thumbnailUrl: card,
     caption: character.alt,
+    author: {
+      "@type": "Person",
+      name: "Aalish Man Singh",
+      url: "https://github.com/AalishMS",
+    },
     isPartOf: { "@type": "CollectionPage", name: "Webendra", url: `${siteUrl}/` },
   }, null, 2).split("\n").map((line) => `      ${line}`).join("\n");
   const replacements = [

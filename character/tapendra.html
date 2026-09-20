@@ -8,6 +8,7 @@
       name="description"
       content="Tapendra — A small collection of things with -endra at the end."
     />
+    <meta name="author" content="Aalish Man Singh" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="googlebot" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#ffffff" />
@@ -73,6 +74,11 @@
         "contentUrl": "https://webendra.vercel.app/assets/tapendra.png",
         "thumbnailUrl": "https://webendra.vercel.app/assets/share/tapendra.png",
         "caption": "Tapendra, a polished chrome water tap",
+        "author": {
+          "@type": "Person",
+          "name": "Aalish Man Singh",
+          "url": "https://github.com/AalishMS"
+        },
         "isPartOf": {
           "@type": "CollectionPage",
           "name": "Webendra",
@@ -129,6 +135,72 @@
         </svg>
       </button>
     </main>
+
+    <div class="curator-colophon">
+      <button
+        id="curator-colophon-btn"
+        class="curator-colophon-btn"
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="curator-dialog"
+        title="Curator details"
+      >
+        <span class="curator-colophon-label">Curator:</span>
+        <span class="curator-colophon-name">Aalish</span>
+      </button>
+
+      <div
+        id="curator-dialog"
+        class="curator-dialog"
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="curator-dialog-title"
+        hidden
+      >
+        <div class="curator-dialog-header">
+          <div class="curator-dialog-titles">
+            <h2 id="curator-dialog-title" class="curator-dialog-name">Aalish Man Singh</h2>
+            <p class="curator-dialog-role">Curator &amp; Developer</p>
+          </div>
+          <button id="curator-dialog-close" type="button" class="curator-dialog-close" aria-label="Close curator details">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <p class="curator-dialog-desc">
+          Creator of Webendra — a gallery of ordinary things given unnecessarily dignified names.
+        </p>
+
+        <div class="curator-dialog-links">
+          <a href="https://www.linkedin.com/in/aalish-man-singh-234443237/" target="_blank" rel="noopener noreferrer" class="curator-link" title="LinkedIn">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+            <span>LinkedIn</span>
+          </a>
+          <a href="https://github.com/AalishMS" target="_blank" rel="noopener noreferrer" class="curator-link" title="GitHub">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://www.instagram.com/_aalishms/" target="_blank" rel="noopener noreferrer" class="curator-link" title="Instagram">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></svg>
+            <span>Instagram</span>
+          </a>
+        </div>
+
+        <div class="curator-dialog-tip">
+          <div class="curator-tip-header">
+            <span class="curator-tip-title">Fuel the Archive</span>
+            <span class="curator-tip-subtitle">Buy a chiya</span>
+          </div>
+          <div class="curator-qr-frame">
+            <img src="/assets/esewa-qr.png" alt="eSewa QR code for Aalish Man Singh" width="130" height="130" class="curator-qr-img" loading="lazy" />
+            <span class="curator-qr-label">Scan via eSewa</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 

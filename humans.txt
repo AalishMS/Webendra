@@ -1,0 +1,10 @@
+/* TEAM */
+Curator & Developer: Aalish Man Singh
+LinkedIn: https://www.linkedin.com/in/aalish-man-singh-234443237/
+GitHub: https://github.com/AalishMS
+Instagram: https://www.instagram.com/_aalishms/
+
+/* SITE */
+Standards: HTML5, CSS3, Vanilla JS, Service Workers (PWA)
+Components: Webendra Archive
+Website: https://webendra.vercel.app/

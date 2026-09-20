@@ -98,6 +98,43 @@ with sync_playwright() as playwright:
     page.wait_for_timeout(900)
     page.screenshot(path=str(Path("test-output") / "curator-dark.png"))
 
+    # Curator colophon & dialog tests
+    colophon_btn = page.locator("#curator-colophon-btn")
+    curator_dialog = page.locator("#curator-dialog")
+    assert colophon_btn.is_visible()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+    assert curator_dialog.is_hidden()
+
+    # Open dialog
+    colophon_btn.click()
+    assert colophon_btn.get_attribute("aria-expanded") == "true"
+    assert curator_dialog.is_visible()
+    assert page.locator("#curator-dialog-title").inner_text() == "Aalish Man Singh"
+    assert page.locator(".curator-link[href*='linkedin.com']").is_visible()
+    assert page.locator(".curator-link[href*='github.com']").is_visible()
+    assert page.locator(".curator-link[href*='instagram.com']").is_visible()
+    assert page.locator(".curator-qr-img").is_visible()
+
+    # Screenshot in dark mode
+    page.screenshot(path=str(Path("test-output") / "curator-dialog-dark.png"))
+
+    # Close via Escape
+    page.keyboard.press("Escape")
+    assert curator_dialog.is_hidden()
+    assert colophon_btn.get_attribute("aria-expanded") == "false"
+
+    # Open and close via close button
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
+    page.locator("#curator-dialog-close").click()
+    assert curator_dialog.is_hidden()
+
+    # Open and close via outside click
+    colophon_btn.click()
+    assert curator_dialog.is_visible()
+    page.locator(".character figcaption").click()
+    assert curator_dialog.is_hidden()
+
     mobile = browser.new_page(viewport={"width": 375, "height": 812}, reduced_motion="reduce")
     mobile.goto(BASE)
     mobile.wait_for_load_state("networkidle")
@@ -109,6 +146,19 @@ with sync_playwright() as playwright:
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )
+
+    # Mobile colophon tap
+    mob_colophon = mobile.locator("#curator-colophon-btn")
+    assert mob_colophon.is_visible()
+    mob_colophon.click()
+    assert mobile.locator("#curator-dialog").is_visible()
+    assert mobile.locator("#curator-dialog").evaluate(
+        "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
+    )
+    mobile.screenshot(path=str(Path("test-output") / "curator-dialog-mobile.png"))
+    mobile.locator("#curator-dialog-close").click()
+    assert mobile.locator("#curator-dialog").is_hidden()
+
     mobile.set_viewport_size({"width": 320, "height": 700})
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
