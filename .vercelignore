@@ -1,0 +1,4 @@
+# Local-only curator. None of these files are needed by the deployed gallery.
+scripts/curator-server.js
+scripts/reorder.js
+scripts/reorder.html

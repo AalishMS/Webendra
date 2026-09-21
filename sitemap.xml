@@ -20,11 +20,11 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/ganendra</loc>
+    <loc>https://webendra.vercel.app/character/dogendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/ganendra.png?v=c9d33eac053890ee</image:loc>
-      <image:title>Ganendra</image:title>
-      <image:caption>Ganendra, a man safely holding a brushed steel pistol pointed down</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/dogendra.png?v=011cb49874b03eda</image:loc>
+      <image:title>Dogendra</image:title>
+      <image:caption>Dogendra, a dog raising one paw at a doorbell camera</image:caption>
     </image:image>
   </url>
   <url>
@@ -36,11 +36,11 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/dogendra</loc>
+    <loc>https://webendra.vercel.app/character/ramendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/dogendra.png?v=011cb49874b03eda</image:loc>
-      <image:title>Dogendra</image:title>
-      <image:caption>Dogendra, a dog raising one paw at a doorbell camera</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/ramendra.png?v=63450773ae9ec216</image:loc>
+      <image:title>Ramendra</image:title>
+      <image:caption>Ramendra, a bowl of ramen with noodles and a soft-boiled egg</image:caption>
     </image:image>
   </url>
   <url>
@@ -76,6 +76,14 @@
     </image:image>
   </url>
   <url>
+    <loc>https://webendra.vercel.app/character/belendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/belendra.png?v=c973ee0755f13aad</image:loc>
+      <image:title>Belendra</image:title>
+      <image:caption>Belendra, a single green bell pepper</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://webendra.vercel.app/character/devendra</loc>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/devendra.png?v=c3c546dfc0a05b54</image:loc>
@@ -84,11 +92,27 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/belendra</loc>
+    <loc>https://webendra.vercel.app/character/tapendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/belendra.png?v=c973ee0755f13aad</image:loc>
-      <image:title>Belendra</image:title>
-      <image:caption>Belendra, a single green bell pepper</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/tapendra.png?v=ebef378949473525</image:loc>
+      <image:title>Tapendra</image:title>
+      <image:caption>Tapendra, a polished chrome water tap</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/ganendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/ganendra.png?v=c9d33eac053890ee</image:loc>
+      <image:title>Ganendra</image:title>
+      <image:caption>Ganendra, a man safely holding a brushed steel pistol pointed down</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/topendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/topendra.png?v=a897b71bc2277868</image:loc>
+      <image:title>Topendra</image:title>
+      <image:caption>Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage</image:caption>
     </image:image>
   </url>
   <url>
@@ -100,11 +124,11 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/blendra</loc>
+    <loc>https://webendra.vercel.app/character/jugendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/blendra.png?v=861d1f533ca53574</image:loc>
-      <image:title>Blendra</image:title>
-      <image:caption>Blendra, an ordinary kitchen blender with an empty transparent jug</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/jugendra.png?v=2990fe10362c4268</image:loc>
+      <image:title>Jugendra</image:title>
+      <image:caption>Jugendra, a glass jug of fresh orange juice</image:caption>
     </image:image>
   </url>
   <url>
@@ -116,19 +140,27 @@
     </image:image>
   </url>
   <url>
+    <loc>https://webendra.vercel.app/character/yogendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/yogendra.png?v=d58bb2ce8d69c6ab</image:loc>
+      <image:title>Yogendra</image:title>
+      <image:caption>Yogendra, a person stretching in an advanced yoga pose</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/hugendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/hugendra.png?v=e64246fb1e0679a3</image:loc>
+      <image:title>Hugendra</image:title>
+      <image:caption>Hugendra, a man sitting on the toilet straining with intense effort</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://webendra.vercel.app/character/shailendra</loc>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/shailendra.png?v=2bdff78b243196d0</image:loc>
       <image:title>Shailendra</image:title>
       <image:caption>Shailendra, a small sailboat with one white sail</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/calendra</loc>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/calendra.png?v=a530c3a988182ca4</image:loc>
-      <image:title>Calendra</image:title>
-      <image:caption>Calendra, a simple wall calendar</image:caption>
     </image:image>
   </url>
   <url>
@@ -156,43 +188,19 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/yogendra</loc>
+    <loc>https://webendra.vercel.app/character/blendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/yogendra.png?v=d58bb2ce8d69c6ab</image:loc>
-      <image:title>Yogendra</image:title>
-      <image:caption>Yogendra, a person stretching in an advanced yoga pose</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/blendra.png?v=861d1f533ca53574</image:loc>
+      <image:title>Blendra</image:title>
+      <image:caption>Blendra, an ordinary kitchen blender with an empty transparent jug</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/ramendra</loc>
+    <loc>https://webendra.vercel.app/character/calendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/ramendra.png?v=63450773ae9ec216</image:loc>
-      <image:title>Ramendra</image:title>
-      <image:caption>Ramendra, a bowl of ramen with noodles and a soft-boiled egg</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/tapendra</loc>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/tapendra.png?v=ebef378949473525</image:loc>
-      <image:title>Tapendra</image:title>
-      <image:caption>Tapendra, a polished chrome water tap</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/jugendra</loc>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/jugendra.png?v=2990fe10362c4268</image:loc>
-      <image:title>Jugendra</image:title>
-      <image:caption>Jugendra, a glass jug of fresh orange juice</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/peakendra</loc>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/peakendra-v2.png?v=b1f2cc6789c17db4</image:loc>
-      <image:title>Peakendra</image:title>
-      <image:caption>Peakendra, a person holding back tears because it&apos;s so peak</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/calendra.png?v=a530c3a988182ca4</image:loc>
+      <image:title>Calendra</image:title>
+      <image:caption>Calendra, a simple wall calendar</image:caption>
     </image:image>
   </url>
   <url>
@@ -204,19 +212,11 @@
     </image:image>
   </url>
   <url>
-    <loc>https://webendra.vercel.app/character/hugendra</loc>
+    <loc>https://webendra.vercel.app/character/peakendra</loc>
     <image:image>
-      <image:loc>https://webendra.vercel.app/assets/hugendra.png?v=e64246fb1e0679a3</image:loc>
-      <image:title>Hugendra</image:title>
-      <image:caption>Hugendra, a man sitting on the toilet straining with intense effort</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://webendra.vercel.app/character/topendra</loc>
-    <image:image>
-      <image:loc>https://webendra.vercel.app/assets/topendra.png?v=a897b71bc2277868</image:loc>
-      <image:title>Topendra</image:title>
-      <image:caption>Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage</image:caption>
+      <image:loc>https://webendra.vercel.app/assets/peakendra-v2.png?v=b1f2cc6789c17db4</image:loc>
+      <image:title>Peakendra</image:title>
+      <image:caption>Peakendra, a person holding back tears because it&apos;s so peak</image:caption>
     </image:image>
   </url>
 </urlset>

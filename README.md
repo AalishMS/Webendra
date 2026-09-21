@@ -25,6 +25,19 @@ node scripts/generate-metadata.js
 node scripts/generate-metadata.js --check
 ```
 
+To visually rearrange the gallery sequence, start the private curator board:
+
+```sh
+node scripts/curator-server.js
+```
+
+Open the local URL printed in the terminal, drag the artworks into place, and
+choose **Save order**. The tool updates `catalogue.js`, regenerates the
+order-dependent pages and metadata, and validates the result. It changes only
+the working tree; review the diff before committing or pushing. If the default
+port is occupied, the server automatically chooses another and prints its URL.
+Use `--port 5000` to request a particular port.
+
 The generator verifies that every listed image exists. To cut out a new image
 without changing its colors, install `Pillow` and `rembg`, then run
 `python remove_bg.py input.jpg assets/nameendra.png`.
@@ -34,8 +47,10 @@ The metadata generator also creates each character's static HTML page and
 generated files directly, so shared links have character metadata before any
 JavaScript runs.
 
+Run `node tests/curator_order_test.js` for the curator save and rollback checks.
 For browser checks, install Python Playwright and its Chromium browser, then run
-`python tests/curator_elements_test.py` and `python tests/pwa_test.py`.
+`python tests/curator_board_test.py`, `python tests/curator_elements_test.py`, and
+`python tests/pwa_test.py`.
 
 ## Theme
 

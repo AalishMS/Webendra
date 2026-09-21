@@ -39,6 +39,24 @@ const escapeXml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
 })[char]);
 const escapeHtml = (value) => escapeXml(value);
 
+function applyCharacterPresentation(html, character, position) {
+  const imageTagPattern = /<img\s+id="character-image"[\s\S]*?\/>/;
+  if (!imageTagPattern.test(html)) throw new Error("Could not find the initial character image");
+  html = html.replace(imageTagPattern, (tag) => tag
+    .replace(/\bsrc="[^"]*"/, `src="${escapeHtml(character.image)}"`)
+    .replace(/\balt="[^"]*"/, `alt="${escapeHtml(character.alt)}"`));
+  html = html
+    .replace(/(<h1 class="character-name">)[\s\S]*?(<\/h1>)/,
+      `$1${escapeHtml(character.displayName ?? character.name)}$2`)
+    .replace(/(id="catalogue-number" class="catalogue-number">)№ \d+ \/ \d+/, (_, prefix) =>
+      `${prefix}№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`)
+    .replace(/(<button id="share-btn"[^>]*aria-label=")[^"]*(")/,
+      `$1Copy link to ${escapeHtml(character.name)}$2`)
+    .replace(/(<button id="copy-image-btn"[^>]*aria-label=")[^"]*(")/,
+      `$1Copy image of ${escapeHtml(character.name)}$2`);
+  return html;
+}
+
 const collection = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -69,12 +87,9 @@ if (!/<script id="structured-data" type="application\/ld\+json">[\s\S]*?<\/scrip
   throw new Error("Could not find metadata placeholders in index.html");
 }
 const data = JSON.stringify(collection, null, 2).split("\n").map((line) => `      ${line}`).join("\n");
-const generatedIndex = index
-  .replace(/(id="character-image"\s+)(?:src="[^"]*"\s+)?/, `$1src="${characters[0].image}"\n            `)
+const generatedIndex = applyCharacterPresentation(index
   .replace(/(<script id="structured-data" type="application\/ld\+json">)[\s\S]*?(\s*<\/script>)/,
-    `$1\n${data}\n    </script>`)
-  .replace(/(id="catalogue-number" class="catalogue-number">)№ \d+ \/ \d+/, (_, prefix) =>
-    `${prefix}№ 01 / ${String(characters.length).padStart(2, "0")}`);
+    `$1\n${data}\n    </script>`), characters[0], 0);
 
 function characterPage(character, position) {
   const slug = character.name.toLowerCase();
@@ -108,13 +123,9 @@ function characterPage(character, position) {
     [/content="https:\/\/webendra\.vercel\.app\/assets\/webendra-share\.png"/g, `content="${card}"`],
     [/content="Webendra, written in wobbly black hand lettering on white"/g, `content="${escapeHtml(cardAlt)}"`],
     [/(<script id="structured-data" type="application\/ld\+json">)[\s\S]*?(\s*<\/script>)/, `$1\n${structured}\n    </script>`],
-    [/src="[^"]*"\s+alt="Ballendra, Balen Shah holding a basketball"/, `src="${character.image}"\n            alt="${escapeHtml(character.alt)}"`],
-    [/<h1 class="character-name">Ballendra<\/h1>/, `<h1 class="character-name">${escapeHtml(character.displayName ?? character.name)}</h1>`],
-    [/(id="catalogue-number" class="catalogue-number">)№ 01 \/ \d+/, `$1№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`],
-    [/aria-label="Copy link to Ballendra"/, `aria-label="Copy link to ${escapeHtml(character.name)}"`],
-    [/aria-label="Copy image of Ballendra"/, `aria-label="Copy image of ${escapeHtml(character.name)}"`],
   ];
-  return replacements.reduce((html, [pattern, value]) => html.replace(pattern, value), generatedIndex);
+  const page = replacements.reduce((html, [pattern, value]) => html.replace(pattern, value), generatedIndex);
+  return applyCharacterPresentation(page, character, position);
 }
 
 const sitemap = [

@@ -10,9 +10,9 @@ const characters = [
     alt: "Birendra, a cold glass of beer",
   },
   {
-    name: "Ganendra",
-    image: "/assets/ganendra.png?v=c9d33eac053890ee",
-    alt: "Ganendra, a man safely holding a brushed steel pistol pointed down",
+    name: "Dogendra",
+    image: "/assets/dogendra.png?v=011cb49874b03eda",
+    alt: "Dogendra, a dog raising one paw at a doorbell camera",
   },
   {
     name: "Bonendra",
@@ -20,9 +20,9 @@ const characters = [
     alt: "Bonendra, a bone",
   },
   {
-    name: "Dogendra",
-    image: "/assets/dogendra.png?v=011cb49874b03eda",
-    alt: "Dogendra, a dog raising one paw at a doorbell camera",
+    name: "Ramendra",
+    image: "/assets/ramendra.png?v=63450773ae9ec216",
+    alt: "Ramendra, a bowl of ramen with noodles and a soft-boiled egg",
   },
   {
     name: "Fishendra",
@@ -45,14 +45,29 @@ const characters = [
     alt: "Gyanendra, a classic hardcover dictionary",
   },
   {
+    name: "Belendra",
+    image: "/assets/belendra.png?v=c973ee0755f13aad",
+    alt: "Belendra, a single green bell pepper",
+  },
+  {
     name: "Devendra",
     image: "/assets/devendra.png?v=c3c546dfc0a05b54",
     alt: "Devendra, a tired programmer holding an open laptop",
   },
   {
-    name: "Belendra",
-    image: "/assets/belendra.png?v=c973ee0755f13aad",
-    alt: "Belendra, a single green bell pepper",
+    name: "Tapendra",
+    image: "/assets/tapendra.png?v=ebef378949473525",
+    alt: "Tapendra, a polished chrome water tap",
+  },
+  {
+    name: "Ganendra",
+    image: "/assets/ganendra.png?v=c9d33eac053890ee",
+    alt: "Ganendra, a man safely holding a brushed steel pistol pointed down",
+  },
+  {
+    name: "Topendra",
+    image: "/assets/topendra.png?v=a897b71bc2277868",
+    alt: "Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage",
   },
   {
     name: "Chillendra",
@@ -60,9 +75,9 @@ const characters = [
     alt: "Chillendra, a relaxed reclining sloth",
   },
   {
-    name: "Blendra",
-    image: "/assets/blendra.png?v=861d1f533ca53574",
-    alt: "Blendra, an ordinary kitchen blender with an empty transparent jug",
+    name: "Jugendra",
+    image: "/assets/jugendra.png?v=2990fe10362c4268",
+    alt: "Jugendra, a glass jug of fresh orange juice",
   },
   {
     name: "Cylendra",
@@ -70,14 +85,19 @@ const characters = [
     alt: "Cylendra, a red household LPG cylinder",
   },
   {
+    name: "Yogendra",
+    image: "/assets/yogendra.png?v=d58bb2ce8d69c6ab",
+    alt: "Yogendra, a person stretching in an advanced yoga pose",
+  },
+  {
+    name: "Hugendra",
+    image: "/assets/hugendra.png?v=e64246fb1e0679a3",
+    alt: "Hugendra, a man sitting on the toilet straining with intense effort",
+  },
+  {
     name: "Shailendra",
     image: "/assets/shailendra.png?v=2bdff78b243196d0",
     alt: "Shailendra, a small sailboat with one white sail",
-  },
-  {
-    name: "Calendra",
-    image: "/assets/calendra.png?v=a530c3a988182ca4",
-    alt: "Calendra, a simple wall calendar",
   },
   {
     name: "Bartendra",
@@ -95,30 +115,14 @@ const characters = [
     alt: "Pretendra, a classic Groucho Marx disguise",
   },
   {
-    name: "Yogendra",
-    image: "/assets/yogendra.png?v=d58bb2ce8d69c6ab",
-    alt: "Yogendra, a person stretching in an advanced yoga pose",
+    name: "Blendra",
+    image: "/assets/blendra.png?v=861d1f533ca53574",
+    alt: "Blendra, an ordinary kitchen blender with an empty transparent jug",
   },
   {
-    name: "Ramendra",
-    image: "/assets/ramendra.png?v=63450773ae9ec216",
-    alt: "Ramendra, a bowl of ramen with noodles and a soft-boiled egg",
-  },
-  {
-    name: "Tapendra",
-    image: "/assets/tapendra.png?v=ebef378949473525",
-    alt: "Tapendra, a polished chrome water tap",
-  },
-  {
-    name: "Jugendra",
-    image: "/assets/jugendra.png?v=2990fe10362c4268",
-    alt: "Jugendra, a glass jug of fresh orange juice",
-  },
-  {
-    name: "Peakendra",
-    displayName: "Absolute Peakendra",
-    image: "/assets/peakendra-v2.png?v=b1f2cc6789c17db4",
-    alt: "Peakendra, a person holding back tears because it's so peak",
+    name: "Calendra",
+    image: "/assets/calendra.png?v=a530c3a988182ca4",
+    alt: "Calendra, a simple wall calendar",
   },
   {
     name: "Lokendra",
@@ -126,14 +130,10 @@ const characters = [
     alt: "Lokendra, Tom Hiddleston as Loki staring at the camera",
   },
   {
-    name: "Hugendra",
-    image: "/assets/hugendra.png?v=e64246fb1e0679a3",
-    alt: "Hugendra, a man sitting on the toilet straining with intense effort",
-  },
-  {
-    name: "Topendra",
-    image: "/assets/topendra.png?v=a897b71bc2277868",
-    alt: "Topendra, a classic antique cannon resting peacefully on an ornate wooden carriage",
+    name: "Peakendra",
+    displayName: "Absolute Peakendra",
+    image: "/assets/peakendra-v2.png?v=b1f2cc6789c17db4",
+    alt: "Peakendra, a person holding back tears because it's so peak",
   },
 ];
 

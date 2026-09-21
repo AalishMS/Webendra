@@ -40,15 +40,17 @@ with sync_playwright() as playwright:
     page.goto(BASE)
     page.wait_for_load_state("networkidle")
 
-    total = page.evaluate("JSON.parse(document.querySelector('#structured-data').textContent).mainEntity.numberOfItems")
+    catalogue = page.evaluate("characters.map(({ name, displayName }) => ({ name, displayName, slug: name.toLowerCase() }))")
+    first, second = catalogue[0], catalogue[1]
+    total = len(catalogue)
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     assert page.locator("#pronounce-btn").count() == 0
-    assert page.get_by_role("button", name="Copy link to Ballendra").is_visible()
-    assert page.get_by_role("button", name="Copy image of Ballendra").is_visible()
-    page.get_by_role("button", name="Copy link to Ballendra").click()
-    assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/ballendra"
+    assert page.get_by_role("button", name=f"Copy link to {first['name']}").is_visible()
+    assert page.get_by_role("button", name=f"Copy image of {first['name']}").is_visible()
+    page.get_by_role("button", name=f"Copy link to {first['name']}").click()
+    assert page.evaluate("navigator.clipboard.readText()") == f"https://webendra.vercel.app/character/{first['slug']}"
 
-    page.get_by_role("button", name="Copy image of Ballendra").click()
+    page.get_by_role("button", name=f"Copy image of {first['name']}").click()
     page.wait_for_function("document.querySelector('#toast').textContent === 'Image copied'")
     page.screenshot(path=str(Path("test-output") / "image-copied-toast.png"))
     has_png = page.evaluate("""async () => {
@@ -58,7 +60,7 @@ with sync_playwright() as playwright:
     assert has_png
 
     page.evaluate("() => { window.__write = navigator.clipboard.write.bind(navigator.clipboard); navigator.clipboard.write = () => Promise.reject(new Error('blocked')); }")
-    page.get_by_role("button", name="Copy image of Ballendra").click()
+    page.get_by_role("button", name=f"Copy image of {first['name']}").click()
     page.wait_for_function("document.querySelector('#toast').textContent === 'Image could not be copied.'")
     page.evaluate("() => { navigator.clipboard.write = window.__write; }")
 
@@ -70,14 +72,14 @@ with sync_playwright() as playwright:
 
     page.get_by_role("button", name="Rightendra, next character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ 02 / {total:02}"
-    assert page.get_by_role("button", name="Copy image of Birendra").is_visible()
-    page.get_by_role("button", name="Copy image of Birendra").click()
+    assert page.get_by_role("button", name=f"Copy image of {second['name']}").is_visible()
+    page.get_by_role("button", name=f"Copy image of {second['name']}").click()
     page.wait_for_function("document.querySelector('#toast').textContent === 'Image copied'")
-    page.get_by_role("button", name="Copy link to Birendra").click()
-    assert page.evaluate("navigator.clipboard.readText()") == "https://webendra.vercel.app/character/birendra"
+    page.get_by_role("button", name=f"Copy link to {second['name']}").click()
+    assert page.evaluate("navigator.clipboard.readText()") == f"https://webendra.vercel.app/character/{second['slug']}"
     assert page.locator("#toast").inner_text() == "Art piece copied."
     page.evaluate("() => { window.__writeText = navigator.clipboard.writeText.bind(navigator.clipboard); navigator.clipboard.writeText = () => Promise.reject(new Error('blocked')); }")
-    page.get_by_role("button", name="Copy link to Birendra").click()
+    page.get_by_role("button", name=f"Copy link to {second['name']}").click()
     assert page.locator("#toast").inner_text() == "Link could not be copied."
     page.evaluate("() => { navigator.clipboard.writeText = window.__writeText; }")
 
@@ -85,7 +87,7 @@ with sync_playwright() as playwright:
     page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
     page.get_by_role("button", name="Leftendra, previous character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
-    page.wait_for_url("**/character/ballendra")
+    page.wait_for_url(f"**/character/{first['slug']}")
     page.get_by_role("button", name="Leftendra, previous character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ {total:02} / {total:02}"
 
@@ -143,7 +145,8 @@ with sync_playwright() as playwright:
     page.wait_for_function("document.querySelector('#toast').textContent === 'Visiting Devendra.'")
     page.wait_for_url("**/character/devendra")
     page.wait_for_timeout(700)
-    assert page.locator("#catalogue-number").inner_text() == f"№ 10 / {total:02}"
+    devendra_position = next(index for index, character in enumerate(catalogue, 1) if character["slug"] == "devendra")
+    assert page.locator("#catalogue-number").inner_text() == f"№ {devendra_position:02} / {total:02}"
     assert page.locator(".character-name:not([aria-hidden])").inner_text() == "Devendra"
 
     # Close via Escape
@@ -171,8 +174,8 @@ with sync_playwright() as playwright:
     assert mobile.locator("#catalogue-number").is_visible()
     assert mobile.get_by_role("button", name="Leftendra, previous character").is_visible()
     assert mobile.get_by_role("button", name="Rightendra, next character").is_visible()
-    assert mobile.get_by_role("button", name="Copy link to Ballendra").is_visible()
-    assert mobile.get_by_role("button", name="Copy image of Ballendra").is_visible()
+    assert mobile.get_by_role("button", name=f"Copy link to {first['name']}").is_visible()
+    assert mobile.get_by_role("button", name=f"Copy image of {first['name']}").is_visible()
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"
     )

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 image_requests = []
 
 
+
 class SiteHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         path = urlsplit(self.path).path
@@ -51,22 +52,29 @@ try:
         page.goto(base)
         page.wait_for_load_state("networkidle")
         page.evaluate("navigator.serviceWorker.ready")
+        catalogue = page.evaluate("characters.map(({ name, displayName, image }) => ({ name, displayName: displayName || name, image, slug: name.toLowerCase() }))")
+        first, second, third, last = catalogue[0], catalogue[1], catalogue[2], catalogue[-1]
+        first_path = urlsplit(first["image"]).path
+        second_path = urlsplit(second["image"]).path
+        third_path = urlsplit(third["image"]).path
+        last_path = urlsplit(last["image"]).path
+        artwork_paths = {urlsplit(character["image"]).path for character in catalogue}
         page.wait_for_function("""async () => {
           const cache = await caches.open('webendra-images');
           return !!(await cache.match(characters[0].image));
         }""")
         assert page.locator('link[rel="manifest"]').get_attribute("href") == "/manifest.webmanifest"
         assert page.evaluate("fetch('/manifest.webmanifest').then(r => r.json()).then(m => m.display)") == "standalone"
-        assert set(path for path in requested_images if path.endswith("endra.png")) == {"/assets/ballendra.png"}
+        assert set(requested_images) & artwork_paths == {first_path, second_path, last_path}
 
         # Seed a stale unversioned portrait, then require the current URL to fetch real bytes.
-        page.evaluate("""async () => {
+        page.evaluate("""async (firstPath) => {
           const cache = await caches.open('webendra-images');
           await cache.delete(characters[0].image);
-          await cache.put('/assets/ballendra.png', new Response('stale portrait', {
+          await cache.put(firstPath, new Response('stale portrait', {
             headers: { 'Content-Type': 'image/png' }
           }));
-        }""")
+        }""", first_path)
         page.reload()
         page.wait_for_load_state("networkidle")
         assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
@@ -80,34 +88,44 @@ try:
         page.reload()
         page.wait_for_load_state("networkidle")
         assert image_requests.count(portrait_url) == count_before
-        assert not page.evaluate("""async () => {
+        assert not page.evaluate("""async (firstPath) => {
           const cache = await caches.open('webendra-images');
-          return !!(await cache.match('/assets/ballendra.png'));
-        }""")
+          return !!(await cache.match(firstPath));
+        }""", first_path)
 
         page.get_by_role("button", name="Rightendra, next character").click()
-        page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Birendra'")
+        page.wait_for_function("expected => document.querySelector('#character-name').textContent.trim() === expected", arg=second["displayName"])
         page.wait_for_function("""async () => {
           const cache = await caches.open('webendra-images');
           return !!(await cache.match(characters[1].image));
         }""")
 
         context.set_offline(True)
-        page.goto(f"{base}/character/birendra")
+        page.goto(f"{base}/character/{second['slug']}")
         page.wait_for_load_state("load")
-        assert page.locator("#character-name").inner_text() == "Birendra"
+        assert page.locator("#character-name").inner_text() == second["displayName"]
         assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
 
+        # Preloaded adjacent character navigates offline
+        page.get_by_role("button", name="Rightendra, next character").click()
+        page.wait_for_function("expected => document.querySelector('#character-name').textContent.trim() === expected", arg=third["displayName"])
+        assert page.locator("#character-name").inner_text() == third["displayName"]
+        assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
+
+        # Uncached character fails offline with toast
         page.get_by_role("button", name="Rightendra, next character").click()
         page.wait_for_function("document.querySelector('#toast').textContent.includes('unavailable')")
-        assert page.locator("#character-name").inner_text() == "Birendra"
+        assert page.locator("#character-name").inner_text() == third["displayName"]
         assert page.locator("#character-image").evaluate("image => image.naturalWidth > 0")
 
         page.keyboard.press("ArrowLeft")
-        page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Ballendra'")
+        page.wait_for_function("expected => document.querySelector('#character-name').textContent.trim() === expected", arg=second["displayName"])
+
+        page.keyboard.press("ArrowLeft")
+        page.wait_for_function("expected => document.querySelector('#character-name').textContent.trim() === expected", arg=first["displayName"])
         page.set_viewport_size({"width": 375, "height": 812})
         page.get_by_role("button", name="Rightendra, next character").tap()
-        page.wait_for_function("document.querySelector('#character-name').textContent.trim() === 'Birendra'")
+        page.wait_for_function("expected => document.querySelector('#character-name').textContent.trim() === expected", arg=second["displayName"])
         page.get_by_role("button", name="Toggle theme").click()
         assert page.locator("html").get_attribute("data-theme") == "dark"
         assert page.locator('meta[name="theme-color"]').get_attribute("content") == "#080a0f"
@@ -121,7 +139,7 @@ try:
         page.reload()
         page.wait_for_load_state("networkidle")
         assert page.evaluate("window.staleAppLoaded === undefined")
-        assert page.locator("#character-name").inner_text() == "Birendra"
+        assert page.locator("#character-name").inner_text() == second["displayName"]
         page.evaluate("""() => new Promise(resolve => {
           const image = new Image();
           image.onload = resolve;
@@ -150,9 +168,9 @@ try:
         direct_images = []
         direct.on("request", lambda request: direct_images.append(urlsplit(request.url).path)
                   if request.resource_type == "image" else None)
-        direct.goto(f"{base}/character/birendra")
+        direct.goto(f"{base}/character/{second['slug']}")
         direct.wait_for_load_state("networkidle")
-        assert set(path for path in direct_images if path.endswith("endra.png")) == {"/assets/birendra.png"}
+        assert set(direct_images) & artwork_paths == {second_path, first_path, third_path}
         direct_context.close()
         browser.close()
 finally:
