@@ -374,6 +374,10 @@ async function showCharacter(index, { updateHistory = true } = {}) {
   previousName.setAttribute("aria-hidden", "true");
   name.append(nextName);
 
+  window.dispatchEvent(new CustomEvent("webendra:characterchange", {
+    detail: { slug: getSlug(character), name: character.name },
+  }));
+
   if (reduceMotion.matches) {
     previousImage.remove();
     nextImage.classList.remove("character-image--incoming");
@@ -553,6 +557,7 @@ if (curatorBtn && curatorDialog) {
 
 document.addEventListener("keydown", (event) => {
   if (curatorDialog && !curatorDialog.hidden) return;
+  if (document.querySelector("#review-dialog")?.open) return;
   if (event.repeat || event.altKey || event.ctrlKey || event.metaKey ||
       event.target.matches("input, textarea, select, [contenteditable=true]")) return;
   if (event.key === "ArrowLeft" || event.key === "ArrowRight") event.preventDefault();

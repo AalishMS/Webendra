@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v4";
 const CACHE_PREFIX = "webendra-";
 const SHELL_CACHE = `${CACHE_PREFIX}shell-${CACHE_VERSION}`;
 // Exact content-version URLs preserve unchanged portraits across shell upgrades.
@@ -10,6 +10,8 @@ const APP_FILES = [
   "/catalogue.js",
   "/app.js",
   "/theme.js",
+  "/reviews.js",
+  "/reviews-config.js",
   "/manifest.webmanifest",
   "/assets/webendra-logo.png",
   "/assets/webendra-icon-192.png",

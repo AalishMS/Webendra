@@ -86,4 +86,30 @@ characters and images.
 ## Deployed on Vercel
 
 Changes are deployed to Vercel on push. The site's Git repository is connected to the Vercel
-project. Vercel serves this static site without a build command.
+project. Vercel regenerates character pages and metadata at build time.
+
+## Ratings and reviews
+
+Every character has a shared five-star rating and an optional written review. Guests can
+revise their own entry on the same browser. Reviews appear immediately; remove unwanted
+entries in the Supabase Table Editor. Ratings and reviews need a connection, while the
+gallery's previously viewed images remain available offline.
+
+For a new deployment, set up a Webendra Supabase project before enabling reviews:
+
+1. Run `supabase/schema.sql` in the project's SQL Editor. Enable anonymous sign-ins under
+   Authentication > Providers, and enable Cloudflare Turnstile under Authentication > Attack
+   Protection. The Turnstile site must allow `webendra.vercel.app` and any local
+   hostname used for testing.
+2. Put the Supabase project URL, publishable key, and Turnstile **site key** in
+   `reviews-config.js`, then redeploy. These three values are public browser settings.
+   Never put a Supabase secret, service-role key, or Turnstile secret in that file.
+3. Confirm that the public review summary loads and a first-time guest can pass
+   Turnstile and submit a rating on the deployed site.
+4. When adding a new character to `catalogue.js`, also insert its lowercase name into
+   `public.review_characters`. This allowlist prevents ratings for unknown characters.
+
+If the public configuration is absent, the gallery still works and the review panel
+explains that reviews are unavailable. If only the Turnstile site key is missing,
+visitors can read ratings and reviews but cannot post. A guest's anonymous session belongs to that
+browser; clearing site data or using another device starts a new session.

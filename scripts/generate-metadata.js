@@ -53,7 +53,13 @@ function applyCharacterPresentation(html, character, position) {
     .replace(/(<button id="share-btn"[^>]*aria-label=")[^"]*(")/,
       `$1Copy link to ${escapeHtml(character.name)}$2`)
     .replace(/(<button id="copy-image-btn"[^>]*aria-label=")[^"]*(")/,
-      `$1Copy image of ${escapeHtml(character.name)}$2`);
+      `$1Copy image of ${escapeHtml(character.name)}$2`)
+    .replace(/(<button id="review-summary"[^>]*aria-label=")[^"]*(")/,
+      `$1Read and write reviews for ${escapeHtml(character.name)}$2`)
+    .replace(/(<span id="review-summary-text">)[\s\S]*?(<\/span>)/,
+      `$1Rate ${escapeHtml(character.name)}$2`)
+    .replace(/(<h2 id="review-title">)[\s\S]*?(<\/h2>)/,
+      `$1${escapeHtml(character.name)}$2`);
   return html;
 }
 
