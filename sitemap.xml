@@ -4,6 +4,9 @@
     <loc>https://webendra.vercel.app/</loc>
   </url>
   <url>
+    <loc>https://webendra.vercel.app/reviews.html</loc>
+  </url>
+  <url>
     <loc>https://webendra.vercel.app/character/ballendra</loc>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/ballendra.png?v=a08ceeef68cef948</image:loc>

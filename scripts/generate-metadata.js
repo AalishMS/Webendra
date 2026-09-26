@@ -140,6 +140,9 @@ const sitemap = [
   "  <url>",
   `    <loc>${siteUrl}/</loc>`,
   "  </url>",
+  "  <url>",
+  `    <loc>${siteUrl}/reviews.html</loc>`,
+  "  </url>",
   ...characters.flatMap((character, index) => [
     "  <url>",
     `    <loc>${escapeXml(urlFor(character, index))}</loc>`,

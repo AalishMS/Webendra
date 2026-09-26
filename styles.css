@@ -435,6 +435,29 @@ button {
 
 /* --- Theme toggle --- */
 
+.reviews-nav {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  z-index: 10000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--control-border);
+  border-radius: 999px;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.reviews-nav:hover { background: var(--control-hover); }
+.reviews-nav:focus-visible { outline: 2px solid var(--control-outline); outline-offset: 3px; }
+
 #theme-toggle {
   position: fixed;
   top: max(16px, env(safe-area-inset-top));
@@ -1017,6 +1040,10 @@ button {
   transition: color 450ms ease-in-out, background-color 450ms ease-in-out, transform 150ms ease;
 }
 
+.theme-ready .reviews-nav {
+  transition: color 450ms ease-in-out, background-color 450ms ease-in-out, border-color 450ms ease-in-out;
+}
+
 .theme-ready #kfc-btn {
   transition: color 450ms ease-in-out, background-color 450ms ease-in-out, border-color 450ms ease-in-out,
     box-shadow 450ms ease-in-out, transform 120ms ease;
@@ -1040,6 +1067,7 @@ button {
   .theme-ready .curator-colophon-btn,
   .theme-ready .curator-dialog,
   .theme-ready .arrow,
+  .theme-ready .reviews-nav,
   .theme-ready #theme-toggle,
   .theme-ready .character-meta,
   .theme-ready .curator-btn,

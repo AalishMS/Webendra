@@ -20,7 +20,7 @@ class Query {
   select() { return this; }
   eq(key, value) { this.filters.push(row => row[key] === value); return this; }
   not(key, operator, value) { this.filters.push(row => row[key] !== value); return this; }
-  order(key, options) { this.sortKey = key; this.desc = !options.ascending; return this; }
+  order(key, options) { (this.sorts ||= []).push({key, descending: !options.ascending}); return this; }
   range(start, end) { this.start = start; this.end = end; return this; }
   insert(values) { this.mode = 'insert'; this.values = values; return this; }
   update(values) { this.mode = 'update'; this.values = values; return this; }
@@ -46,7 +46,13 @@ class Query {
       return {data: null, error: null};
     }
     let rows = state.entries.filter(row => this.filters.every(filter => filter(row)));
-    if (this.sortKey) rows = rows.sort((a, b) => this.desc ? (a[this.sortKey] < b[this.sortKey] ? 1 : -1) : (a[this.sortKey] > b[this.sortKey] ? 1 : -1));
+    if (this.sorts) rows = rows.sort((a, b) => {
+      for (const {key, descending} of this.sorts) {
+        const comparison = a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0;
+        if (comparison) return descending ? -comparison : comparison;
+      }
+      return 0;
+    });
     return {data: rows.slice(this.start, this.end + 1), error: null};
   }
 }
@@ -157,8 +163,96 @@ test("reviews follow characters and support edits", async () => {
     await page.waitForFunction(() => document.querySelector("#review-summary-text").textContent === "Reviews offline");
     await page.click("#review-summary");
     await page.waitForFunction(() => document.querySelector("#review-list").textContent.includes("Reviews need a connection."));
+    await context.setOffline(false);
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator(".reviews-nav").textContent(), "Reviews");
+    assert.equal(await page.locator(".all-reviews-link").count(), 0);
+    const reviewsNavBounds = await page.locator(".reviews-nav").boundingBox();
+    assert.ok(reviewsNavBounds.x < 40 && reviewsNavBounds.y < 40);
+    await page.locator(".reviews-nav").click();
+    await page.waitForURL("**/reviews.html");
+    await page.waitForFunction(() => document.querySelector(".card-rating").textContent.includes("rating"));
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "dark");
+    assert.equal(await page.locator("#theme-toggle").getAttribute("aria-pressed"), "true");
+    assert.equal(await page.locator("body").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(8, 10, 15)");
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector("#ambient-particles");
+      return canvas && canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height)
+        .data.some((value, index) => index % 4 === 3 && value > 0);
+    });
+    assert.equal(await page.locator(".artwork-card").count(), 27);
+    assert.equal(await page.locator('.artwork-card[href*="ballendra"] .card-rating').textContent(), "4.5 / 5 · 2 ratings");
+    if (process.env.WEBENDRA_REVIEWS_OVERVIEW_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_OVERVIEW_SCREENSHOT, fullPage: true });
+    }
+    await page.click("#theme-toggle");
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
+    await page.locator('.artwork-card[href*="ballendra"]').click();
+    await page.waitForURL("**/reviews.html?artwork=ballendra");
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
+    await page.waitForFunction(() => document.querySelectorAll(".review-entry").length === 1);
+    assert.equal(await page.locator("#detail-title").textContent(), "Ballendra");
+    assert.match(await page.locator("#detail-image").getAttribute("src"), /^\/assets\/ballendra\.png\?v=/);
+    assert.equal(await page.locator('input[name="rating"]:checked').inputValue(), "4");
+    await page.check('input[name="rating"][value="5"]');
+    await page.fill("#review-body", "A finer guest.");
+    await page.click("#review-submit");
+    await page.waitForFunction(() => document.querySelector("#detail-summary").textContent.includes("5.0 / 5"));
+    assert.equal(await page.locator(".entry-body").textContent(), "A finer guest.");
+    await page.evaluate(() => {
+      for (let index = 0; index < 9; index += 1) {
+        window.__reviews.entries.push({id: 200 + index, character_slug: "ballendra", user_id: `person-${index}`,
+          rating: index % 2 ? 5 : 2, nickname: `Person ${index}`, review: `Review ${index}`,
+          created_at: new Date(Date.UTC(2026, 2, index + 1)).toISOString()});
+      }
+    });
+    await page.locator("#sort-top").focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await page.locator("#sort-top").getAttribute("aria-pressed"), "true");
+    await page.waitForFunction(() => document.querySelectorAll(".review-entry").length === 8);
+    assert.match(await page.locator(".review-entry").first().locator(".entry-stars").getAttribute("aria-label"), /^5 out of 5/);
+    await page.click("#load-more");
+    await page.waitForFunction(() => document.querySelectorAll(".review-entry").length === 10);
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    if (process.env.WEBENDRA_REVIEWS_MOBILE_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_MOBILE_SCREENSHOT, fullPage: true });
+    }
+    await page.click("#theme-toggle");
+    assert.equal(await page.locator("#detail-form").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(8, 10, 15)");
+    if (process.env.WEBENDRA_REVIEWS_DARK_DETAIL_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_DARK_DETAIL_SCREENSHOT, fullPage: true });
+    }
+    await page.locator(".back-link").click();
+    await page.waitForFunction(() => document.querySelectorAll(".artwork-card").length === characters.length);
+    assert.equal(await page.locator(".artwork-grid").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 2);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.locator(".artwork-card").last().scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => document.querySelector(".artwork-card:last-child img").naturalWidth > 0);
+    const galleryNav = await page.locator(".reviews-nav").boundingBox();
+    const themeNav = await page.locator("#theme-toggle").boundingBox();
+    assert.ok(galleryNav.x + galleryNav.width < themeNav.x);
+    if (process.env.WEBENDRA_REVIEWS_MOBILE_OVERVIEW_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_MOBILE_OVERVIEW_SCREENSHOT, fullPage: true });
+    }
     assert.deepEqual(errors, []);
     await context.close();
+
+    const offlineContext = await browser.newContext({ serviceWorkers: "allow" });
+    await offlineContext.route("**/reviews-config.js", route => route.fulfill({ contentType: "text/javascript", body:
+      "window.WEBENDRA_REVIEWS_CONFIG={supabaseUrl:'https://example.supabase.co',publishableKey:'test',turnstileSiteKey:'test'};" }));
+    await offlineContext.route("https://cdn.jsdelivr.net/**", route => route.fulfill({ contentType: "text/javascript", body: fakeSupabase }));
+    const offlinePage = await offlineContext.newPage();
+    await offlinePage.goto(`http://127.0.0.1:${server.address().port}/`);
+    await offlinePage.evaluate(() => navigator.serviceWorker.ready);
+    await offlinePage.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+    await offlinePage.goto(`http://127.0.0.1:${server.address().port}/reviews.html`);
+    await offlinePage.waitForFunction(() => document.querySelectorAll(".artwork-card").length === characters.length);
+    await offlineContext.setOffline(true);
+    await offlinePage.reload();
+    await offlinePage.waitForFunction(() => document.querySelectorAll(".artwork-card").length === characters.length);
+    assert.equal(await offlinePage.locator("#overview-title").textContent(), "Reviews");
+    await offlineContext.close();
   } finally {
     if (browser) await browser.close();
     await new Promise(resolve => server.close(resolve));

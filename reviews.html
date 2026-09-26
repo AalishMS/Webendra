@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="Ratings and reviews for every artwork in Webendra." />
+    <title>Reviews — Webendra</title>
+    <link rel="canonical" href="https://webendra.vercel.app/reviews.html" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('webendra-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        } catch (e) {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = theme === 'dark' ? '#080a0f' : '#ffffff';
+      })();
+    </script>
+    <link rel="icon" href="/assets/webendra-logo.png" type="image/png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/reviews-page.css" />
+  </head>
+  <body>
+    <canvas id="ambient-particles" aria-hidden="true"></canvas>
+    <a class="reviews-nav" href="/">← Gallery</a>
+    <button id="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" hidden>
+      <span class="theme-text-dark">Darkendra</span>
+      <svg class="theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+      </svg>
+      <span class="theme-text-light" style="display:none">Lightendra</span>
+      <svg class="theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
+        <circle cx="12" cy="12" r="5" />
+        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    </button>
+    <main class="reviews-page">
+      <section id="reviews-overview" aria-labelledby="overview-title">
+        <div class="section-heading">
+          <h1 id="overview-title">Reviews</h1>
+          <p id="overview-count"></p>
+        </div>
+        <p id="overview-status" class="muted" role="status"></p>
+        <div id="artwork-grid" class="artwork-grid"></div>
+      </section>
+
+      <section id="artwork-detail" aria-labelledby="detail-title" hidden>
+        <a class="back-link" href="/reviews.html">← All reviews</a>
+        <div class="detail-hero">
+          <a id="detail-artwork-link" class="detail-portrait-link" href="/" aria-label="View artwork in gallery">
+            <img id="detail-image" class="detail-image" alt="" width="320" height="320" />
+          </a>
+          <div class="detail-intro">
+            <p class="eyebrow">Artwork reviews</p>
+            <h1 id="detail-title"></h1>
+            <p id="detail-summary" class="detail-summary" aria-live="polite"></p>
+            <a id="detail-gallery-link" class="text-link" href="/">View artwork ↗</a>
+          </div>
+        </div>
+
+        <form id="detail-form" class="detail-review-form">
+          <fieldset>
+            <legend>Your rating</legend>
+            <div id="rating-options" class="rating-options">
+              <label><input type="radio" name="rating" value="1" required aria-label="1 star" /><span aria-hidden="true">★</span></label>
+              <label><input type="radio" name="rating" value="2" aria-label="2 stars" /><span aria-hidden="true">★</span></label>
+              <label><input type="radio" name="rating" value="3" aria-label="3 stars" /><span aria-hidden="true">★</span></label>
+              <label><input type="radio" name="rating" value="4" aria-label="4 stars" /><span aria-hidden="true">★</span></label>
+              <label><input type="radio" name="rating" value="5" aria-label="5 stars" /><span aria-hidden="true">★</span></label>
+            </div>
+          </fieldset>
+          <div class="form-fields">
+            <label for="review-name">Name <span class="muted">for a written review</span></label>
+            <input id="review-name" name="nickname" type="text" maxlength="30" autocomplete="nickname" />
+            <label for="review-body">Review <span class="muted">optional</span></label>
+            <textarea id="review-body" name="review" maxlength="500" rows="4"></textarea>
+          </div>
+          <div id="review-captcha" hidden></div>
+          <div class="form-footer">
+            <button id="review-submit" type="submit" disabled>Post rating</button>
+            <p id="form-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <div class="list-heading">
+          <h2>Written reviews <span id="written-count"></span></h2>
+          <div class="sort-controls" role="group" aria-label="Sort reviews">
+            <button id="sort-latest" type="button" aria-pressed="true">Latest</button>
+            <button id="sort-top" type="button" aria-pressed="false">Top rated</button>
+          </div>
+        </div>
+        <div id="review-list" aria-live="polite"></div>
+        <button id="load-more" class="load-more" type="button" hidden>Load more</button>
+      </section>
+    </main>
+    <script src="/catalogue.js"></script>
+    <script src="/theme.js"></script>
+    <script src="/reviews-config.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+    <script defer src="/reviews-page.js"></script>
+  </body>
+</html>
