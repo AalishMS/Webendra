@@ -1,0 +1,91 @@
+:root {
+  color: #111;
+  background: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { min-width: 320px; margin: 0; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.reviews-page { width: min(1200px, calc(100% - 2rem)); margin: 0 auto; padding-bottom: 5rem; }
+.page-head { display: flex; align-items: start; justify-content: space-between; gap: 1rem; padding: 1.4rem 0 2.8rem; }
+.home-link, .back-link, .text-link { text-underline-offset: 0.22em; }
+.home-link { min-height: 44px; padding: 0.7rem 0; font-size: 0.88rem; }
+.masthead { display: grid; text-align: right; line-height: 0.9; }
+.masthead span { font: 700 clamp(1.2rem, 3vw, 2rem)/1 Arial, sans-serif; letter-spacing: -0.055em; }
+.masthead strong { margin-top: 0.25rem; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.36em; }
+.section-heading { margin: 0 0 1.5rem; text-align: center; }
+.section-heading h1 { margin: 0; font: 400 clamp(3rem, 8vw, 6rem)/1 Georgia, serif; letter-spacing: -0.06em; }
+.section-heading p { margin: 0.65rem 0 0; color: #666; font-size: 0.82rem; }
+.muted { color: #666; }
+#overview-status { min-height: 1.25rem; margin: 0 0 1rem; text-align: center; font-size: 0.84rem; }
+.artwork-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+.artwork-card { display: flex; flex-direction: column; align-items: center; min-width: 0; min-height: 230px; padding: 1rem 0.5rem 1.1rem; border: 1px solid #222; text-align: center; text-decoration: none; transition: transform 150ms ease, box-shadow 150ms ease; }
+.artwork-card:hover { transform: translateY(-3px); box-shadow: 3px 4px 0 #111; }
+.artwork-card img { width: min(100%, 126px); height: 126px; object-fit: contain; }
+.artwork-card-name { margin: 0.6rem 0 0.2rem; overflow-wrap: anywhere; font: 400 1.35rem/1.15 Georgia, serif; }
+.card-stars, .detail-stars, .entry-stars { color: #c88600; letter-spacing: 0.035em; }
+.card-stars { margin-top: auto; font-size: 1.3rem; white-space: nowrap; }
+.card-rating { margin-top: 0.25rem; color: #555; font-size: 0.78rem; }
+.back-link { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 1.5rem; font-size: 0.88rem; }
+#artwork-detail { max-width: 760px; margin-inline: auto; }
+.detail-hero { display: grid; grid-template-columns: 190px minmax(0, 1fr); align-items: center; gap: 1.7rem; margin: 0 0 2rem; }
+.detail-portrait-link { display: grid; place-items: center; width: 190px; height: 190px; }
+.detail-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.eyebrow { margin: 0 0 0.5rem; color: #666; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
+.detail-intro h1 { margin: 0; font: 400 clamp(2.5rem, 7vw, 4.4rem)/1 Georgia, serif; letter-spacing: -0.05em; overflow-wrap: anywhere; }
+.detail-summary { min-height: 2rem; margin: 1rem 0 0.6rem; font-size: 0.94rem; }
+.detail-stars { display: inline-block; margin-right: 0.45rem; font-size: 1.5rem; vertical-align: -0.08em; white-space: nowrap; }
+.text-link { font-size: 0.8rem; }
+.review-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem 2rem; padding: 1.4rem; border: 1px solid #222; }
+.review-form fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.review-form legend, .form-fields label { font-size: 0.86rem; font-weight: 600; }
+.rating-options { display: flex; margin-top: 0.4rem; }
+.rating-options label { position: relative; display: grid; place-items: center; width: 44px; height: 44px; }
+.rating-options input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.rating-options span { color: #888; font-size: 2rem; line-height: 1; }
+.rating-options label.is-selected span, .rating-options label:hover span { color: #c88600; }
+.form-fields { display: grid; gap: 0.45rem; }
+.form-fields label:not(:first-child) { margin-top: 0.45rem; }
+.form-fields input, .form-fields textarea { width: 100%; min-height: 42px; padding: 0.6rem; border: 1px solid #777; border-radius: 0; background: #fff; color: #111; }
+.form-fields textarea { resize: vertical; }
+.form-footer { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.form-footer button { min-height: 44px; padding: 0.55rem 1rem; border: 1px solid #111; background: #111; color: #fff; }
+.form-footer button:disabled { opacity: 0.5; cursor: wait; }
+.form-footer p { margin: 0; color: #555; font-size: 0.82rem; }
+#review-captcha { grid-column: 1 / -1; }
+.list-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin: 2.25rem 0 0.8rem; }
+.list-heading h2 { margin: 0; font: 400 clamp(1.5rem, 4vw, 2rem)/1.2 Georgia, serif; }
+.list-heading h2 span { color: #666; font: 400 0.88rem Arial, sans-serif; }
+.sort-controls { display: flex; gap: 0.25rem; }
+.sort-controls button { min-height: 42px; padding: 0.4rem 0.75rem; border: 1px solid transparent; background: #fff; }
+.sort-controls button[aria-pressed="true"] { border-color: #111; }
+.review-entry { padding: 1.1rem 0; border-top: 1px solid #999; }
+.entry-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.35rem 1rem; }
+.entry-name { font-weight: 600; }
+.entry-date { color: #666; font-size: 0.76rem; }
+.entry-stars { margin-top: 0.4rem; font-size: 1.25rem; }
+.entry-body { margin: 0.45rem 0 0; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.empty-message { padding: 1rem 0; border-top: 1px solid #999; color: #666; font-size: 0.9rem; }
+.load-more { display: block; min-height: 44px; margin: 1rem auto; padding: 0.5rem 1rem; border: 1px solid #111; background: #fff; }
+:focus-visible, .rating-options label:has(input:focus-visible) { outline: 2px solid #111; outline-offset: 3px; }
+@media (max-width: 900px) { .artwork-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 650px) {
+  .reviews-page { width: min(100% - 1.25rem, 520px); }
+  .page-head { padding-bottom: 2rem; }
+  .artwork-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+  .artwork-card { min-height: 207px; padding: 0.7rem 0.35rem; }
+  .artwork-card img { height: 105px; }
+  .artwork-card-name { font-size: 1.18rem; }
+  .detail-hero { grid-template-columns: 110px minmax(0, 1fr); gap: 0.75rem; }
+  .detail-portrait-link { width: 110px; height: 110px; }
+  .detail-intro h1 { font-size: clamp(2rem, 8vw, 3rem); }
+  .detail-stars { font-size: 1.2rem; }
+  .review-form { grid-template-columns: 1fr; padding: 1rem; }
+  .form-footer, #review-captcha { grid-column: 1; }
+  .list-heading { align-items: start; flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) { .artwork-card { transition: none; } }

@@ -226,6 +226,17 @@ button {
 }
 
 .review-summary-stars { color: var(--page-fg); letter-spacing: 0.05em; }
+.all-reviews-link {
+  grid-column: 2;
+  grid-row: 5;
+  justify-self: center;
+  padding: 0.5rem;
+  color: var(--meta-fg);
+  font-size: 0.75rem;
+  text-underline-offset: 0.2em;
+}
+.all-reviews-link:hover { color: var(--page-fg); }
+.all-reviews-link:focus-visible { outline: 2px solid var(--control-outline); outline-offset: 2px; }
 
 .review-dialog {
   width: min(34rem, calc(100vw - 1.5rem));
