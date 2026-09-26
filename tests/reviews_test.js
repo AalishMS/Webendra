@@ -164,15 +164,32 @@ test("reviews follow characters and support edits", async () => {
     await page.click("#review-summary");
     await page.waitForFunction(() => document.querySelector("#review-list").textContent.includes("Reviews need a connection."));
     await context.setOffline(false);
-    await page.goto(`http://127.0.0.1:${server.address().port}/reviews.html`);
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator(".reviews-nav").textContent(), "Reviews");
+    assert.equal(await page.locator(".all-reviews-link").count(), 0);
+    const reviewsNavBounds = await page.locator(".reviews-nav").boundingBox();
+    assert.ok(reviewsNavBounds.x < 40 && reviewsNavBounds.y < 40);
+    await page.locator(".reviews-nav").click();
+    await page.waitForURL("**/reviews.html");
     await page.waitForFunction(() => document.querySelector(".card-rating").textContent.includes("rating"));
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "dark");
+    assert.equal(await page.locator("#theme-toggle").getAttribute("aria-pressed"), "true");
+    assert.equal(await page.locator("body").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(8, 10, 15)");
+    await page.waitForFunction(() => {
+      const canvas = document.querySelector("#ambient-particles");
+      return canvas && canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height)
+        .data.some((value, index) => index % 4 === 3 && value > 0);
+    });
     assert.equal(await page.locator(".artwork-card").count(), 27);
     assert.equal(await page.locator('.artwork-card[href*="ballendra"] .card-rating').textContent(), "4.5 / 5 · 2 ratings");
     if (process.env.WEBENDRA_REVIEWS_OVERVIEW_SCREENSHOT) {
       await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_OVERVIEW_SCREENSHOT, fullPage: true });
     }
+    await page.click("#theme-toggle");
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
     await page.locator('.artwork-card[href*="ballendra"]').click();
     await page.waitForURL("**/reviews.html?artwork=ballendra");
+    assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
     await page.waitForFunction(() => document.querySelectorAll(".review-entry").length === 1);
     assert.equal(await page.locator("#detail-title").textContent(), "Ballendra");
     assert.match(await page.locator("#detail-image").getAttribute("src"), /^\/assets\/ballendra\.png\?v=/);
@@ -201,6 +218,23 @@ test("reviews follow characters and support edits", async () => {
     if (process.env.WEBENDRA_REVIEWS_MOBILE_SCREENSHOT) {
       await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_MOBILE_SCREENSHOT, fullPage: true });
     }
+    await page.click("#theme-toggle");
+    assert.equal(await page.locator("#detail-form").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(8, 10, 15)");
+    if (process.env.WEBENDRA_REVIEWS_DARK_DETAIL_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_DARK_DETAIL_SCREENSHOT, fullPage: true });
+    }
+    await page.locator(".back-link").click();
+    await page.waitForFunction(() => document.querySelectorAll(".artwork-card").length === characters.length);
+    assert.equal(await page.locator(".artwork-grid").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 2);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.locator(".artwork-card").last().scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => document.querySelector(".artwork-card:last-child img").naturalWidth > 0);
+    const galleryNav = await page.locator(".reviews-nav").boundingBox();
+    const themeNav = await page.locator("#theme-toggle").boundingBox();
+    assert.ok(galleryNav.x + galleryNav.width < themeNav.x);
+    if (process.env.WEBENDRA_REVIEWS_MOBILE_OVERVIEW_SCREENSHOT) {
+      await page.screenshot({ path: process.env.WEBENDRA_REVIEWS_MOBILE_OVERVIEW_SCREENSHOT, fullPage: true });
+    }
     assert.deepEqual(errors, []);
     await context.close();
 
@@ -217,7 +251,7 @@ test("reviews follow characters and support edits", async () => {
     await offlineContext.setOffline(true);
     await offlinePage.reload();
     await offlinePage.waitForFunction(() => document.querySelectorAll(".artwork-card").length === characters.length);
-    assert.equal(await offlinePage.locator("#overview-title").textContent(), "The reviews");
+    assert.equal(await offlinePage.locator("#overview-title").textContent(), "Reviews");
     await offlineContext.close();
   } finally {
     if (browser) await browser.close();

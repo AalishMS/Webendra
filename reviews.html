@@ -7,19 +7,44 @@
     <meta name="description" content="Ratings and reviews for every artwork in Webendra." />
     <title>Reviews — Webendra</title>
     <link rel="canonical" href="https://webendra.vercel.app/reviews.html" />
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('webendra-theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        } catch (e) {
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        }
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.content = theme === 'dark' ? '#080a0f' : '#ffffff';
+      })();
+    </script>
     <link rel="icon" href="/assets/webendra-logo.png" type="image/png" />
+    <link rel="stylesheet" href="/styles.css" />
     <link rel="stylesheet" href="/reviews-page.css" />
   </head>
   <body>
+    <canvas id="ambient-particles" aria-hidden="true"></canvas>
+    <a class="reviews-nav" href="/">← Gallery</a>
+    <button id="theme-toggle" type="button" aria-label="Toggle theme" aria-pressed="false" hidden>
+      <span class="theme-text-dark">Darkendra</span>
+      <svg class="theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+      </svg>
+      <span class="theme-text-light" style="display:none">Lightendra</span>
+      <svg class="theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24" style="display:none">
+        <circle cx="12" cy="12" r="5" />
+        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    </button>
     <main class="reviews-page">
-      <header class="page-head">
-        <a class="home-link" href="/">← Gallery</a>
-        <div class="masthead"><span>WEBENDRA</span><strong>REVIEWS</strong></div>
-      </header>
-
       <section id="reviews-overview" aria-labelledby="overview-title">
         <div class="section-heading">
-          <h1 id="overview-title">The reviews</h1>
+          <h1 id="overview-title">Reviews</h1>
           <p id="overview-count"></p>
         </div>
         <p id="overview-status" class="muted" role="status"></p>
@@ -40,7 +65,7 @@
           </div>
         </div>
 
-        <form id="detail-form" class="review-form">
+        <form id="detail-form" class="detail-review-form">
           <fieldset>
             <legend>Your rating</legend>
             <div id="rating-options" class="rating-options">
@@ -71,11 +96,12 @@
             <button id="sort-top" type="button" aria-pressed="false">Top rated</button>
           </div>
         </div>
-        <div id="review-list" class="review-list" aria-live="polite"></div>
+        <div id="review-list" aria-live="polite"></div>
         <button id="load-more" class="load-more" type="button" hidden>Load more</button>
       </section>
     </main>
     <script src="/catalogue.js"></script>
+    <script src="/theme.js"></script>
     <script src="/reviews-config.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
     <script defer src="/reviews-page.js"></script>
