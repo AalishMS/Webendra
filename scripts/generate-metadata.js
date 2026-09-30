@@ -51,7 +51,7 @@ function applyCharacterPresentation(html, character, position) {
     .replace(/(id="catalogue-number" class="catalogue-number">)№ \d+ \/ \d+/, (_, prefix) =>
       `${prefix}№ ${String(position + 1).padStart(2, "0")} / ${String(characters.length).padStart(2, "0")}`)
     .replace(/(<button id="share-btn"[^>]*aria-label=")[^"]*(")/,
-      `$1Copy link to ${escapeHtml(character.name)}$2`)
+      `$1Share ${escapeHtml(character.name)}$2`)
     .replace(/(<button id="copy-image-btn"[^>]*aria-label=")[^"]*(")/,
       `$1Copy image of ${escapeHtml(character.name)}$2`)
     .replace(/(<button id="review-summary"[^>]*aria-label=")[^"]*(")/,

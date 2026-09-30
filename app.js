@@ -92,7 +92,7 @@ function updateCuratorMeta(index) {
   const character = characters[index];
   const digits = String(characters.length).length;
   catalogueNumber.textContent = `№ ${String(index + 1).padStart(digits, "0")} / ${String(characters.length).padStart(digits, "0")}`;
-  shareButton.setAttribute("aria-label", `Copy link to ${character.name}`);
+  shareButton.setAttribute("aria-label", `Share ${character.name}`);
   copyImageButton?.setAttribute("aria-label", `Copy image of ${character.name}`);
 }
 
@@ -109,11 +109,21 @@ function showToast(message) {
 }
 
 async function shareCurrentCharacter() {
+  const character = characters[currentIndex];
   const url = `${SITE_URL}${getCharacterPath(currentIndex)}`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `${character.name} — Webendra`, url });
+      return;
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      // Browsers can expose share while refusing a particular request.
+    }
+  }
   try {
     if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
     await navigator.clipboard.writeText(url);
-    showToast("Art piece copied.");
+    showToast("Link copied.");
   } catch {
     showToast("Link could not be copied.");
   }
@@ -452,6 +462,24 @@ async function showCharacter(index, { updateHistory = true } = {}) {
 
 previousButton.addEventListener("click", () => showCharacter(currentIndex - 1));
 nextButton.addEventListener("click", () => showCharacter(currentIndex + 1));
+
+let touchStart = null;
+imageFrame.addEventListener("pointerdown", (event) => {
+  if (event.pointerType !== "touch" || !event.isPrimary) return;
+  touchStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  imageFrame.setPointerCapture(event.pointerId);
+});
+
+imageFrame.addEventListener("pointerup", (event) => {
+  if (!touchStart || event.pointerId !== touchStart.id) return;
+  const deltaX = event.clientX - touchStart.x;
+  const deltaY = event.clientY - touchStart.y;
+  touchStart = null;
+  if (Math.abs(deltaX) < 50 || Math.abs(deltaX) < Math.abs(deltaY) * 1.3) return;
+  showCharacter(currentIndex + (deltaX < 0 ? 1 : -1));
+});
+
+imageFrame.addEventListener("pointercancel", () => { touchStart = null; });
 
 window.addEventListener("popstate", () => {
   const index = getIndexFromPath();
