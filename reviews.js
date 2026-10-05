@@ -318,6 +318,15 @@
     loadOwnReview();
     loadReviews({ reset: true });
   });
+  
+  const writeReviewBtn = document.querySelector("#write-review-btn");
+  if (writeReviewBtn) {
+    writeReviewBtn.addEventListener("click", () => {
+      summaryButton.click();
+      setTimeout(() => nicknameInput.focus(), 0);
+    });
+  }
+
   closeButton.addEventListener("click", closeDialog);
   dialog.addEventListener("close", () => {
     if (pendingCaptchaReject) {

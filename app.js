@@ -94,6 +94,11 @@ function updateCuratorMeta(index) {
   catalogueNumber.textContent = `№ ${String(index + 1).padStart(digits, "0")} / ${String(characters.length).padStart(digits, "0")}`;
   shareButton.setAttribute("aria-label", `Share ${character.name}`);
   copyImageButton?.setAttribute("aria-label", `Copy image of ${character.name}`);
+  
+  const writeReviewBtn = document.querySelector("#write-review-btn");
+  if (writeReviewBtn) {
+    writeReviewBtn.setAttribute("aria-label", `Write a review for ${character.name}`);
+  }
 }
 
 function showToast(message) {
