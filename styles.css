@@ -94,6 +94,7 @@ button {
   overflow: hidden;
   background: #fff;
   background: transparent;
+  touch-action: pan-y;
 }
 
 .image-frame img {
