@@ -112,6 +112,22 @@
       "destination": "/character/lokendra.html"
     },
     {
+      "source": "/character/rajendra",
+      "destination": "/character/rajendra.html"
+    },
+    {
+      "source": "/character/jogendra",
+      "destination": "/character/jogendra.html"
+    },
+    {
+      "source": "/character/mahendra",
+      "destination": "/character/mahendra.html"
+    },
+    {
+      "source": "/character/upendra",
+      "destination": "/character/upendra.html"
+    },
+    {
       "source": "/character/peakendra",
       "destination": "/character/peakendra.html"
     },

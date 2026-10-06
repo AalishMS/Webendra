@@ -215,6 +215,38 @@
     </image:image>
   </url>
   <url>
+    <loc>https://webendra.vercel.app/character/rajendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/rajendra.png?v=366588a882313ca9</image:loc>
+      <image:title>Rajendra</image:title>
+      <image:caption>Rajendra, a polished wooden chess king standing upright</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/jogendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/jogendra.png?v=ab873a5e1fa5952a</image:loc>
+      <image:title>Jogendra</image:title>
+      <image:caption>Jogendra, a determined jogger in a navy tracksuit mid-stride</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/mahendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/mahendra.png?v=64cc0b1262a466a3</image:loc>
+      <image:title>Mahendra</image:title>
+      <image:caption>Mahendra, a wooden honey dipper dripping honey into a glass jar</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://webendra.vercel.app/character/upendra</loc>
+    <image:image>
+      <image:loc>https://webendra.vercel.app/assets/upendra.png?v=7522447f3d49d361</image:loc>
+      <image:title>Upendra</image:title>
+      <image:caption>Upendra, a straight-faced man giving a firm thumbs up</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://webendra.vercel.app/character/peakendra</loc>
     <image:image>
       <image:loc>https://webendra.vercel.app/assets/peakendra-v2.png?v=94d8661892d1f178</image:loc>

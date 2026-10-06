@@ -130,6 +130,26 @@ const characters = [
     alt: "Lokendra, Tom Hiddleston as Loki staring at the camera",
   },
   {
+    name: "Rajendra",
+    image: "/assets/rajendra.png?v=366588a882313ca9",
+    alt: "Rajendra, a polished wooden chess king standing upright",
+  },
+  {
+    name: "Jogendra",
+    image: "/assets/jogendra.png?v=ab873a5e1fa5952a",
+    alt: "Jogendra, a determined jogger in a navy tracksuit mid-stride",
+  },
+  {
+    name: "Mahendra",
+    image: "/assets/mahendra.png?v=64cc0b1262a466a3",
+    alt: "Mahendra, a wooden honey dipper dripping honey into a glass jar",
+  },
+  {
+    name: "Upendra",
+    image: "/assets/upendra.png?v=7522447f3d49d361",
+    alt: "Upendra, a straight-faced man giving a firm thumbs up",
+  },
+  {
     name: "Peakendra",
     displayName: "Absolute Peakendra",
     image: "/assets/peakendra-v2.png?v=94d8661892d1f178",

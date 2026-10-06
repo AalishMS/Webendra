@@ -86,6 +86,10 @@ These characters are currently present in `catalogue.js`.
 | Topendra | A classic antique cannon resting peacefully on an ornate wooden wheeled carriage. | `assets/topendra.png` |
 | Yogendra | A person stretching in an advanced yoga pose. | `assets/yogendra.png` |
 | Peakendra | A person holding back tears, jaw clenched, overwhelmed because something is peak. | `assets/peakendra-v2.png` |
+| Jogendra | A determined jogger in a tracksuit mid-stride, facing the camera. | `assets/jogendra.png` |
+| Mahendra | A wooden honey dipper dripping golden honey into a small glass jar. | `assets/mahendra.png` |
+| Rajendra | A single polished wooden chess king standing upright under studio lighting. | `assets/rajendra.png` |
+| Upendra | A straight-faced person giving one firm thumbs up to the camera. | `assets/upendra.png` |
 
 ## Previously stated / not currently implemented
 
@@ -272,3 +276,4 @@ must not be suggested again.
 | Narendra | A classic handheld red-and-white megaphone resting on a white surface. |
 | Pushpendra | A single pristine red rose standing in a slender clear glass vase. |
 | Surendra | A polished stainless steel tuning fork standing upright under studio lighting. |
+| Harendra | A brown hare sitting upright with tall ears, facing the camera. |
