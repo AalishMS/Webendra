@@ -45,9 +45,9 @@ with sync_playwright() as playwright:
     total = len(catalogue)
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     assert page.locator("#pronounce-btn").count() == 0
-    assert page.get_by_role("button", name=f"Copy link to {first['name']}").is_visible()
+    assert page.get_by_role("button", name=f"Share {first['name']}").is_visible()
     assert page.get_by_role("button", name=f"Copy image of {first['name']}").is_visible()
-    page.get_by_role("button", name=f"Copy link to {first['name']}").click()
+    page.get_by_role("button", name=f"Share {first['name']}").click()
     assert page.evaluate("navigator.clipboard.readText()") == f"https://webendra.vercel.app/character/{first['slug']}"
 
     page.get_by_role("button", name=f"Copy image of {first['name']}").click()
@@ -75,16 +75,16 @@ with sync_playwright() as playwright:
     assert page.get_by_role("button", name=f"Copy image of {second['name']}").is_visible()
     page.get_by_role("button", name=f"Copy image of {second['name']}").click()
     page.wait_for_function("document.querySelector('#toast').textContent === 'Image copied'")
-    page.get_by_role("button", name=f"Copy link to {second['name']}").click()
+    page.get_by_role("button", name=f"Share {second['name']}").click()
     assert page.evaluate("navigator.clipboard.readText()") == f"https://webendra.vercel.app/character/{second['slug']}"
-    assert page.locator("#toast").inner_text() == "Art piece copied."
+    assert page.locator("#toast").inner_text() == "Link copied."
     page.evaluate("() => { window.__writeText = navigator.clipboard.writeText.bind(navigator.clipboard); navigator.clipboard.writeText = () => Promise.reject(new Error('blocked')); }")
-    page.get_by_role("button", name=f"Copy link to {second['name']}").click()
+    page.get_by_role("button", name=f"Share {second['name']}").click()
     assert page.locator("#toast").inner_text() == "Link could not be copied."
     page.evaluate("() => { navigator.clipboard.writeText = window.__writeText; }")
 
     page.keyboard.press("c")
-    page.wait_for_function("document.querySelector('#toast').textContent === 'Art piece copied.'")
+    page.wait_for_function("document.querySelector('#toast').textContent === 'Link copied.'")
     page.get_by_role("button", name="Leftendra, previous character").click()
     assert page.locator("#catalogue-number").inner_text() == f"№ 01 / {total:02}"
     page.wait_for_url(f"**/character/{first['slug']}")
@@ -118,18 +118,18 @@ with sync_playwright() as playwright:
     assert page.locator(".curator-tip-title").inner_text() == "Support Webendra"
     assert page.locator(".curator-tip-subtitle").inner_text() == "Pleasendra"
     assert page.locator("#curator-devendra-link").is_visible()
-    linkedin_link = page.locator(".curator-link[href*='linkedin.com']")
-    assert linkedin_link.is_visible()
-    linkedin_svg_box = linkedin_link.locator("svg").bounding_box()
-    linkedin_span_box = linkedin_link.locator("span").bounding_box()
-    svg_center_y = linkedin_svg_box["y"] + linkedin_svg_box["height"] / 2
-    span_center_y = linkedin_span_box["y"] + linkedin_span_box["height"] / 2
-    assert abs(svg_center_y - span_center_y) <= 1.0, f"LinkedIn logo and text misaligned: {svg_center_y} vs {span_center_y}"
-    assert page.locator(".curator-link[href*='github.com']").is_visible()
-    assert page.locator(".curator-link[href*='instagram.com']").is_visible()
-    border_style = linkedin_link.evaluate("el => getComputedStyle(el).borderStyle")
+    github_link = page.locator(".curator-link[href*='github.com']")
+    assert github_link.is_visible()
+    github_svg_box = github_link.locator("svg").bounding_box()
+    github_span_box = github_link.locator("span").bounding_box()
+    svg_center_y = github_svg_box["y"] + github_svg_box["height"] / 2
+    span_center_y = github_span_box["y"] + github_span_box["height"] / 2
+    assert abs(svg_center_y - span_center_y) <= 1.0, f"GitHub logo and text misaligned: {svg_center_y} vs {span_center_y}"
+    assert page.locator(".curator-link[href*='linkedin.com']").count() == 0
+    assert page.locator(".curator-link[href*='instagram.com']").count() == 0
+    border_style = github_link.evaluate("el => getComputedStyle(el).borderStyle")
     assert border_style in ("none", "hidden"), f"Expected no border, got {border_style}"
-    svg_width = linkedin_link.locator("svg").evaluate("el => parseFloat(getComputedStyle(el).width)")
+    svg_width = github_link.locator("svg").evaluate("el => parseFloat(getComputedStyle(el).width)")
     assert svg_width >= 16.0, f"Expected icon width >= 16px, got {svg_width}"
     assert page.locator(".curator-qr-img").is_visible()
     save_qr_btn = page.locator("#curator-save-qr-btn")
@@ -174,7 +174,7 @@ with sync_playwright() as playwright:
     assert mobile.locator("#catalogue-number").is_visible()
     assert mobile.get_by_role("button", name="Leftendra, previous character").is_visible()
     assert mobile.get_by_role("button", name="Rightendra, next character").is_visible()
-    assert mobile.get_by_role("button", name=f"Copy link to {first['name']}").is_visible()
+    assert mobile.get_by_role("button", name=f"Share {first['name']}").is_visible()
     assert mobile.get_by_role("button", name=f"Copy image of {first['name']}").is_visible()
     assert mobile.locator(".character-meta").evaluate(
         "element => { const r = element.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; }"

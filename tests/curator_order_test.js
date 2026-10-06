@@ -52,7 +52,7 @@ async function run() {
   assert.deepEqual(require(path.join(temp, "catalogue.js")).map((character) => character.name.toLowerCase()), reordered);
   const updatedIndex = fs.readFileSync(path.join(temp, "index.html"), "utf8");
   assert.match(updatedIndex, new RegExp(`<h1 class="character-name">${originalCharacters[1].name}</h1>`));
-  assert.match(updatedIndex, new RegExp(`aria-label="Copy link to ${originalCharacters[1].name}"`));
+  assert.match(updatedIndex, new RegExp(`aria-label="Share ${originalCharacters[1].name}"`));
   assert.ok(updatedIndex.includes(`src="${originalCharacters[1].image}"`));
   assert.ok(updatedIndex.includes(`alt="${originalCharacters[1].alt}"`));
   const peakendraBlock = /\{\s*name: "Peakendra",[\s\S]*?\n  \}/.exec(originalSource)[0];

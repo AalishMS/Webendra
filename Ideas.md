@@ -276,4 +276,19 @@ must not be suggested again.
 | Narendra | A classic handheld red-and-white megaphone resting on a white surface. |
 | Pushpendra | A single pristine red rose standing in a slender clear glass vase. |
 | Surendra | A polished stainless steel tuning fork standing upright under studio lighting. |
+| Cubendra | A classic 3x3 Rubik's cube with scrambled colorful faces, tilted slightly under studio lighting. |
+| Railendra | A vintage dark iron steam locomotive shown in crisp side profile. |
+| Refendra | A serious football referee in a black kit holding up a red card. |
+| Samosendra | A crisp golden-brown fried samosa standing upright on its flat base. |
+| Walrendra | A stately walrus with long white tusks resting with quiet dignity, facing forward. |
+| Broomendra | A plain straw broom standing upright, isolated on a transparent background. |
+| Paintendra | A house painter in blue overalls holding a paint roller upright, facing the camera. |
+| Pigeonendra | A plump city pigeon standing squarely and looking directly at the camera. |
+| Shroomendra | A single brown mushroom standing upright with its cap fully visible. |
+| Tacoendra | A single hard-shell taco filled with lettuce, tomato, and cheese, shown in side profile. |
+| Chappalendra | A single classic blue-and-white rubber hawai chappal resting flat. |
+| Chiyendra | A small clear glass tumbler of steaming Nepali milk tea. |
+| Dokendra | A traditional woven bamboo doko basket standing upright on its base. |
+| Selendra | A single golden-brown, crispy sel roti resting flat on a white surface. |
+| Yakkendra | A sturdy Himalayan yak standing squarely and facing forward with quiet authority. |
 | Harendra | A brown hare sitting upright with tall ears, facing the camera. |

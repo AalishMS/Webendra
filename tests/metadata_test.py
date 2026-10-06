@@ -75,6 +75,6 @@ assert home.tags["og:image"] == f"{SITE}/assets/webendra-share.png"
 first = characters[0]
 assert re.search(rf'<img\s+id="character-image"\s+src="{re.escape(first["image"])}"\s+alt="{re.escape(first["alt"])}"', home_html)
 assert f'<h1 class="character-name">{first.get("displayName", first["name"])}</h1>' in home_html
-assert f'aria-label="Copy link to {first["name"]}"' in home_html
+assert f'aria-label="Share {first["name"]}"' in home_html
 assert f'aria-label="Copy image of {first["name"]}"' in home_html
 print(f"Initial metadata and share cards passed for {len(characters)} character links.")

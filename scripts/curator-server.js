@@ -229,6 +229,215 @@ function applyOrder(root, payload) {
   }
 }
 
+function gitStatus(root) {
+  const check = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (check.status !== 0) {
+    return { isGit: false, error: "Not a git repository." };
+  }
+
+  const branchResult = spawnSync("git", ["branch", "--show-current"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  let branch = (branchResult.stdout || "").trim();
+  if (!branch) {
+    const headResult = spawnSync("git", ["rev-parse", "--short", "HEAD"], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    branch = (headResult.stdout || "").trim() || "HEAD";
+  }
+
+  let upstream = "";
+  const upstreamResult = spawnSync("git", ["rev-parse", "--abbrev-ref", "@{u}"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (upstreamResult.status === 0) {
+    upstream = (upstreamResult.stdout || "").trim();
+  }
+
+  const statusResult = spawnSync("git", ["status", "--porcelain"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  const rawStatus = (statusResult.stdout || "").trim();
+  const modifiedFiles = rawStatus ? rawStatus.split(/\r?\n/).map((line) => line.trim()) : [];
+
+  let ahead = 0;
+  let behind = 0;
+  if (upstream) {
+    const countsResult = spawnSync("git", ["rev-list", "--left-right", "--count", `${upstream}...HEAD`], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    if (countsResult.status === 0) {
+      const parts = (countsResult.stdout || "").trim().split(/\s+/);
+      behind = Number.parseInt(parts[0], 10) || 0;
+      ahead = Number.parseInt(parts[1], 10) || 0;
+    }
+  }
+
+  return {
+    isGit: true,
+    branch,
+    upstream,
+    clean: modifiedFiles.length === 0,
+    modifiedFiles,
+    ahead,
+    behind,
+  };
+}
+
+function gitCommitAndPush(root, options = {}) {
+  const { message, push = true } = options || {};
+  if (typeof message !== "string" || !message.trim()) {
+    const error = new Error("A commit message is required.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const check = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (check.status !== 0) {
+    const error = new Error("Not a git repository.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const addResult = spawnSync("git", ["add", "-A"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  if (addResult.status !== 0) {
+    const error = new Error(`Could not stage files: ${(addResult.stderr || addResult.stdout || "").trim()}`);
+    error.statusCode = 500;
+    throw error;
+  }
+
+  const diffResult = spawnSync("git", ["diff", "--cached", "--quiet"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  const hasStagedChanges = diffResult.status !== 0;
+
+  const branchResult = spawnSync("git", ["branch", "--show-current"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  const branch = (branchResult.stdout || "").trim() || "HEAD";
+
+  let hash = "";
+  let committed = false;
+
+  if (hasStagedChanges) {
+    const commitResult = spawnSync("git", ["commit", "-m", message.trim()], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    if (commitResult.status !== 0) {
+      const detail = (commitResult.stderr || commitResult.stdout || "").trim();
+      const error = new Error(`Commit failed: ${detail}`);
+      error.statusCode = 500;
+      throw error;
+    }
+    committed = true;
+    const revResult = spawnSync("git", ["rev-parse", "--short", "HEAD"], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    hash = (revResult.stdout || "").trim();
+  }
+
+  const upstreamResult = spawnSync("git", ["rev-parse", "--abbrev-ref", "@{u}"], {
+    cwd: root,
+    encoding: "utf8",
+  });
+  const upstream = upstreamResult.status === 0 ? (upstreamResult.stdout || "").trim() : "";
+
+  let pushed = false;
+  if (push) {
+    if (!committed && upstream) {
+      const unpushedResult = spawnSync("git", ["rev-list", "--count", "@{u}..HEAD"], {
+        cwd: root,
+        encoding: "utf8",
+      });
+      const count = Number.parseInt((unpushedResult.stdout || "").trim(), 10) || 0;
+      if (count === 0) {
+        return {
+          ok: true,
+          committed: false,
+          pushed: false,
+          message: "Working tree is clean. Nothing to commit or push.",
+        };
+      }
+    } else if (!committed && !upstream) {
+      return {
+        ok: true,
+        committed: false,
+        pushed: false,
+        message: "Working tree is clean. Nothing to commit or push.",
+      };
+    }
+
+    let pushArgs = ["push"];
+    if (!upstream && branch && branch !== "HEAD") {
+      pushArgs = ["push", "-u", "origin", branch];
+    }
+
+    const pushResult = spawnSync("git", pushArgs, {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+      timeout: 30000,
+    });
+
+    if (pushResult.status !== 0) {
+      const detail = (pushResult.stderr || pushResult.stdout || pushResult.error?.message || "Push failed.").trim();
+      const msg = committed
+        ? `Committed (${hash || "locally"}), but push failed: ${detail}`
+        : `Push failed: ${detail}`;
+      const error = new Error(msg);
+      error.statusCode = 500;
+      throw error;
+    }
+    pushed = true;
+  }
+
+  if (!committed && !pushed) {
+    return {
+      ok: true,
+      committed: false,
+      pushed: false,
+      message: "Nothing to commit. Working tree is clean.",
+    };
+  }
+
+  const target = upstream || branch || "remote";
+  let messageText = "";
+  if (committed && pushed) {
+    messageText = `Committed ${hash} and pushed to ${target}.`;
+  } else if (committed) {
+    messageText = `Committed ${hash} locally.`;
+  } else {
+    messageText = `Pushed commits to ${target}.`;
+  }
+
+  return {
+    ok: true,
+    hash,
+    branch,
+    committed,
+    pushed,
+    message: messageText,
+  };
+}
+
 function publicCatalogue(root) {
   const cataloguePath = path.join(root, "catalogue.js");
   const source = fs.readFileSync(cataloguePath, "utf8");
@@ -321,6 +530,48 @@ function startServer({ root = DEFAULT_ROOT, port = 4174, quiet = false } = {}) {
         }
         return;
       }
+      if (request.method === "GET" && pathname === "/api/git/status") {
+        if (request.headers.origin && !allowedOrigins.has(request.headers.origin)) {
+          sendJson(response, 403, { error: "This status request did not come from the local curator board." });
+          return;
+        }
+        sendJson(response, 200, gitStatus(root));
+        return;
+      }
+      if (request.method === "POST" && pathname === "/api/git/commit") {
+        if (!request.headers.origin || !allowedOrigins.has(request.headers.origin)) {
+          sendJson(response, 403, { error: "This commit request did not come from the local curator board." });
+          return;
+        }
+        if (!request.headers["content-type"]?.toLowerCase().startsWith("application/json")) {
+          sendJson(response, 415, { error: "Commit requests must use application/json." });
+          return;
+        }
+        if (saving) {
+          sendJson(response, 409, { error: "Another operation is already in progress." });
+          return;
+        }
+        saving = true;
+        try {
+          const payload = await readJson(request);
+          let orderResult = null;
+          if (payload.order) {
+            orderResult = applyOrder(root, payload);
+          }
+          const result = gitCommitAndPush(root, {
+            message: payload.message,
+            push: payload.push !== false,
+          });
+          if (orderResult) {
+            result.revision = orderResult.revision;
+            result.changed = orderResult.changed;
+          }
+          sendJson(response, 200, result);
+        } finally {
+          saving = false;
+        }
+        return;
+      }
       if (request.method === "GET" && (pathname === "/" || pathname === "/reorder")) {
         const html = fs.readFileSync(UI_FILE);
         response.writeHead(200, {
@@ -388,6 +639,8 @@ if (require.main === module) {
 
 module.exports = {
   applyOrder,
+  gitCommitAndPush,
+  gitStatus,
   locateCharacterBlocks,
   publicCatalogue,
   reorderCatalogueSource,

@@ -32,11 +32,11 @@ node scripts/curator-server.js
 ```
 
 Open the local URL printed in the terminal, drag the artworks into place, and
-choose **Save order**. The tool updates `catalogue.js`, regenerates the
-order-dependent pages and metadata, and validates the result. It changes only
-the working tree; review the diff before committing or pushing. If the default
-port is occupied, the server automatically chooses another and prints its URL.
-Use `--port 5000` to request a particular port.
+choose **Save order** to update the working tree, or **Commit & push** to record
+the sequence with a commit message and push directly to remote. The tool updates
+`catalogue.js`, regenerates the order-dependent pages and metadata, and validates
+the result. If the default port is occupied, the server automatically chooses another
+and prints its URL. Use `--port 5000` to request a particular port.
 
 The generator verifies that every listed image exists. To cut out a new image
 without changing its colors, install `Pillow` and `rembg`, then run
@@ -47,9 +47,9 @@ The metadata generator also creates each character's static HTML page and
 generated files directly, so shared links have character metadata before any
 JavaScript runs.
 
-Run `node tests/curator_order_test.js` for the curator save and rollback checks.
+Run `node tests/curator_order_test.js` and `node tests/curator_git_test.js` for the curator save, rollback, and git checks.
 For browser checks, install Python Playwright and its Chromium browser, then run
-`python tests/curator_board_test.py`, `python tests/curator_elements_test.py`, and
+`python tests/curator_board_test.py`, `python tests/curator_commit_ui_test.py`, `python tests/curator_elements_test.py`, and
 `python tests/pwa_test.py`.
 
 ## Theme

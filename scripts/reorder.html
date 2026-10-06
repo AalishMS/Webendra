@@ -3,167 +3,954 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Webendra curator's table</title>
+    <title>Webendra curator’s table</title>
+    <link rel="icon" href="/assets/webendra-logo.png" type="image/png" />
+    <script>
+      (function () {
+        var theme = "light";
+        try {
+          var saved = localStorage.getItem("webendra-theme");
+          if (saved === "light" || saved === "dark") theme = saved;
+          else if (window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        } catch (e) {
+          if (window.matchMedia("(prefers-color-scheme: dark)").matches) theme = "dark";
+        }
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
     <style>
       :root {
         color-scheme: light;
-        --ink: #11110f;
-        --paper: #ffffff;
-        --quiet: #686861;
-        --rule: #d9d8d1;
-        --wash: #f5f4ef;
-        --focus: #2058c9;
-        --success: #176b3a;
-        --danger: #a72a22;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --bg-page: #fafaf9;
+        --bg-surface: #ffffff;
+        --bg-surface-subtle: #f4f4f3;
+        --bg-studio: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f1ee 100%);
+        --ink: #141412;
+        --ink-secondary: #575752;
+        --quiet: #787872;
+        --rule: #e5e5e0;
+        --rule-subtle: #eeeee9;
+        --focus: #2563eb;
+        --focus-ring: rgba(37, 99, 235, 0.25);
+        --success: #15803d;
+        --success-bg: #f0fdf4;
+        --success-border: #bbf7d0;
+        --danger: #b91c1c;
+        --danger-bg: #fef2f2;
+        --danger-border: #fecaca;
+        --warning: #b45309;
+        --warning-bg: #fffbeb;
+        --warning-border: #fde68a;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+        --shadow-drag: 0 20px 30px -6px rgba(0, 0, 0, 0.14), 0 8px 12px -4px rgba(0, 0, 0, 0.08);
+        --header-bg: rgba(250, 250, 249, 0.88);
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      [data-theme="dark"] {
+        color-scheme: dark;
+        --bg-page: #080a0f;
+        --bg-surface: #11141d;
+        --bg-surface-subtle: #171c28;
+        --bg-studio: radial-gradient(circle at 50% 50%, #1a2030 0%, #0d1017 100%);
+        --ink: #f4f4f5;
+        --ink-secondary: #9da3b2;
+        --quiet: #777e8f;
+        --rule: #232838;
+        --rule-subtle: #191f2c;
+        --focus: #3b82f6;
+        --focus-ring: rgba(59, 130, 246, 0.3);
+        --success: #10b981;
+        --success-bg: rgba(16, 185, 129, 0.12);
+        --success-border: rgba(16, 185, 129, 0.28);
+        --danger: #ef4444;
+        --danger-bg: rgba(239, 68, 68, 0.12);
+        --danger-border: rgba(239, 68, 68, 0.28);
+        --warning: #f59e0b;
+        --warning-bg: rgba(245, 158, 11, 0.12);
+        --warning-border: rgba(245, 158, 11, 0.28);
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.45);
+        --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.55);
+        --shadow-drag: 0 20px 30px -6px rgba(0, 0, 0, 0.65);
+        --header-bg: rgba(8, 10, 15, 0.88);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          color-scheme: dark;
+          --bg-page: #080a0f;
+          --bg-surface: #11141d;
+          --bg-surface-subtle: #171c28;
+          --bg-studio: radial-gradient(circle at 50% 50%, #1a2030 0%, #0d1017 100%);
+          --ink: #f4f4f5;
+          --ink-secondary: #9da3b2;
+          --quiet: #777e8f;
+          --rule: #232838;
+          --rule-subtle: #191f2c;
+          --focus: #3b82f6;
+          --focus-ring: rgba(59, 130, 246, 0.3);
+          --success: #10b981;
+          --success-bg: rgba(16, 185, 129, 0.12);
+          --success-border: rgba(16, 185, 129, 0.28);
+          --danger: #ef4444;
+          --danger-bg: rgba(239, 68, 68, 0.12);
+          --danger-border: rgba(239, 68, 68, 0.28);
+          --warning: #f59e0b;
+          --warning-bg: rgba(245, 158, 11, 0.12);
+          --warning-border: rgba(245, 158, 11, 0.28);
+          --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.45);
+          --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.4);
+          --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.55);
+          --shadow-drag: 0 20px 30px -6px rgba(0, 0, 0, 0.65);
+          --header-bg: rgba(8, 10, 15, 0.88);
+        }
       }
 
       * { box-sizing: border-box; }
-      body { margin: 0; min-width: 280px; color: var(--ink); background: var(--paper); }
-      button { font: inherit; }
+      body {
+        margin: 0;
+        min-width: 280px;
+        color: var(--ink);
+        background: var(--bg-page);
+        -webkit-font-smoothing: antialiased;
+      }
+      button, input { font: inherit; }
 
+      /* --- Masthead --- */
       .masthead {
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: 50;
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        gap: 1.25rem;
-        align-items: end;
-        padding: 1.25rem clamp(1rem, 4vw, 3rem);
-        border-bottom: 1px solid var(--ink);
-        background: rgba(255, 255, 255, 0.96);
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1.1rem clamp(1rem, 4vw, 3rem);
+        border-bottom: 1px solid var(--rule);
+        background: var(--header-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
 
-      .eyebrow, .position {
+      .masthead-brand { min-width: 0; }
+
+      .masthead-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.35rem;
+      }
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--focus);
+      }
+      .eyebrow {
+        margin: 0;
         font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
         font-size: 0.72rem;
+        font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
+        color: var(--quiet);
       }
-      .eyebrow { margin: 0 0 0.25rem; color: var(--quiet); }
+
       h1 {
         margin: 0;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(1.8rem, 4vw, 3.5rem);
+        font-family: "Baskerville", "Iowan Old Style", Georgia, "Times New Roman", serif;
+        font-size: clamp(1.75rem, 3.2vw, 2.65rem);
         font-weight: 400;
-        letter-spacing: -0.045em;
-        line-height: 0.95;
+        letter-spacing: -0.035em;
+        line-height: 1.05;
+        color: var(--ink);
       }
-      .instructions { max-width: 38rem; margin: 0.65rem 0 0; color: var(--quiet); font-size: 0.9rem; }
-      .actions { display: flex; gap: 0.55rem; align-items: center; }
-      .action, .nudge {
-        border: 1px solid var(--ink);
-        border-radius: 0;
-        background: var(--paper);
+
+      .instructions {
+        max-width: 44rem;
+        margin: 0.5rem 0 0;
+        color: var(--ink-secondary);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+
+      .kbd {
+        display: inline-block;
+        padding: 0.1rem 0.34rem;
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 0.74rem;
+        font-weight: 600;
+        line-height: 1.1;
+        color: var(--ink);
+        background: var(--bg-surface-subtle);
+        border: 1px solid var(--rule);
+        border-radius: 4px;
+        box-shadow: 0 1px 0 var(--rule);
+      }
+
+      .masthead-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .search-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .search-icon {
+        position: absolute;
+        left: 0.7rem;
+        color: var(--quiet);
+        pointer-events: none;
+      }
+      .search-input {
+        width: 175px;
+        min-height: 2.45rem;
+        padding: 0.4rem 2rem 0.4rem 2.15rem;
+        font-size: 0.84rem;
+        color: var(--ink);
+        background: var(--bg-surface);
+        border: 1px solid var(--rule);
+        border-radius: 8px;
+        outline: none;
+      }
+      .search-input::-webkit-search-cancel-button,
+      .search-input::-webkit-search-decoration {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .search-input:focus-visible {
+        border-color: var(--focus);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+        width: 215px;
+      }
+
+      .search-clear {
+        position: absolute;
+        right: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.3rem;
+        height: 1.3rem;
+        padding: 0;
+        border-radius: 50%;
+        border: 0;
+        background: var(--bg-surface-subtle);
+        color: var(--quiet);
+        cursor: pointer;
+      }
+      .search-clear:hover {
+        background: var(--rule);
+        color: var(--ink);
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.45rem;
+        height: 2.45rem;
+        padding: 0;
+        border-radius: 8px;
+        border: 1px solid var(--rule);
+        background: var(--bg-surface);
+        color: var(--ink-secondary);
+        cursor: pointer;
+      }
+      .action-icon:hover {
+        background: var(--bg-surface-subtle);
+        color: var(--ink);
+        border-color: var(--ink-secondary);
+      }
+
+      .icon-sun { display: none; }
+      .icon-moon { display: block; }
+      [data-theme="dark"] .icon-sun { display: block; }
+      [data-theme="dark"] .icon-moon { display: none; }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) .icon-sun { display: block; }
+        :root:not([data-theme="light"]) .icon-moon { display: none; }
+      }
+
+      .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        min-height: 2.45rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 8px;
+        border: 1px solid var(--rule);
+        background: var(--bg-surface);
         color: var(--ink);
         cursor: pointer;
       }
-      .action { min-height: 2.65rem; padding: 0.65rem 1rem; font-weight: 650; }
-      .action--primary { background: var(--ink); color: var(--paper); }
-      .action:disabled, .nudge:disabled { cursor: default; opacity: 0.38; }
-      .action:focus-visible, .nudge:focus-visible, .piece:focus-visible {
-        outline: 3px solid var(--focus);
-        outline-offset: 3px;
+      .action:not(:disabled):hover {
+        background: var(--bg-surface-subtle);
+        border-color: var(--ink-secondary);
+      }
+      .action--primary {
+        background: var(--ink);
+        color: var(--bg-surface);
+        border-color: var(--ink);
+        box-shadow: var(--shadow-sm);
+      }
+      .action--primary:not(:disabled):hover {
+        opacity: 0.9;
+      }
+      .action:disabled {
+        cursor: not-allowed;
+        opacity: 0.42;
+      }
+      .action:focus-visible, .action-icon:focus-visible, .search-clear:focus-visible, .nudge:focus-visible, .piece:focus-visible, .modal-close:focus-visible, .form-input:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
       }
 
-      main { padding: clamp(1rem, 4vw, 3rem); }
-      .state-line {
+      /* --- Commit & Push Modal --- */
+      .commit-modal::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      .commit-modal {
+        border: 1px solid var(--rule);
+        border-radius: 14px;
+        background: var(--bg-surface);
+        color: var(--ink);
+        box-shadow: var(--shadow-lg);
+        padding: 1.5rem;
+        width: min(480px, calc(100vw - 2rem));
+        max-width: 480px;
+        margin: auto;
+      }
+      .commit-modal[open] {
         display: flex;
+        flex-direction: column;
+        gap: 1.15rem;
+      }
+      .modal-header {
+        display: flex;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 1rem;
-        margin-bottom: 1rem;
+      }
+      .modal-title-group {
+        min-width: 0;
+      }
+      .modal-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.25rem;
+      }
+      .modal-title {
+        margin: 0;
+        font-family: "Baskerville", "Iowan Old Style", Georgia, "Times New Roman", serif;
+        font-size: 1.45rem;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        color: var(--ink);
+      }
+      .modal-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        padding: 0;
+        border-radius: 6px;
+        border: 1px solid transparent;
+        background: transparent;
         color: var(--quiet);
+        cursor: pointer;
+      }
+      .modal-close:hover {
+        background: var(--bg-surface-subtle);
+        color: var(--ink);
+        border-color: var(--rule);
+      }
+      .modal-description {
+        margin: 0;
+        font-size: 0.86rem;
+        color: var(--ink-secondary);
+        line-height: 1.45;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .form-label-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .form-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .form-hint {
+        font-size: 0.74rem;
+        color: var(--quiet);
+      }
+      .form-input {
+        width: 100%;
+        min-height: 2.45rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        color: var(--ink);
+        background: var(--bg-page);
+        border: 1px solid var(--rule);
+        border-radius: 8px;
+        outline: none;
+      }
+      .form-input:focus-visible {
+        border-color: var(--focus);
+        box-shadow: 0 0 0 3px var(--focus-ring);
+      }
+      .form-options {
+        font-size: 0.84rem;
+        color: var(--ink-secondary);
+      }
+      .checkbox-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+      }
+      .checkbox-label input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--focus);
+        cursor: pointer;
+      }
+      .commit-summary {
+        padding: 0.65rem 0.85rem;
+        background: var(--bg-surface-subtle);
+        border: 1px solid var(--rule-subtle);
+        border-radius: 8px;
+        font-size: 0.78rem;
+      }
+      .summary-header {
+        font-weight: 600;
+        color: var(--ink-secondary);
+        margin-bottom: 0.35rem;
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .summary-list {
+        margin: 0;
+        padding-left: 1.15rem;
+        color: var(--quiet);
+        line-height: 1.45;
+        max-height: 100px;
+        overflow-y: auto;
+      }
+      .modal-feedback {
+        padding: 0.6rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        line-height: 1.4;
+      }
+      .modal-feedback[data-kind="error"] {
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        color: var(--danger);
+      }
+      .modal-feedback[data-kind="success"] {
+        background: var(--success-bg);
+        border: 1px solid var(--success-border);
+        color: var(--success);
+      }
+      .modal-feedback[data-kind="info"] {
+        background: var(--bg-surface-subtle);
+        border: 1px solid var(--rule);
+        color: var(--ink);
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+      }
+
+      /* --- Main Area & State Line --- */
+      main {
+        max-width: 1560px;
+        margin: 0 auto;
+        padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 3rem);
+      }
+
+      .state-line {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
         font-size: 0.82rem;
       }
-      .state-line [data-dirty="true"] { color: var(--danger); font-weight: 700; }
-      .state-line [data-kind="success"] { color: var(--success); }
-      .state-line [data-kind="error"] { color: var(--danger); }
 
+      #count {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.8rem;
+        border-radius: 9999px;
+        font-size: 0.81rem;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        background: var(--bg-surface);
+        border: 1px solid var(--rule);
+        font-variant-numeric: tabular-nums;
+        box-shadow: var(--shadow-sm);
+      }
+
+      #status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        font-size: 0.81rem;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        background: var(--bg-surface);
+        border: 1px solid var(--rule);
+        box-shadow: var(--shadow-sm);
+      }
+      #status::before {
+        content: "";
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.55;
+        flex-shrink: 0;
+      }
+      #status[data-dirty="true"] {
+        color: var(--warning);
+        background: var(--warning-bg);
+        border-color: var(--warning-border);
+        font-weight: 600;
+      }
+      #status[data-dirty="true"]::before {
+        background: var(--warning);
+        opacity: 1;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22);
+      }
+      #status[data-kind="success"] {
+        color: var(--success);
+        background: var(--success-bg);
+        border-color: var(--success-border);
+      }
+      #status[data-kind="success"]::before {
+        background: var(--success);
+        opacity: 1;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22);
+      }
+      #status[data-kind="error"] {
+        color: var(--danger);
+        background: var(--danger-bg);
+        border-color: var(--danger-border);
+      }
+      #status[data-kind="error"]::before {
+        background: var(--danger);
+        opacity: 1;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22);
+      }
+
+      /* --- Gallery Grid --- */
       .gallery {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
         gap: clamp(0.75rem, 2vw, 1.25rem);
-        max-width: 1500px;
         margin: 0 auto;
         padding: 0;
         list-style: none;
       }
+
+      /* --- Artwork Piece Card --- */
       .piece {
         position: relative;
         min-width: 0;
+        border-radius: 12px;
         border: 1px solid var(--rule);
-        background: var(--paper);
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-sm);
         cursor: grab;
         user-select: none;
+        overflow: visible;
       }
       .piece:active { cursor: grabbing; }
-      .piece.is-dragging { opacity: 0.36; }
-      .piece.is-picked { border-color: var(--focus); box-shadow: inset 0 0 0 2px var(--focus); }
-      .piece.drop-before::before, .piece.drop-after::after {
-        position: absolute;
-        z-index: 2;
-        top: -0.45rem;
-        bottom: -0.45rem;
-        width: 4px;
-        background: var(--focus);
-        content: "";
+
+      .piece.is-dragging {
+        opacity: 0.35;
       }
-      .piece.drop-before::before { left: -0.55rem; }
-      .piece.drop-after::after { right: -0.55rem; }
+
+      .piece.is-picked {
+        border-color: var(--focus);
+        box-shadow: 0 0 0 2px var(--focus), var(--shadow-drag);
+        z-index: 10;
+      }
+
+      .picked-pill {
+        display: none;
+        position: absolute;
+        top: 0.6rem;
+        right: 0.6rem;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem 0.55rem;
+        border-radius: 9999px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #ffffff;
+        background: var(--focus);
+        box-shadow: 0 3px 8px rgba(37, 99, 235, 0.4);
+        z-index: 12;
+        pointer-events: none;
+      }
+      .piece.is-picked .picked-pill {
+        display: inline-flex;
+      }
+      .picked-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #ffffff;
+      }
+
+      .piece.is-filtered-out {
+        opacity: 0.16;
+        filter: grayscale(0.85);
+        pointer-events: none;
+      }
+
+      /* --- Drop indicators --- */
+      .piece.drop-before::before,
+      .piece.drop-after::after {
+        position: absolute;
+        z-index: 25;
+        top: -6px;
+        bottom: -6px;
+        width: 4px;
+        border-radius: 4px;
+        background: var(--focus);
+        box-shadow: 0 0 8px var(--focus);
+        content: "";
+        pointer-events: none;
+      }
+      .piece.drop-before::before { left: -7px; }
+      .piece.drop-after::after { right: -7px; }
+
+      /* --- Portrait presentation --- */
       .portrait {
+        position: relative;
         display: grid;
         width: 100%;
         aspect-ratio: 1;
         place-items: center;
-        padding: 0.75rem;
-        background: var(--wash);
+        padding: 0.85rem;
+        background: var(--bg-studio);
+        border-radius: 11px 11px 0 0;
+        overflow: hidden;
         pointer-events: none;
       }
-      .portrait img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-      .label {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        gap: 0.6rem;
-        align-items: center;
-        min-height: 3.25rem;
-        padding: 0.55rem 0.65rem;
-        border-top: 1px solid var(--rule);
+      .portrait img {
+        width: 100%;
+        height: 100%;
+        max-width: 86%;
+        max-height: 86%;
+        object-fit: contain;
+        pointer-events: none;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.05));
       }
-      .position { color: var(--quiet); }
-      .name { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-      .grip { color: var(--quiet); font-size: 1rem; letter-spacing: -0.2em; }
-      .nudges { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--rule); }
-      .nudge { min-height: 2rem; border: 0; }
-      .nudge + .nudge { border-left: 1px solid var(--rule); }
-      .nudge:not(:disabled):hover, .action:not(:disabled):hover { background: var(--wash); }
-      .action--primary:not(:disabled):hover { background: #34342f; }
-      .empty { padding: 3rem; color: var(--danger); text-align: center; }
+      [data-theme="dark"] .portrait img {
+        filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      }
 
+      /* --- Card Label --- */
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        min-height: 2.85rem;
+        padding: 0.5rem 0.75rem;
+        background: var(--bg-surface);
+        border-top: 1px solid var(--rule-subtle);
+      }
+      .position {
+        font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        font-variant-numeric: tabular-nums;
+        padding: 0.15rem 0.4rem;
+        border-radius: 5px;
+        background: var(--bg-surface-subtle);
+        color: var(--quiet);
+        border: 1px solid var(--rule);
+        flex-shrink: 0;
+      }
+      .name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        font-weight: 600;
+        font-size: 0.875rem;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .grip {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--quiet);
+        opacity: 0.5;
+        flex-shrink: 0;
+      }
+      .piece:hover .grip { opacity: 1; }
+
+      /* --- Nudge controls --- */
+      .nudges {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid var(--rule);
+        background: var(--bg-surface-subtle);
+        border-radius: 0 0 11px 11px;
+        overflow: hidden;
+      }
+      .nudge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        min-height: 2.15rem;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--ink-secondary);
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+      }
+      .nudge + .nudge { border-left: 1px solid var(--rule); }
+      .nudge:not(:disabled):hover {
+        background: var(--bg-surface);
+        color: var(--ink);
+      }
+      .nudge:disabled {
+        cursor: default;
+        opacity: 0.3;
+      }
+
+      .empty {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: var(--danger);
+        background: var(--danger-bg);
+        border: 1px solid var(--danger-border);
+        border-radius: 12px;
+        font-size: 0.95rem;
+      }
+
+      /* --- Responsive adjustments --- */
       @media (max-width: 680px) {
-        .masthead { position: static; grid-template-columns: 1fr; align-items: start; }
+        .masthead {
+          grid-template-columns: 1fr;
+          gap: 0.85rem;
+          padding: 1rem;
+        }
+        .masthead-controls {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.6rem;
+          width: 100%;
+        }
+        .search-box {
+          width: 100%;
+        }
+        .search-input {
+          width: 100%;
+        }
+        .search-input:focus-visible {
+          width: 100%;
+        }
+        .actions {
+          width: 100%;
+          display: flex;
+          gap: 0.5rem;
+        }
+        .action {
+          flex: 1;
+        }
+        .gallery {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.75rem;
+        }
+        main {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .gallery { grid-template-columns: 1fr; }
+        .masthead-controls { flex-direction: column; align-items: stretch; }
         .actions { width: 100%; }
         .action { flex: 1; }
-        .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
-      @media (max-width: 350px) { .gallery { grid-template-columns: 1fr; } }
+
+      /* --- Motion preferences --- */
       @media (prefers-reduced-motion: no-preference) {
-        .piece { transition: opacity 120ms ease, box-shadow 120ms ease; }
+        .piece {
+          transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease, opacity 120ms ease, border-color 180ms ease;
+        }
+        .piece:hover {
+          box-shadow: var(--shadow-md);
+        }
+        .action, .nudge, .action-icon, .search-input, .search-clear {
+          transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+        }
+        .portrait img {
+          transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .piece:hover .portrait img {
+          transform: scale(1.04);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.001s !important;
+          transition-duration: 0s !important;
+        }
       }
     </style>
   </head>
   <body>
     <header class="masthead">
-      <div>
-        <p class="eyebrow">Private collection room</p>
+      <div class="masthead-brand">
+        <div class="masthead-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          <p class="eyebrow">Private collection room</p>
+        </div>
         <h1>Curator’s table</h1>
-        <p class="instructions">Drag a distinguished guest into position. For the keyboard: focus a piece, press Space, move it with the arrow keys, then press Space again.</p>
+        <p class="instructions">
+          Drag a distinguished guest into position. With a keyboard: focus a piece, press <kbd class="kbd">Space</kbd> to select, arrow keys to move, and <kbd class="kbd">Space</kbd> to place.
+        </p>
       </div>
-      <div class="actions">
-        <button class="action" id="reset" type="button" disabled>Reset</button>
-        <button class="action action--primary" id="save" type="button" disabled>Save order</button>
+      <div class="masthead-controls">
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="search" id="search-input" class="search-input" placeholder="Find an artwork…" aria-label="Search artworks" autocomplete="off" spellcheck="false" />
+          <button type="button" id="search-clear" class="search-clear" aria-label="Clear search" hidden>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="actions">
+          <button class="action-icon" id="theme-toggle" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
+            <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <button class="action" id="reset" type="button" disabled>Reset</button>
+          <button class="action action--primary" id="save" type="button" disabled>Save order</button>
+          <button class="action" id="commit-btn" type="button" disabled title="No changes to commit">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10.5 7.75a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zm1.43.75a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 1 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 1 1 0 1.5h-3.32z"/>
+            </svg>
+            Commit &amp; push
+          </button>
+        </div>
       </div>
     </header>
+
+    <dialog class="commit-modal" id="commit-modal" aria-labelledby="commit-modal-title">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-badge">
+            <span class="badge-dot" aria-hidden="true"></span>
+            <span class="eyebrow" id="commit-branch-badge">git: main</span>
+          </div>
+          <h2 class="modal-title" id="commit-modal-title">Commit &amp; push</h2>
+        </div>
+        <button type="button" class="modal-close" id="commit-modal-close" aria-label="Close dialog">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p class="modal-description" id="commit-description">
+        Record the gallery sequence in version control and push to the remote repository.
+      </p>
+
+      <div class="form-group">
+        <div class="form-label-row">
+          <label for="commit-message" class="form-label">Commit message</label>
+          <span class="form-hint">Required</span>
+        </div>
+        <input
+          type="text"
+          id="commit-message"
+          class="form-input"
+          placeholder="e.g. Rearrange gallery sequence"
+          value="Rearrange gallery sequence"
+          autocomplete="off"
+          spellcheck="false"
+          required
+        />
+      </div>
+
+      <div class="form-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="commit-push-checkbox" checked />
+          <span>Push to remote (<span id="commit-remote-label">origin/main</span>)</span>
+        </label>
+      </div>
+
+      <div class="commit-summary" id="commit-summary">
+        <div class="summary-header">Changes to include</div>
+        <ul class="summary-list" id="commit-summary-list"></ul>
+      </div>
+
+      <div class="modal-feedback" id="commit-feedback" role="alert" hidden></div>
+
+      <div class="modal-actions">
+        <button type="button" class="action" id="commit-cancel">Cancel</button>
+        <button type="button" class="action action--primary" id="commit-submit">
+          Commit &amp; push
+        </button>
+      </div>
+    </dialog>
+
     <main>
       <div class="state-line">
         <span id="count">Loading the collection…</span>
@@ -181,6 +968,21 @@
       const error = document.querySelector("#error");
       const resetButton = document.querySelector("#reset");
       const saveButton = document.querySelector("#save");
+      const searchInput = document.querySelector("#search-input");
+      const searchClear = document.querySelector("#search-clear");
+      const themeToggle = document.querySelector("#theme-toggle");
+      const commitBtn = document.querySelector("#commit-btn");
+      const commitModal = document.querySelector("#commit-modal");
+      const commitModalClose = document.querySelector("#commit-modal-close");
+      const commitBranchBadge = document.querySelector("#commit-branch-badge");
+      const commitRemoteLabel = document.querySelector("#commit-remote-label");
+      const commitMessage = document.querySelector("#commit-message");
+      const commitPushCheckbox = document.querySelector("#commit-push-checkbox");
+      const commitSummaryList = document.querySelector("#commit-summary-list");
+      const commitFeedback = document.querySelector("#commit-feedback");
+      const commitCancel = document.querySelector("#commit-cancel");
+      const commitSubmit = document.querySelector("#commit-submit");
+
       let characters = [];
       let initialOrder = [];
       let currentOrder = [];
@@ -189,6 +991,8 @@
       let pickedSlug = null;
       let pickupOrder = null;
       let saving = false;
+      let committing = false;
+      let gitStatusData = null;
 
       const characterMap = () => new Map(characters.map((character) => [character.slug, character]));
       const isDirty = () => currentOrder.some((slug, index) => slug !== initialOrder[index]);
@@ -196,17 +1000,51 @@
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
       })[character]);
 
+      function getActiveTheme() {
+        const current = document.documentElement.dataset.theme;
+        if (current === "dark" || current === "light") return current;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        try {
+          localStorage.setItem("webendra-theme", theme);
+        } catch (e) {}
+      }
+
+      themeToggle?.addEventListener("click", () => {
+        const next = getActiveTheme() === "dark" ? "light" : "dark";
+        setTheme(next);
+      });
+
       function setStatus(message, kind = "") {
         status.textContent = message;
         status.dataset.kind = kind;
         status.dataset.dirty = String(isDirty());
       }
+
       function updateControls(announce = true) {
         const dirty = isDirty();
-        resetButton.disabled = saving || !dirty;
-        saveButton.disabled = saving || !dirty;
-        if (announce && !saving) setStatus(dirty ? "Unsaved order" : "No changes");
+        const hasGitChanges = Boolean(gitStatusData?.isGit && (!gitStatusData.clean || gitStatusData.ahead > 0));
+        resetButton.disabled = saving || committing || !dirty;
+        saveButton.disabled = saving || committing || !dirty;
+        if (commitBtn) {
+          commitBtn.disabled = saving || committing || (!dirty && !hasGitChanges);
+          if (!gitStatusData?.isGit) {
+            commitBtn.title = "Git repository not detected";
+          } else if (dirty) {
+            commitBtn.title = "Save, commit, and push this order";
+          } else if (hasGitChanges) {
+            commitBtn.title = "Commit and push working tree changes";
+          } else {
+            commitBtn.title = "Working tree is clean; no changes to commit";
+          }
+        }
+        if (announce && !saving && !committing) setStatus(dirty ? "Unsaved order" : "No changes");
       }
+
       function move(fromIndex, toIndex, focusSlug) {
         if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || toIndex >= currentOrder.length) return;
         const [slug] = currentOrder.splice(fromIndex, 1);
@@ -214,11 +1052,52 @@
         render(focusSlug || slug);
         setStatus(`${characterMap().get(slug).name} is now number ${toIndex + 1}.`);
       }
+
       function clearDropMarks() {
         gallery.querySelectorAll(".drop-before, .drop-after").forEach((piece) => {
           piece.classList.remove("drop-before", "drop-after");
         });
       }
+
+      function filterGallery() {
+        const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+        if (searchClear) searchClear.hidden = !query;
+        let visibleCount = 0;
+        const lookup = characterMap();
+        gallery.querySelectorAll(".piece").forEach((piece) => {
+          const slug = piece.dataset.slug;
+          const character = lookup.get(slug);
+          const name = character ? (character.displayName || character.name).toLowerCase() : "";
+          const matches = !query || slug.includes(query) || name.includes(query);
+          piece.classList.toggle("is-filtered-out", !matches);
+          if (matches) visibleCount += 1;
+        });
+        if (query) {
+          count.textContent = `${visibleCount} of ${characters.length} artworks`;
+        } else if (characters.length > 0) {
+          count.textContent = `${characters.length} artworks`;
+        }
+      }
+
+      searchInput?.addEventListener("input", filterGallery);
+      searchInput?.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          searchInput.value = "";
+          filterGallery();
+        } else if (event.key === "Enter") {
+          const firstMatch = gallery.querySelector(".piece:not(.is-filtered-out)");
+          firstMatch?.scrollIntoView({ behavior: "smooth", block: "center" });
+          firstMatch?.focus();
+        }
+      });
+      searchClear?.addEventListener("click", () => {
+        if (searchInput) {
+          searchInput.value = "";
+          searchInput.focus();
+          filterGallery();
+        }
+      });
+
       function render(focusSlug = null) {
         const lookup = characterMap();
         gallery.replaceChildren(...currentOrder.map((slug, index) => {
@@ -231,21 +1110,44 @@
           item.setAttribute("aria-label", `${character.name}, position ${index + 1} of ${currentOrder.length}. Press Space to pick up.`);
           item.setAttribute("aria-grabbed", String(pickedSlug === slug));
           if (pickedSlug === slug) item.classList.add("is-picked");
+
           item.innerHTML = `
-            <div class="portrait"><img src="${escapeMarkup(character.image)}" alt="${escapeMarkup(character.alt)}"></div>
+            <div class="portrait">
+              <img src="${escapeMarkup(character.image)}" alt="${escapeMarkup(character.alt)}" loading="lazy" width="180" height="180">
+            </div>
             <div class="label">
               <span class="position">${String(index + 1).padStart(2, "0")}</span>
-              <span class="name">${escapeMarkup(character.displayName || character.name)}</span>
-              <span class="grip" aria-hidden="true">⠿</span>
+              <span class="name" title="${escapeMarkup(character.displayName || character.name)}">${escapeMarkup(character.displayName || character.name)}</span>
+              <span class="grip" aria-hidden="true" title="Drag to reorder">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="5" cy="3" r="1.5"/>
+                  <circle cx="11" cy="3" r="1.5"/>
+                  <circle cx="5" cy="8" r="1.5"/>
+                  <circle cx="11" cy="8" r="1.5"/>
+                  <circle cx="5" cy="13" r="1.5"/>
+                  <circle cx="11" cy="13" r="1.5"/>
+                </svg>
+              </span>
             </div>
             <div class="nudges">
-              <button class="nudge" type="button" data-direction="-1" aria-label="Move ${escapeMarkup(character.name)} earlier" ${index === 0 ? "disabled" : ""}>← Earlier</button>
-              <button class="nudge" type="button" data-direction="1" aria-label="Move ${escapeMarkup(character.name)} later" ${index === currentOrder.length - 1 ? "disabled" : ""}>Later →</button>
+              <button class="nudge" type="button" data-direction="-1" aria-label="Move ${escapeMarkup(character.name)} earlier" ${index === 0 ? "disabled" : ""}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Earlier
+              </button>
+              <button class="nudge" type="button" data-direction="1" aria-label="Move ${escapeMarkup(character.name)} later" ${index === currentOrder.length - 1 ? "disabled" : ""}>
+                Later
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+            <div class="picked-pill" aria-hidden="true">
+              <span class="picked-dot"></span> Moving
             </div>`;
+
           item.querySelectorAll(".nudge").forEach((button) => button.addEventListener("click", (event) => {
             event.stopPropagation();
             move(index, index + Number(button.dataset.direction), slug);
           }));
+
           item.addEventListener("dragstart", (event) => {
             draggedSlug = slug;
             event.dataTransfer.effectAllowed = "move";
@@ -280,6 +1182,7 @@
           item.addEventListener("keydown", (event) => handleKeyboard(event, slug));
           return item;
         }));
+        filterGallery();
         updateControls();
         if (focusSlug) gallery.querySelector(`[data-slug="${focusSlug}"]`)?.focus();
       }
@@ -332,6 +1235,7 @@
         render();
         setStatus("Order reset.");
       });
+
       saveButton.addEventListener("click", async () => {
         saving = true;
         saveButton.textContent = "Saving…";
@@ -348,6 +1252,7 @@
           revision = result.revision;
           initialOrder = [...currentOrder];
           setStatus(result.message, "success");
+          await refreshGitStatus();
         } catch (failure) {
           setStatus(failure.message, "error");
         } finally {
@@ -356,11 +1261,187 @@
           updateControls(false);
         }
       });
+
+      function showCommitFeedback(message, kind = "info") {
+        if (!commitFeedback) return;
+        if (!message) {
+          commitFeedback.hidden = true;
+          commitFeedback.textContent = "";
+          return;
+        }
+        commitFeedback.hidden = false;
+        commitFeedback.textContent = message;
+        commitFeedback.dataset.kind = kind;
+      }
+
+      function populateCommitSummary() {
+        if (!commitSummaryList) return;
+        commitSummaryList.replaceChildren();
+        const dirty = isDirty();
+        if (dirty) {
+          const li = document.createElement("li");
+          li.innerHTML = "<strong>Curator arrangement</strong> (catalogue.js will be saved, metadata regenerated)";
+          commitSummaryList.appendChild(li);
+        }
+        const files = gitStatusData?.modifiedFiles || [];
+        if (files.length > 0) {
+          const limit = Math.min(files.length, 6);
+          for (let i = 0; i < limit; i += 1) {
+            const li = document.createElement("li");
+            li.textContent = files[i];
+            commitSummaryList.appendChild(li);
+          }
+          if (files.length > 6) {
+            const li = document.createElement("li");
+            li.textContent = `…and ${files.length - 6} other modified files`;
+            commitSummaryList.appendChild(li);
+          }
+        } else if (!dirty) {
+          const li = document.createElement("li");
+          li.textContent = gitStatusData?.ahead ? `${gitStatusData.ahead} unpushed commit(s)` : "Working tree is clean.";
+          commitSummaryList.appendChild(li);
+        }
+      }
+
+      function openCommitModal() {
+        if (!commitModal) return;
+        showCommitFeedback("");
+        populateCommitSummary();
+        if (commitPushCheckbox) {
+          commitPushCheckbox.checked = true;
+        }
+        if (commitMessage && !commitMessage.value.trim()) {
+          commitMessage.value = "Rearrange gallery sequence";
+        }
+        commitModal.showModal();
+        commitMessage?.focus();
+        commitMessage?.select();
+      }
+
+      function closeCommitModal() {
+        if (committing) return;
+        commitModal?.close();
+      }
+
+      async function refreshGitStatus() {
+        try {
+          const response = await fetch("/api/git/status", { cache: "no-store" });
+          if (!response.ok) {
+            gitStatusData = { isGit: false };
+            return;
+          }
+          gitStatusData = await response.json();
+          if (commitBranchBadge && gitStatusData.branch) {
+            commitBranchBadge.textContent = `git: ${gitStatusData.branch}`;
+          }
+          if (commitRemoteLabel) {
+            commitRemoteLabel.textContent = gitStatusData.upstream || `origin/${gitStatusData.branch || "main"}`;
+          }
+        } catch (e) {
+          gitStatusData = { isGit: false };
+        } finally {
+          updateControls(false);
+        }
+      }
+
+      commitBtn?.addEventListener("click", () => {
+        openCommitModal();
+      });
+
+      commitModalClose?.addEventListener("click", () => {
+        closeCommitModal();
+      });
+
+      commitCancel?.addEventListener("click", () => {
+        closeCommitModal();
+      });
+
+      commitModal?.addEventListener("click", (event) => {
+        if (event.target === commitModal) {
+          closeCommitModal();
+        }
+      });
+
+      commitMessage?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          commitSubmit?.click();
+        }
+      });
+
+      commitSubmit?.addEventListener("click", async () => {
+        const message = commitMessage ? commitMessage.value.trim() : "";
+        if (!message) {
+          showCommitFeedback("A commit message is required.", "error");
+          commitMessage?.focus();
+          return;
+        }
+
+        committing = true;
+        if (commitBtn) commitBtn.disabled = true;
+        commitSubmit.disabled = true;
+        if (commitCancel) commitCancel.disabled = true;
+        if (commitMessage) commitMessage.disabled = true;
+        if (commitPushCheckbox) commitPushCheckbox.disabled = true;
+
+        const push = commitPushCheckbox ? commitPushCheckbox.checked : true;
+
+        try {
+          if (isDirty()) {
+            commitSubmit.textContent = "Saving order…";
+            showCommitFeedback("Saving catalogue order and regenerating metadata…", "info");
+            setStatus("Updating the gallery…");
+
+            const saveResponse = await fetch("/api/order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ revision, order: currentOrder }),
+            });
+            const saveResult = await saveResponse.json();
+            if (!saveResponse.ok) {
+              throw new Error(saveResult.error || "The order could not be saved.");
+            }
+            revision = saveResult.revision;
+            initialOrder = [...currentOrder];
+          }
+
+          commitSubmit.textContent = push ? "Pushing…" : "Committing…";
+          showCommitFeedback(push ? "Committing changes and pushing to remote…" : "Committing changes locally…", "info");
+          setStatus(push ? "Committing and pushing…" : "Committing changes…");
+
+          const commitResponse = await fetch("/api/git/commit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, push }),
+          });
+          const commitResult = await commitResponse.json();
+          if (!commitResponse.ok) {
+            throw new Error(commitResult.error || "Git operation failed.");
+          }
+
+          await refreshGitStatus();
+          commitModal.close();
+          setStatus(commitResult.message, "success");
+        } catch (failure) {
+          showCommitFeedback(failure.message, "error");
+          setStatus(failure.message, "error");
+        } finally {
+          committing = false;
+          commitSubmit.disabled = false;
+          if (commitCancel) commitCancel.disabled = false;
+          if (commitMessage) commitMessage.disabled = false;
+          if (commitPushCheckbox) commitPushCheckbox.disabled = false;
+          commitSubmit.textContent = "Commit & push";
+          updateControls(false);
+        }
+      });
+
       window.addEventListener("beforeunload", (event) => {
         if (!isDirty()) return;
         event.preventDefault();
         event.returnValue = "";
       });
+
       async function load() {
         try {
           const response = await fetch("/api/catalogue", { cache: "no-store" });
@@ -372,6 +1453,7 @@
           currentOrder = [...initialOrder];
           count.textContent = `${characters.length} artworks`;
           render();
+          await refreshGitStatus();
         } catch (failure) {
           gallery.hidden = true;
           error.hidden = false;
@@ -380,6 +1462,7 @@
           setStatus("Nothing moved", "error");
         }
       }
+
       load();
     </script>
   </body>
